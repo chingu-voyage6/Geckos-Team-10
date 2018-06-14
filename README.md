@@ -1,6 +1,8 @@
 # Trello Clone📌
 A reverse-engineered clone of the popular project managment app trello.
 
+[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
+
 ## Geckos-Team-10
 Chingu Voyage-6 | https://chingu.io/
 

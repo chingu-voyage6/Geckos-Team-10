@@ -8,6 +8,7 @@
     "path": "^0.12.7",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
+    "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.4"
   },
   "proxy": "http://localhost:5000",
@@ -16,5 +17,14 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-emoji"
+    }
+  },
+  "devDependencies": {
+    "cz-emoji": "^1.1.1",
+    "nodemon": "^1.17.5"
   }
 }
