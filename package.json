@@ -16,7 +16,10 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "commit": "git-cz",
+    "lint": "eslint .",
+    "precommit": "npm run lint"
   },
   "config": {
     "commitizen": {
@@ -24,7 +27,21 @@
     }
   },
   "devDependencies": {
+    "babel-eslint": "^8.2.3",
     "cz-emoji": "^1.1.1",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-import-resolver-babel-module": "^4.0.0",
+    "eslint-plugin-import": "^2.12.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.9.1",
+    "husky": "^0.14.3",
     "nodemon": "^1.17.5"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint",
+      "pre-push": "npm run lint"
+    }
   }
 }

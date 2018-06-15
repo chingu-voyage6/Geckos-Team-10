@@ -1,13 +1,11 @@
-import React, { Component } from 'react';
+import React from 'react'
 
-class Board extends Component {
-  render() {
-    return (
-      <div>
-        <h1>Project Board</h1>
-      </div>
-    );
-  }
+const Board = () => {
+  return (
+    <div>
+      <h1>Project Board</h1>
+    </div>
+  )
 }
 
-export default Board;
+export default Board
