@@ -1,15 +1,17 @@
 import App from './App/App'
 import Board from './Board/Board'
+import Callback from './Callback/Callback'
 import Home from './Home/Home'
-import Login from './Login/Login'
+import LoggedOut from './Logged-out/LoggedOut'
 import Profile from './Profile/Profile'
 import Signup from './Signup/Signup'
 
 export {
   App,
+  Callback,
   Board,
   Home,
-  Login,
+  LoggedOut,
   Profile,
   Signup
 }
