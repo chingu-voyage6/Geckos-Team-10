@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import {
   Router,
   Route,
@@ -25,18 +25,17 @@ class App extends Component {
             <Route exact path="/" component={Home} />
             <Route path="/home" component={Home} />
             {isAuthenticated() &&
-              <Route path="/board" component={Board} />
-            }
-            {
-              isAuthenticated() &&
-              <Route path="/profile" component={Profile} />
+              <Fragment>
+                <Route path="/board" component={Board} />
+                <Route path="/profile" component={Profile} />
+              </Fragment>
             }
             <Route
               path="/callback"
               render={props => {
                 this.handleAuthentication(props)
                 return <Callback {...props} />
-                }
+              }
               }
             />
             <Route path="/logged-out" component={LoggedOut} />
