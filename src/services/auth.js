@@ -20,6 +20,7 @@ class Auth {
   handleAuthentication = () => {
     this.auth0.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
+        // console.log(authResult)
         this.setSession(authResult)
         history.replace('/home')
       } else if (err) {
@@ -55,6 +56,11 @@ class Auth {
     // access token's expiry time
     const expiresAt = JSON.parse(localStorage.getItem('expires_at'))
     return new Date().getTime() < expiresAt
+  }
+
+  // return local access token
+  accessToken = () => {
+    return localStorage.getItem('id_token')
   }
 }
 

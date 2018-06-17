@@ -4,19 +4,24 @@
   "private": true,
   "dependencies": {
     "auth0-js": "^9.6.1",
+    "axios": "^0.18.0",
     "body-parser": "^1.18.3",
     "express": "^4.16.3",
+    "express-jwt": "^5.3.1",
+    "express-jwt-authz": "^1.0.0",
     "history": "^4.7.2",
+    "jwks-rsa": "^1.2.1",
     "path": "^0.12.7",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
     "react-router-dom": "^4.3.1",
+    "react-router-hash-link": "^1.2.0",
     "react-scripts": "1.1.4"
   },
-  "proxy": "http://localhost:5000",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "dev": "nodemon server",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "commit": "git-cz",
@@ -40,6 +45,7 @@
     "husky": "^0.14.3",
     "nodemon": "^1.17.5"
   },
+  "proxy": "http://localhost:5000",
   "husky": {
     "hooks": {
       "pre-commit": "npm run lint",

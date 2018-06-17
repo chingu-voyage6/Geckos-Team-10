@@ -11,6 +11,7 @@ const LoggedOut = () => (
   <div>
     <h1>Logged out</h1>
     <button onClick={login}>Login</button>
+    <a href="/home">Home</a>
   </div>
 )
 
