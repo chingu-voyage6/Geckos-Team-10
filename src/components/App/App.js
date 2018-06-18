@@ -1,24 +1,49 @@
-import React from 'react'
+import React, { Component, Fragment } from 'react'
 import {
-  BrowserRouter as Router,
+  Router,
   Route,
-  Switch
 } from 'react-router-dom'
-import { Login, Signup, Home } from '../Components'
-import './App.scss'
+import { Board, Callback, Home, LoggedOut, Profile } from '../Components'
+import { Auth, History } from '../../services/Services'
 
-const App = () => {
-  return (
-    <div className="app-routes">
-      <Router>
-        <Switch>
-          <Route path="/login" component={Login} />
-          <Route path="/signup" component={Signup} />
-          <Route path="/" component={Home} />
-        </Switch>
-      </Router>
-    </div>
-  )
+const auth = new Auth()
+
+class App extends Component {
+  handleAuthentication = nextState => {
+    if (/access_token|id_token|error/.test(nextState.location.hash)) {
+      auth.handleAuthentication()
+    }
+  }
+
+  render() {
+    // calls the isAuthenticated method in authentication service
+    const { isAuthenticated } = auth
+    return (
+      <div>
+        <Router history={History}>
+          <div>
+            <Route exact path="/" component={Home} />
+            <Route path="/home" component={Home} />
+            {isAuthenticated() &&
+              <Fragment>
+                <Route path="/board" component={Board} />
+                <Route path="/profile" component={Profile} />
+              </Fragment>
+            }
+            <Route
+              path="/callback"
+              render={props => {
+                this.handleAuthentication(props)
+                return <Callback {...props} />
+              }
+              }
+            />
+            <Route path="/logged-out" component={LoggedOut} />
+          </div>
+        </Router>
+      </div>
+    )
+  }
 }
 
 export default App
