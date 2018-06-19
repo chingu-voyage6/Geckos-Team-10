@@ -20,7 +20,7 @@ class Auth {
   handleAuthentication = () => {
     this.auth0.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
-        // console.log(authResult)
+        // console.log(authResult.idTokenPayload.aud)
         this.setSession(authResult)
         history.replace('/home')
       } else if (err) {

@@ -19,7 +19,7 @@ const checkJwt = jwt({
   }),
 
   // Validate the audience and the issuer.
-  // audience: 'http://localhost:5000/',
+  audience: 'cSlJoIh8NZT9AdOdPm8GFwJjW42Y07PX',
   issuer: 'https://geckos-team-10.auth0.com/',
   algorithms: ['RS256']
 })
