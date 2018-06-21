@@ -2,9 +2,8 @@ import App from './App/App'
 import Board from './Board/Board'
 import Callback from './Callback/Callback'
 import Home from './Home/Home'
-import LoggedOut from './Logged-out/LoggedOut'
+import LoggedOut from './LoggedOut/LoggedOut'
 import Profile from './Profile/Profile'
-import Signup from './Signup/Signup'
 import Toolbar from './Toolbar/Toolbar'
 
 export {
@@ -14,6 +13,5 @@ export {
   Home,
   LoggedOut,
   Profile,
-  Signup,
   Toolbar,
 }
