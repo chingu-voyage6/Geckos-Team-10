@@ -1,6 +1,9 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
+import { Link } from 'react-router-dom'
 import axios from 'axios'
 import Auth from '../../services/auth'
+import { Toolbar } from '../Components'
+
 
 const auth = new Auth()
 
@@ -42,9 +45,14 @@ class Home extends Component {
     const { isAuthenticated } = auth
     return (
       <div>
+        <Toolbar />
         <h1>Home</h1>
         {isAuthenticated() ?
-          <button onClick={this.logout}>Logout</button> :
+          <Fragment>
+            <button onClick={this.logout}>Logout</button>
+            <Link to="/board">Board</Link>
+            <Link to="/profile">Profile</Link>
+          </Fragment> :
           <button onClick={this.login}>Login</button>
         }
         <button onClick={() => this.validate(auth.accessToken())}>Validate Token</button>
