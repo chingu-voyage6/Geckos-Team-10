@@ -1,41 +1,96 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import {
   Router,
   Route,
 } from 'react-router-dom'
-import { Board, Callback, Home, LoggedOut, Profile } from '../Components'
+import styled, { css } from 'styled-components'
+
+import { Board, Callback, Home, LoggedOut, Profile, Toolbar } from '../Components'
 import { Auth, History } from '../../services/Services'
+
+const Wrapper = styled.section`
+  ${props => props.offset && css`
+    margin-left: 280px;
+  `}
+`
 
 const auth = new Auth()
 
+const { isAuthenticated } = auth
+
 class App extends Component {
+  constructor(props) {
+    super(props)
+    this.state = { keepOpen: false, isAuthenticated: false }
+  }
+
+  authStateChanged = () => {
+    if (isAuthenticated() !== this.state.isAuthenticated) {
+      this.setState({ isAuthenticated: isAuthenticated() })
+    }
+  }
+
   handleAuthentication = nextState => {
     if (/access_token|id_token|error/.test(nextState.location.hash)) {
       auth.handleAuthentication()
     }
   }
 
+  toggleFixedMenu = () => {
+    this.setState({ keepOpen: !this.state.keepOpen })
+  }
+
+  resetMenuState = () => {
+    this.setState({ keepOpen: false })
+  }
+
   render() {
+    const homeJSX = () => (
+      <Home
+        authStateChanged={this.authStateChanged}
+        keepOpen={this.state.keepOpen}
+        resetMenuState={this.resetMenuState}
+      />
+    )
+
+    const routesJSX = (
+      <Fragment>
+        <Route exact path="/" render={homeJSX} />
+        <Route path="/home" render={homeJSX} />
+        <Route path="/board" component={Board} />
+        <Route path="/profile" component={Profile} />
+        <Route
+          path="/callback"
+          render={props => {
+            this.handleAuthentication(props)
+            return <Callback {...props} />
+          }
+          }
+        />
+        <Route path="/logged-out" component={LoggedOut} />
+      </Fragment>
+    )
     return (
-      <div>
+      <Wrapper>
         <Router history={History}>
-          <div>
-            <Route exact path="/" component={Home} />
-            <Route path="/home" component={Home} />
-            <Route path="/board" component={Board} />
-            <Route path="/profile" component={Profile} />
-            <Route
-              path="/callback"
-              render={props => {
-                this.handleAuthentication(props)
-                return <Callback {...props} />
-              }
-              }
-            />
-            <Route path="/logged-out" component={LoggedOut} />
-          </div>
+          <Fragment>
+            {this.state.isAuthenticated &&
+              <Toolbar
+                keepOpen={this.state.keepOpen}
+                toggleFixedMenu={this.toggleFixedMenu}
+              />
+            }
+            {this.state.keepOpen ?
+              <Wrapper offset>
+                {routesJSX}
+              </Wrapper> :
+              <Wrapper>
+                {routesJSX}
+              </Wrapper>
+            }
+          </Fragment>
         </Router>
-      </div>
+      </Wrapper>
     )
   }
 }

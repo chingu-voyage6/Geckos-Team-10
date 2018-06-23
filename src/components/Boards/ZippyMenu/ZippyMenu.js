@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Pills, Pill, Button, Text, Icon } from '../Boards.styles'
+import { Button, Text, Icon } from '../Boards.styles'
+import { Pills, Pill } from './ZippyMenu.styles'
 
 class ZippyMenu extends Component {
   constructor(props) {

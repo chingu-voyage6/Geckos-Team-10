@@ -1,16 +1,20 @@
 import styled, { css } from 'styled-components'
 
 const Wrapper = styled.section`
-  width: 100%;
-  height: 35px;
+  height: 32px;
   display: flex;
   overflow: hidden;
   justify-content: space-between;
-  padding: 5px 0;
+  padding: 4px 0;
   z-index: 10;
 
   box-shadow: 0 1px 1px rgba(0,0,0,.1);
   background: #FFFFCC;
+
+  ${props => props.offset && css`
+    position: relative;
+    margin-left: 280px;
+  `}
 `
 
 const Icon = styled.span`

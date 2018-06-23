@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 
 import { Auth } from '../../services/Services'
@@ -19,11 +19,19 @@ class Toolbar extends Component {
   }
 
   render() {
-    return (
-      isAuthenticated() &&
-      <Wrapper>
-        {this.state.isActive ? <Boards /> : ''}
-        <Button onClick={this.toggleBoards}>Boards</Button>
+    const BoardsJSX = (
+      <Boards
+        toggleFixedMenu={this.props.toggleFixedMenu}
+        keepOpen={this.props.keepOpen}
+      />)
+
+    const ContentJSX = (
+      <Fragment>
+        {this.state.isActive && BoardsJSX
+        }
+        {!this.props.keepOpen &&
+          <Button onClick={this.toggleBoards}>Boards</Button>
+        }
         <Input type="search" />
         <Brand>
           <Link to="/">Trello Clone</Link>
@@ -37,7 +45,22 @@ class Toolbar extends Component {
         <Button>
           <Icon className="fa fa-bell" />
         </Button>
-      </Wrapper>
+      </Fragment>
+    )
+
+    return (
+      isAuthenticated() &&
+      <Fragment>
+        {this.props.keepOpen ? BoardsJSX : ''}
+        {this.props.keepOpen ?
+          <Wrapper offset>
+            {ContentJSX}
+          </Wrapper> :
+          <Wrapper>
+            {ContentJSX}
+          </Wrapper>
+        }
+      </Fragment>
     )
   }
 }
