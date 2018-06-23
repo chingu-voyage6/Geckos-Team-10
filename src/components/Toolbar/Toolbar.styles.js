@@ -13,6 +13,15 @@ const Wrapper = styled.section`
   background: #FFFFCC;
 `
 
+const Icon = styled.span`
+  font-size: 20px;
+  height: 20px;
+  width: 20px;
+  padding: 6px;
+  
+  color: white;
+`
+
 const Brand = styled.div`
   position: absolute;
   left: 45%;
@@ -25,15 +34,21 @@ const Brand = styled.div`
 `
 
 const Input = styled.input`
+  width: 210px;
+  border-radius: 3px;
   margin: 0 5px 0 5px;
+  border: none;
 `
 
 const Button = styled.button`
   cursor: pointer;
+  font-weight: 700;
   margin: 0 5px 0 5px;
   border-radius: 4px;
   outline: none;
   border: none;
+
+  color: white;
 
   ${props => props.pull_right && css`
     margin-left: auto;
@@ -44,5 +59,6 @@ export {
   Wrapper,
   Brand,
   Input,
+  Icon,
   Button
 }
