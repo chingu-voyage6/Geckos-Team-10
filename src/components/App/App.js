@@ -16,27 +16,20 @@ class App extends Component {
   }
 
   render() {
-    // calls the isAuthenticated method in authentication service
-    const { isAuthenticated } = auth
     return (
       <div>
         <Router history={History}>
           <div>
             <Route exact path="/" component={Home} />
             <Route path="/home" component={Home} />
-            {isAuthenticated() &&
-              <Route path="/board" component={Board} />
-            }
-            {
-              isAuthenticated() &&
-              <Route path="/profile" component={Profile} />
-            }
+            <Route path="/board" component={Board} />
+            <Route path="/profile" component={Profile} />
             <Route
               path="/callback"
               render={props => {
                 this.handleAuthentication(props)
                 return <Callback {...props} />
-                }
+              }
               }
             />
             <Route path="/logged-out" component={LoggedOut} />
