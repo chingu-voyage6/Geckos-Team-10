@@ -31,18 +31,18 @@ const BoardContainer = styled.div`
 
 const Board = () =>
   (isAuthenticated() &&
-  <Fragment>
-    <Toolbar />
-    <BoardContainer>
-      <ListContainer>
-        {Tasks.map(task => {
-          return (
-            <List task={task} />
-          )
-        })}
-      </ListContainer>
-    </BoardContainer>
-  </Fragment>
+    <Fragment>
+      <Toolbar />
+      <BoardContainer>
+        <ListContainer>
+          {Tasks.map(task => {
+            return (
+              <List task={task} />
+            )
+          })}
+        </ListContainer>
+      </BoardContainer>
+    </Fragment>
   )
 
 export default Board
