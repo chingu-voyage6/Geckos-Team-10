@@ -2,8 +2,6 @@ import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 import Auth from '../../services/auth'
-import { Toolbar } from '../Components'
-
 
 const auth = new Auth()
 
@@ -14,12 +12,19 @@ class Home extends Component {
       authMessage: '',
     }
   }
+
+  // will re-render App.js
+  componentDidMount() {
+    this.props.authStateChanged()
+  }
+
   // calls the login method in authentication service
   login = () => {
     auth.login()
   }
   // calls the logout method in authentication service
   logout = () => {
+    this.props.resetMenuState()
     auth.logout()
   }
   // sends our access token to the server so
@@ -45,7 +50,7 @@ class Home extends Component {
     const { isAuthenticated } = auth
     return (
       <div>
-        <Toolbar />
+        {/* <Toolbar /> */}
         <h1>Home</h1>
         {isAuthenticated() ?
           <Fragment>
