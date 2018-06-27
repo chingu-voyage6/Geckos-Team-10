@@ -2,7 +2,6 @@ import React, { Fragment } from 'react'
 import styled from 'styled-components'
 import Tasks from '../../dummyData'
 import List from './components/List/List'
-import { Toolbar } from '../Components'
 import { Auth } from '../../services/Services'
 
 const auth = new Auth()
@@ -32,7 +31,6 @@ const BoardContainer = styled.div`
 const Board = () =>
   (isAuthenticated() &&
     <Fragment>
-      <Toolbar />
       <BoardContainer>
         <ListContainer>
           {Tasks.map(task => {
