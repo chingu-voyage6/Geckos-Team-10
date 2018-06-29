@@ -3,10 +3,9 @@ import styled, { css } from 'styled-components'
 const Wrapper = styled.div`
   left: 0;
   display: block;
-  z-index: 99;
   width: 280px;
-  height: 1000px;
-
+  z-index: 99;
+  
   background: #9999FF;
 
   ${props => props.notAlwaysOpen && css`
@@ -20,6 +19,7 @@ const Wrapper = styled.div`
     top: 0;
     position: fixed;
     box-shadow: 0 0 6px rgba(0,0,0,.4);
+    height: 100%;
   `}
   
 `
@@ -80,9 +80,7 @@ const Button = styled.button`
   ${props => props.secondary && css`
     border-radius: 3px;
     display: block;
-    margin-top: 3px;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 6px;
     padding: 6px;
     width: 95%;
 

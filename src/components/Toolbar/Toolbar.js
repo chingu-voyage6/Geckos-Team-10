@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { Auth } from '../../services/Services'
 import { Wrapper, Button, Brand, Input, Icon } from './Toolbar.styles'
 import Boards from '../Boards/Boards'
+import PopOver from './components/PopOver/PopOver'
 
 const auth = new Auth()
 
@@ -14,8 +15,13 @@ class Toolbar extends Component {
     super(props)
     this.state = { isActive: false }
   }
+
   toggleBoards = () => {
     this.setState({ isActive: !this.state.isActive })
+  }
+
+  logout = () => {
+    this.props.auth.logout()
   }
 
   render() {
@@ -27,7 +33,8 @@ class Toolbar extends Component {
 
     const ContentJSX = (
       <Fragment>
-        {this.state.isActive && BoardsJSX
+        {
+          this.state.isActive && BoardsJSX
         }
         {!this.props.keepOpen &&
           <Button onClick={this.toggleBoards}>Boards</Button>
@@ -45,15 +52,15 @@ class Toolbar extends Component {
         <Button>
           <Icon className="fa fa-bell" />
         </Button>
+        <PopOver logout={this.logout} />
       </Fragment>
     )
 
     return (
       isAuthenticated() &&
       <Fragment>
-        {this.props.keepOpen ? BoardsJSX : ''}
         {this.props.keepOpen ?
-          <Wrapper offset>
+          <Wrapper offset="true">
             {ContentJSX}
           </Wrapper> :
           <Wrapper>

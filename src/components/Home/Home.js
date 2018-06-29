@@ -4,8 +4,9 @@ import axios from 'axios'
 
 import Auth from '../../services/auth'
 import LeftSidebar from './components/LeftSidebar/LeftSidebar'
-import { Wrapper } from './Home.styles'
 import boards from '../../stupidData'
+
+import { Wrapper } from './Home.styles'
 
 const auth = new Auth()
 
