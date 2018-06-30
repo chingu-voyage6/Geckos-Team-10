@@ -15,7 +15,7 @@ class Home extends Component {
     super(props)
     this.state = {
       authMessage: '',
-      activeEl: 'home',
+      activeComponent: 'home',
       boards,
     }
   }
@@ -26,8 +26,8 @@ class Home extends Component {
   }
 
   // toggle components that are shown
-  toggleComponents = el => {
-    this.setState({ activeEl: el.target.id })
+  toggleComponents = e => {
+    this.setState({ activeComponent: e.target.id })
   }
 
   // calls the login method in authentication service
@@ -85,11 +85,11 @@ class Home extends Component {
             <Fragment>
               <LeftSidebar
                 toggleComponents={this.toggleComponents}
-                activeEl={this.state.activeEl}
+                activeComponent={this.state.activeComponent}
                 boards={this.state.boards}
               />
-              {this.state.activeEl === 'boards' && <span>Boards</span>}
-              {this.state.activeEl === 'home' && <span>Main content / right sidebar</span>}
+              {this.state.activeComponent === 'boards' && <span>Boards</span>}
+              {this.state.activeComponent === 'home' && <span>Main content / right sidebar</span>}
             </Fragment>
           }
         </Wrapper>

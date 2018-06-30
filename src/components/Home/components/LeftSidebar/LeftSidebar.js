@@ -7,7 +7,7 @@ const LeftSidebar = props => {
       <Button
         key={board.id}
         id={board.team}
-        color={props.activeEl === board.team}
+        color={props.activeComponent === board.team}
         onClick={el => props.toggleComponents(el)}
       >{board.team}
       </Button>
@@ -18,13 +18,13 @@ const LeftSidebar = props => {
     <Wrapper>
       <Button
         id="home"
-        color={props.activeEl === 'home'}
+        color={props.activeComponent === 'home'}
         onClick={el => props.toggleComponents(el)}
       >Home
       </Button>
       <Button
         id="boards"
-        color={props.activeEl === 'boards'}
+        color={props.activeComponent === 'boards'}
         onClick={el => props.toggleComponents(el)}
       >Boards
       </Button>
