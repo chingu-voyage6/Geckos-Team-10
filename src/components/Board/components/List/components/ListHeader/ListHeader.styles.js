@@ -1,19 +1,5 @@
 import styled from 'styled-components'
 
-const Button = styled.button`
-  padding: 0 5px;
-  background-color: #fff0;
-  color: #909090;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
-  outline: none;
-  :hover {
-    background-color: #ccc
-    color: #000;
-  }
-`
-
 const Label = styled.label`
   width: 100%;
   cursor: pointer;
@@ -30,7 +16,6 @@ const ListHeaderContainer = styled.div`
 `
 
 export {
-  Button,
   Label,
   ListHeaderContainer
 }

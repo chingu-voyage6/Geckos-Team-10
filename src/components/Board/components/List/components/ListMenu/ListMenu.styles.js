@@ -14,20 +14,4 @@ const ModalContainer = styled.div`
   z-index: 1;
 `
 
-const Button = styled.button`
-  color: #000;
-  height: 50px;
-  width: 100%;
-  cursor: pointer;
-  outline: none;
-  background-color: #fff0;
-  border: none;
-  :hover {
-    background-color: #ccc;
-  }
-`
-
-export {
-  ModalContainer,
-  Button
-}
+export default ModalContainer
