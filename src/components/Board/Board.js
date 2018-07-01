@@ -4,6 +4,7 @@ import Tasks from '../../dummyData'
 import List from './components/List/List'
 import { Auth } from '../../services/Services'
 import BoardProvider from './BoardProvider'
+import Modal from './components/Modal/Modal'
 
 const auth = new Auth()
 
@@ -11,7 +12,6 @@ const { isAuthenticated } = auth
 
 const ListContainer = styled.div`
   overflow-x: auto;
-  overflow-y: hidden;
   position: absolute;
   top: 0;
   right: 0;
@@ -32,6 +32,7 @@ const BoardContainer = styled.div`
 const Board = () =>
   (isAuthenticated() &&
     <BoardProvider>
+      <Modal />
       <BoardContainer>
         <ListContainer>
           {Tasks.map((task, index) => {
