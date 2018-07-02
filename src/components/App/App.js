@@ -21,7 +21,7 @@ const { isAuthenticated } = auth
 class App extends Component {
   constructor(props) {
     super(props)
-    this.state = { keepOpen: false, isAuthenticated: false }
+    this.state = { keepOpen: false, isAuthenticated }
   }
 
   authStateChanged = () => {
@@ -76,6 +76,7 @@ class App extends Component {
           <Fragment>
             {this.state.isAuthenticated &&
               <Toolbar
+                auth={auth}
                 keepOpen={this.state.keepOpen}
                 toggleFixedMenu={this.toggleFixedMenu}
               />

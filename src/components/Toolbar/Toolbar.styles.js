@@ -1,19 +1,18 @@
 import styled, { css } from 'styled-components'
 
-const Wrapper = styled.section`
+const Wrapper = styled.div`
   height: 32px;
   display: flex;
   overflow: hidden;
   justify-content: space-between;
   padding: 4px 0;
-  z-index: 10;
 
   box-shadow: 0 1px 1px rgba(0,0,0,.1);
   background: #FFFFCC;
 
   ${props => props.offset && css`
-    position: relative;
     margin-left: 280px;
+    z-index: -1;
   `}
 `
 
@@ -57,9 +56,24 @@ const Button = styled.button`
   ${props => props.pull_right && css`
     margin-left: auto;
   `}
+
+  ${props => props.avatar && css`
+    border-radius: 25em;
+    height: 32px;
+    width: 32px;
+    padding: 0;
+    border: none;
+  `}
+`
+
+const Avatar = styled.img`
+  border-radius: inherit;
+  height: inherit;
+  width: inherit;
 `
 
 export {
+  Avatar,
   Wrapper,
   Brand,
   Input,

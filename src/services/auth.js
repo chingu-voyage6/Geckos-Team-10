@@ -9,7 +9,7 @@ class Auth {
     redirectUri: 'http://localhost:3000/callback',
     audience: 'https://geckos-team-10.auth0.com/userinfo',
     responseType: 'token id_token',
-    scope: 'openid'
+    scope: 'openid profile'
   });
 
   login() {
@@ -20,7 +20,7 @@ class Auth {
   handleAuthentication = () => {
     this.auth0.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
-        // console.log(authResult.idTokenPayload.aud)
+        // console.log(authResult)
         this.setSession(authResult)
         history.replace('/home')
       } else if (err) {
@@ -33,6 +33,8 @@ class Auth {
   setSession = authResult => {
     // Set the time that the access token will expire at
     const expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime())
+    localStorage.setItem('picture', authResult.idTokenPayload.picture)
+    localStorage.setItem('nickname', authResult.idTokenPayload.nickname)
     localStorage.setItem('access_token', authResult.accessToken)
     localStorage.setItem('id_token', authResult.idToken)
     localStorage.setItem('expires_at', expiresAt)
@@ -43,6 +45,8 @@ class Auth {
   // removes user details from localStorage
   logout = () => {
     // Clear access token and ID token from local storage
+    localStorage.removeItem('picture')
+    localStorage.removeItem('nickname')
     localStorage.removeItem('access_token')
     localStorage.removeItem('id_token')
     localStorage.removeItem('expires_at')

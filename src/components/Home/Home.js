@@ -1,7 +1,12 @@
 import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
+
 import Auth from '../../services/auth'
+import LeftSidebar from './components/LeftSidebar/LeftSidebar'
+import boards from '../../stupidData'
+
+import { Wrapper } from './Home.styles'
 
 const auth = new Auth()
 
@@ -10,12 +15,19 @@ class Home extends Component {
     super(props)
     this.state = {
       authMessage: '',
+      activeComponent: 'home',
+      boards,
     }
   }
 
   // will re-render App.js
   componentDidMount() {
     this.props.authStateChanged()
+  }
+
+  // toggle components that are shown
+  toggleComponents = e => {
+    this.setState({ activeComponent: e.target.id })
   }
 
   // calls the login method in authentication service
@@ -48,10 +60,9 @@ class Home extends Component {
   }
   render() {
     const { isAuthenticated } = auth
-    return (
-      <div>
-        {/* <Toolbar /> */}
-        <h1>Home</h1>
+
+    const testComponent = (
+      <Fragment>
         {isAuthenticated() ?
           <Fragment>
             <button onClick={this.logout}>Logout</button>
@@ -62,6 +73,26 @@ class Home extends Component {
         }
         <button onClick={() => this.validate(auth.accessToken())}>Validate Token</button>
         <p>{this.state.authMessage}</p>
+      </Fragment>
+    )
+
+    return (
+      <div>
+        <h1>Home</h1>
+        {testComponent}
+        <Wrapper>
+          {isAuthenticated() &&
+            <Fragment>
+              <LeftSidebar
+                toggleComponents={this.toggleComponents}
+                activeComponent={this.state.activeComponent}
+                boards={this.state.boards}
+              />
+              {this.state.activeComponent === 'boards' && <span>Boards</span>}
+              {this.state.activeComponent === 'home' && <span>Main content / right sidebar</span>}
+            </Fragment>
+          }
+        </Wrapper>
       </div>
     )
   }
