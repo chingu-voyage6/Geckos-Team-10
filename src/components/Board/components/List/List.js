@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
 import ListContainer from './List.styles'
-import { CardTask, ListHeader, ListFooter, Modal } from './components'
+import BoardProvider from '../../BoardProvider'
+import { CardTask, ListHeader, ListFooter, ListMenu } from './components'
 
 const TextArea = styled.textarea`
   box-sizing: border-box;
@@ -19,11 +20,11 @@ class List extends Component {
   state = {
     addingCard: false,
     newCardValue: '',
-    showModal: false
+    showListMenu: false
   }
 
   onAddCard = () => {
-    this.setState({ addingCard: true, showModal: false })
+    this.setState({ addingCard: true, showListMenu: false })
   }
 
   onSaveCard = () => {
@@ -44,23 +45,38 @@ class List extends Component {
   }
 
   handleOption = () => {
-    this.setState({ showModal: !this.state.showModal })
+    this.setState({ showListMenu: !this.state.showListMenu })
+  }
+
+  handleTextAreaBlur = () => {
+    this.setState({ addingCard: false, newCardValue: '' })
+  }
+
+  handleListMenuBlur = () => {
+    this.setState({ showListMenu: false, })
   }
 
   render() {
-    const { addingCard, showModal } = this.state
+    const { addingCard, showListMenu } = this.state
     const { listTitle, cards } = this.props.task
     return (
-      <ListContainer>
+      <ListContainer onBlur={this.handleListMenuBlur}>
         <ListHeader listTitle={listTitle} displayOption={this.handleOption} />
         {cards.map(({ content, dueDate, member }) => {
           return (
             <CardTask key={content} content={content} dueDate={dueDate} member={member} />
           )
         })}
-        {showModal && <Modal onAddCard={this.onAddCard} />}
-        {addingCard && <TextArea onChange={e => this.newCard(e)} />}
+        {showListMenu && <ListMenu onAddCard={this.onAddCard} />}
+        {addingCard && (
+          <TextArea
+            autoFocus
+            onBlur={this.handleTextAreaBlur}
+            onChange={e => this.newCard(e)}
+          />
+        )}
         <ListFooter
+          onFocus={this.handleFocus}
           onAddCard={this.onAddCard}
           onSaveCard={this.onSaveCard}
           onCancelCard={this.onCancelCard}
@@ -71,4 +87,8 @@ class List extends Component {
   }
 }
 
-export default List
+export default props => (
+  <BoardProvider.Consumer>
+    {value => <List {...value} {...props} />}
+  </BoardProvider.Consumer>
+)

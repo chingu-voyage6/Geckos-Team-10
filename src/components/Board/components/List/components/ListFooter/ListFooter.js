@@ -1,5 +1,6 @@
 import React from 'react'
-import { Button, ListFooterContainer } from './ListFooter.styles'
+import ListFooterContainer from './ListFooter.styles'
+import { Button } from '../../../../../StyledComponents'
 
 const ListFooter = props => {
   return (
@@ -10,9 +11,10 @@ const ListFooter = props => {
             width="50px"
             onClick={props.onSaveCard}
             backgroundColor="#5aac44"
-            backgroundColorHover="#519839"
+            hoverBackgroundColor="#519839"
             color="#fff"
-            colorHover="#fff"
+            hoverColor="#fff"
+            margin="0 5px 0 0"
           >
             Save
           </Button>

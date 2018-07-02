@@ -1,5 +1,6 @@
 import React from 'react'
-import { Button, Label, ListHeaderContainer } from './ListHeader.styles'
+import { Label, ListHeaderContainer } from './ListHeader.styles'
+import { Button } from '../../../../../StyledComponents'
 
 const ListHeader = props => {
   return (
@@ -7,7 +8,7 @@ const ListHeader = props => {
       <Label>
         {props.listTitle}
       </Label>
-      <Button onClick={props.displayOption}>
+      <Button width="30px" onClick={props.displayOption}>
         ...
       </Button>
     </ListHeaderContainer>

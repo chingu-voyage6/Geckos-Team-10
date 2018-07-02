@@ -16,6 +16,7 @@ const CardTaskContainer = styled.div`
 `
 
 const LineContainer = styled.div`
+  align-items: center;
   display: flex;
   justify-content: space-between;
   width: 100%;
@@ -26,16 +27,7 @@ const Label = styled.label`
   cursor: pointer;
 `
 
-const Button = styled.button`
-  border: 5px;
-  background-color: green;
-  border-radius: 5px;
-  cursor: pointer;
-  outline: none;
-`
-
 export {
-  Button,
   CardTaskContainer,
   Label,
   LineContainer

@@ -1,8 +1,9 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import Tasks from '../../dummyData'
 import List from './components/List/List'
 import { Auth } from '../../services/Services'
+import BoardProvider from './BoardProvider'
 
 const auth = new Auth()
 
@@ -30,17 +31,17 @@ const BoardContainer = styled.div`
 
 const Board = () =>
   (isAuthenticated() &&
-    <Fragment>
+    <BoardProvider>
       <BoardContainer>
         <ListContainer>
-          {Tasks.map(task => {
+          {Tasks.map((task, index) => {
             return (
-              <List task={task} />
+              <List task={task} key={index} />
             )
           })}
         </ListContainer>
       </BoardContainer>
-    </Fragment>
+    </BoardProvider>
   )
 
 export default Board
