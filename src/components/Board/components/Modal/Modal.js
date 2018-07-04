@@ -67,6 +67,16 @@ class Modal extends Component {
             <Button textAlign="left">Remove</Button>
           </ModalColumn>
         </ModalColumnContainer>
+        <Button
+          onClick={() => onHideModal()}
+          color="#fff"
+          backgroundColor="#5aac44"
+          hoverBackgroundColor="#519839"
+          hoverColor="#fff"
+          width="100px"
+        >
+          Save
+        </Button>
       </ReactModal>
     )
   }
