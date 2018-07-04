@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import ReactModal from 'react-modal'
-import { ModalContainer, ModalColumn, ModalColumnContainer } from './Modal.styles'
+import { ModalContainer, ModalColumn, ModalColumnContainer, TextArea } from './Modal.styles'
 import BoardProvider from '../../BoardProvider'
 import { Button, Label } from '../../../StyledComponents'
 
@@ -46,9 +46,11 @@ class Modal extends Component {
             <Label notPointer fontSize="15px" >
               Description
             </Label>
+            <TextArea />
             <Label notPointer fontSize="15px" >
               Add a commentary
             </Label>
+            <TextArea />
           </ModalColumn>
           <ModalColumn>
             <Label notPointer fontSize="15px" >
