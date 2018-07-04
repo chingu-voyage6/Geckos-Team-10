@@ -4,7 +4,7 @@ import { Button } from '../../../../../StyledComponents'
 
 const CardTask = props => {
   return (
-    <CardTaskContainer>
+    <CardTaskContainer onClick={() => props.onCardClick()}>
       <Label>{props.content}</Label>
       <LineContainer>
         <Button

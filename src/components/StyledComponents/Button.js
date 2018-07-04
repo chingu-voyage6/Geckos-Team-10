@@ -9,9 +9,12 @@ const Button = styled.button`
   font-weight: 600;
   height: ${props => props.height || '30px'};
   margin: ${props => props.margin || '0px'};
-  text-align: center;
+  text-align: ${props => props.textAlign || 'center'};
+  top: ${props => props.positionTop || 'initial'};
   outline: none;
   padding: ${props => props.margin || '0 5px'};
+  position: ${props => props.position || 'initial'};
+  right: ${props => props.positionRight || 'initial'};
   width: ${props => props.width || '100%'};
   :hover {
     background-color: ${props => props.hoverBackgroundColor || '#ccc'};

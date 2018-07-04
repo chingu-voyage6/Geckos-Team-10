@@ -64,7 +64,13 @@ class List extends Component {
         <ListHeader listTitle={listTitle} displayOption={this.handleOption} />
         {cards.map(({ content, dueDate, member }) => {
           return (
-            <CardTask key={content} content={content} dueDate={dueDate} member={member} />
+            <CardTask
+              onCardClick={() => this.props.onShowModal()}
+              key={content}
+              content={content}
+              dueDate={dueDate}
+              member={member}
+            />
           )
         })}
         {showListMenu && <ListMenu onAddCard={this.onAddCard} />}
