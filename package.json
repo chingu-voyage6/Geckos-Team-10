@@ -9,6 +9,7 @@
     "express": "^4.16.3",
     "express-jwt": "^5.3.1",
     "express-jwt-authz": "^1.0.0",
+    "graphql-request": "^1.6.0",
     "history": "^4.7.2",
     "jwks-rsa": "^1.2.1",
     "path": "^0.12.7",
@@ -22,7 +23,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "dev": "nodemon server",
+    "dev": "nodemon ./backend/server",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "commit": "git-cz",

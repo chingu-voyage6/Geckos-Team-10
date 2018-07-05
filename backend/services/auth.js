@@ -1,8 +1,4 @@
-const express = require('express')
-
-const router = express.Router()
 const jwt = require('express-jwt')
-// const jwtAuthz = require('express-jwt-authz')
 const jwksRsa = require('jwks-rsa')
 
 // Access Token must exist and be verified against
@@ -24,18 +20,4 @@ const checkJwt = jwt({
   algorithms: ['RS256']
 })
 
-// This route doesn't need authentication
-router.get('/public', (req, res) => {
-  res.json({
-    message: 'Hello from a public endpoint! You don\'t need to be authenticated to see this.'
-  })
-})
-
-// Notice that we included our checkJwt middleware for our request
-router.post('/private', checkJwt, (req, res) => {
-  res.json({
-    message: 'Hello from a private endpoint! You need to be authenticated to see this.'
-  })
-})
-
-module.exports = router
+module.exports = checkJwt
