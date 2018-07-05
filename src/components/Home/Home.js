@@ -38,6 +38,7 @@ class Home extends Component {
   logout = () => {
     this.props.resetMenuState()
     auth.logout()
+    // redirects the user to the auth0 login form
     auth.login()
   }
   // sends our access token to the server so
