@@ -38,6 +38,7 @@ class Home extends Component {
   logout = () => {
     this.props.resetMenuState()
     auth.logout()
+    auth.login()
   }
   // sends our access token to the server so
   // we can access restricted routes
