@@ -9,7 +9,7 @@ Chingu Voyage-6 | https://chingu.io/
 ### Technologies Used
 - React.js
 - Express.js / Node.js
-- mongoDB
+- GraphQL
 
 ### MVP User Stories
 | Goal | Status |
@@ -34,8 +34,6 @@ This is a list of proposed features to add after MVP is completed.
 | Support multilanguage | Not yet started |
 
 ### Authors
-@albertoescala
-
-@Debasree Samadder
-
-@Nicholas Vorraso
+* [Alberto Escala](https://github.com/albertoescala)
+* [Nicholas Vorraso](https://github.com/nickeyvee)
+* [Debasree Samadder](https://github.com/debasree888)
