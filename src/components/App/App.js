@@ -5,7 +5,7 @@ import {
 } from 'react-router-dom'
 import styled, { css } from 'styled-components'
 
-import { Board, Callback, Home, LoggedOut, Profile, Toolbar } from '../Components'
+import { Board, Callback, Home, Profile, Toolbar } from '../Components'
 import { Auth, History } from '../../services/Services'
 
 const Wrapper = styled.section`
@@ -67,7 +67,6 @@ class App extends Component {
           }
           }
         />
-        <Route path="/logged-out" component={LoggedOut} />
       </Fragment>
     )
     return (

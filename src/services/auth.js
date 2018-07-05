@@ -51,7 +51,7 @@ class Auth {
     localStorage.removeItem('id_token')
     localStorage.removeItem('expires_at')
     // navigate to the home route
-    history.replace('/logged-out')
+    history.replace('/callback')
   }
 
   // checks if the user is authenticated
