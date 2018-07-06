@@ -2,6 +2,48 @@ const { request } = require('graphql-request')
 
 const endpoint = 'https://api.graph.cool/simple/v1/cjj542qr0121k0102x4zidn4u'
 
+const deleteCardMutation = `
+  {
+    deleteCard(id: $CardId) {
+      id
+      task
+    }
+  }
+`
+
+const deleteListMutation = `
+  {
+    deleteList(id: $ListId) {
+      id
+      listTitle
+    }
+  }
+`
+
+const deleteBoardMutation = `
+  {
+    deleteBoard(id: $BoardId) {
+      id
+      title
+    }
+  }
+`
+//
+// DELETE OPERATIONS
+//
+// You only need to pass the unique ID of the node you
+// want to delete.
+//
+// Example usage...
+//
+// const cardID = "cjj8pdoilfduj0123n5zol4tc"
+//
+// db.deleteCard({ cardID })
+//
+const deleteCard = cardId => request(endpoint, deleteCardMutation, cardId)
+const deleteList = listId => request(endpoint, deleteListMutation, listId)
+const deleteBoard = boardId => request(endpoint, deleteBoardMutation, boardId)
+
 const createCardMutation = `
   {
     createCard(task: $Task, desc: $Desc, order: $Order, authorId: $AuthorId, 
@@ -114,4 +156,7 @@ module.exports = {
   createCard,
   createList,
   createBoard,
+  deleteCard,
+  deleteList,
+  deleteBoard,
 }
