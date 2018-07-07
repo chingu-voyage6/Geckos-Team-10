@@ -33,6 +33,8 @@ class Auth {
   setSession = authResult => {
     // Set the time that the access token will expire at
     const expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime())
+    localStorage.setItem('name', authResult.idTokenPayload.name)
+    localStorage.setItem('user_id', authResult.idTokenPayload.sub)
     localStorage.setItem('picture', authResult.idTokenPayload.picture)
     localStorage.setItem('nickname', authResult.idTokenPayload.nickname)
     localStorage.setItem('access_token', authResult.accessToken)
@@ -45,6 +47,8 @@ class Auth {
   // removes user details from localStorage
   logout = () => {
     // Clear access token and ID token from local storage
+    localStorage.removeItem('name')
+    localStorage.removeItem('user_id')
     localStorage.removeItem('picture')
     localStorage.removeItem('nickname')
     localStorage.removeItem('access_token')

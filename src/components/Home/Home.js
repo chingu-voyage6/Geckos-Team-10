@@ -50,6 +50,10 @@ class Home extends Component {
       url: '/api/private',
       headers: {
         authorization: BearerToken
+      },
+      data: {
+        nickname: localStorage.getItem('nickname'),
+        user_id: localStorage.getItem('user_id')
       }
     }).then(res => {
       this.setState({ authMessage: res.data.message })
