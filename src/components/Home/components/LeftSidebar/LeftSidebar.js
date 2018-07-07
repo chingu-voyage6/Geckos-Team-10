@@ -1,15 +1,30 @@
 import React from 'react'
-import { Wrapper, Button, Title } from './LeftSidebar.styles'
+import { Wrapper, Title } from './LeftSidebar.styles'
+import { Button } from '../../../StyledComponents'
+import Auth from '../../../../services/auth'
+
+const auth = new Auth()
 
 const LeftSidebar = props => {
-  const Teams = props.boards.map(board => {
-    return (board.team &&
+  const {
+    resetMenuState, boards, activeComponent, toggleComponents
+  } = props
+
+  const logout = () => {
+    resetMenuState()
+    auth.logout()
+    auth.login()
+  }
+
+  const Teams = boards.map(({ team, id }) => {
+    return (team &&
       <Button
-        key={board.id}
-        id={board.team}
-        color={props.activeComponent === board.team}
-        onClick={el => props.toggleComponents(el)}
-      >{board.team}
+        key={id}
+        id={team}
+        backgroundColor={activeComponent === team && '#ccc'}
+        color={activeComponent === team && '#000'}
+        onClick={e => toggleComponents(e)}
+      >{team}
       </Button>
     )
   })
@@ -18,14 +33,16 @@ const LeftSidebar = props => {
     <Wrapper>
       <Button
         id="home"
-        color={props.activeComponent === 'home'}
-        onClick={el => props.toggleComponents(el)}
+        backgroundColor={activeComponent === 'home' && '#ccc'}
+        color={activeComponent === 'home' && '#000'}
+        onClick={e => toggleComponents(e)}
       >Home
       </Button>
       <Button
         id="boards"
-        color={props.activeComponent === 'boards'}
-        onClick={el => props.toggleComponents(el)}
+        backgroundColor={activeComponent === 'boards' && '#ccc'}
+        color={activeComponent === 'boards' && '#000'}
+        onClick={e => toggleComponents(e)}
       >Boards
       </Button>
       <Title>Teams</Title>
@@ -34,6 +51,7 @@ const LeftSidebar = props => {
         id="create"
       >+ Create a Team
       </Button>
+      <Button onClick={logout}>Logout</Button>
     </Wrapper>
   )
 }

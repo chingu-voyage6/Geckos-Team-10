@@ -1,9 +1,9 @@
 import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
-
+import { Button } from '../StyledComponents'
 import Auth from '../../services/auth'
-import LeftSidebar from './components/LeftSidebar/LeftSidebar'
+import { LeftSidebar, MainContent } from './components'
 import boards from '../../stupidData'
 
 import { Wrapper } from './Home.styles'
@@ -66,11 +66,10 @@ class Home extends Component {
       <Fragment>
         {isAuthenticated() ?
           <Fragment>
-            <button onClick={this.logout}>Logout</button>
             <Link to="/board">Board</Link>
             <Link to="/profile">Profile</Link>
           </Fragment> :
-          <button onClick={this.login}>Login</button>
+          <Button onClick={this.login}>Login</Button>
         }
         <button onClick={() => this.validate(auth.accessToken())}>Validate Token</button>
         <p>{this.state.authMessage}</p>
@@ -88,8 +87,9 @@ class Home extends Component {
                 toggleComponents={this.toggleComponents}
                 activeComponent={this.state.activeComponent}
                 boards={this.state.boards}
+                resetMenuState={this.props.resetMenuState}
               />
-              {this.state.activeComponent === 'boards' && <span>Boards</span>}
+              {this.state.activeComponent === 'boards' && <MainContent />}
               {this.state.activeComponent === 'home' && <span>Main content / right sidebar</span>}
             </Fragment>
           }
