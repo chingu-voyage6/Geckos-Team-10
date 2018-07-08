@@ -5,7 +5,7 @@ import { Button } from '../../../../../StyledComponents'
 const CardTask = props => {
   return (
     <CardTaskContainer onClick={() => props.onCardClick()}>
-      <Label>{props.content}</Label>
+      <Label>{props.description}</Label>
       <LineContainer>
         <Button
           color="#fff"
@@ -14,7 +14,7 @@ const CardTask = props => {
           hoverColor="#fff"
           width="100px"
         >
-          {props.dueDate}
+          {props.dueDate || '07/07/18'}
         </Button>
         <Button
           borderRadius="100%"

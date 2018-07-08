@@ -1,6 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
-import Tasks from '../../dummyData'
+import { Query } from 'react-apollo'
+import gql from 'graphql-tag'
+// import { boardQuery } from '../../graphql/queries'
 import List from './components/List/List'
 import { Auth } from '../../services/Services'
 import BoardProvider from './BoardProvider'
@@ -9,6 +11,28 @@ import Modal from './components/Modal/Modal'
 const auth = new Auth()
 
 const { isAuthenticated } = auth
+
+const boardQuery = gql`
+  {
+    Board(id: "cjj7smzwg8eco0149e347lcq0") {
+      id
+      title
+      lists {
+        id
+        listTitle
+        cards {
+          id
+          desc
+          author {
+            id
+            name
+            nickname
+          }
+        }
+      }
+    }
+  }
+`
 
 const ListContainer = styled.div`
   overflow-x: auto;
@@ -35,11 +59,17 @@ const Board = () =>
       <Modal />
       <BoardContainer>
         <ListContainer>
-          {Tasks.map((task, index) => {
-            return (
-              <List task={task} key={index} />
-            )
-          })}
+          <Query query={boardQuery} >
+            {({ loading, data: { Board: MainBoard } }) => {
+              return (
+                !loading && MainBoard.lists.map(({ id, listTitle, cards }) => {
+                  return (
+                    <List listTitle={listTitle} cards={cards} key={id} />
+                  )
+                })
+              )
+            }}
+          </Query>
         </ListContainer>
       </BoardContainer>
     </BoardProvider>

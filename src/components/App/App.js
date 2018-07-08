@@ -4,7 +4,6 @@ import {
   Route,
 } from 'react-router-dom'
 import styled, { css } from 'styled-components'
-
 import { Board, Callback, Home, Profile, Toolbar } from '../Components'
 import { Auth, History } from '../../services/Services'
 
