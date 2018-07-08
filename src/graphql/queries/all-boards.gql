@@ -1,0 +1,6 @@
+query allBoards {
+  allBoards {
+    id
+    title
+  }
+}

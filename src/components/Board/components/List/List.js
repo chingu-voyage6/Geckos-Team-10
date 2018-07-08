@@ -58,18 +58,18 @@ class List extends Component {
 
   render() {
     const { addingCard, showListMenu } = this.state
-    const { listTitle, cards } = this.props.task
+    const { cards, listTitle } = this.props
     return (
       <ListContainer onBlur={this.handleListMenuBlur}>
         <ListHeader listTitle={listTitle} displayOption={this.handleOption} />
-        {cards.map(({ content, dueDate, member }) => {
+        {cards.map(({ id, desc, author: { nickname } }) => {
           return (
             <CardTask
               onCardClick={() => this.props.onShowModal()}
-              key={content}
-              content={content}
-              dueDate={dueDate}
-              member={member}
+              key={id}
+              description={desc}
+              dueDate=""
+              member={nickname}
             />
           )
         })}
