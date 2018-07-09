@@ -61,6 +61,7 @@ const Board = () =>
         <ListContainer>
           <Query query={boardQuery} >
             {({ loading, data: { Board: MainBoard } }) => {
+              console.log(MainBoard)
               return (
                 !loading && MainBoard.lists.map(({ id, listTitle, cards }) => {
                   return (

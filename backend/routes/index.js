@@ -15,7 +15,7 @@ router.get('/public', (req, res) => {
 // Notice that we included our checkJwt middleware for our request
 router.post('/private', checkJwt, (req, res) => {
   const userId = req.body.user_id
-  // console.log(userId)
+  console.log(userId)
   db.getUserId({ UserId: userId })
     .then(data => {
       // retrieve user id from database

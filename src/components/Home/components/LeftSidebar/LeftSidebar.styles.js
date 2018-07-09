@@ -9,7 +9,6 @@ const Pill = styled.div`
   border-radius: 3px;
   margin-top: 3px;
   padding: 6px;
-  background: #DDDDDD;
   width: 100%;
 `
 
@@ -25,6 +24,7 @@ const Title = styled.span`
 const Button = styled.button`
   cursor: pointer;
   text-align: left;
+  font-weight: bold;
   padding: 8px;
   width: 80%;
   margin: 5px 5px 5px 0;
@@ -33,17 +33,19 @@ const Button = styled.button`
   outline: none;
   border: none;
 
-  color: white;
+  color: black;
+  background: #F8F9F9;
 
   &:hover {
-    background: #cacaca;
+    background: #EDEFF0;
   }
 
-  ${props => props.color && css`
-    background: #343434;
+  ${props => props.active && css`
+    color: #0179BF !important;
+    background: #E4F0F6;
 
     &:hover {
-      background: black;
+      background: #E4F0F6;      
     }
   `}
 `
