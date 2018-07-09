@@ -3,7 +3,7 @@ import React from 'react'
 const MainContent = () => {
   return (
     <div>
-      <span>LeftSidebar</span>
+      <span>Main Content</span>
     </div>
   )
 }
