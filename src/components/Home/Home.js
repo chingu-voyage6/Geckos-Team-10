@@ -4,6 +4,7 @@ import axios from 'axios'
 
 import Auth from '../../services/auth'
 import LeftSidebar from './components/LeftSidebar/LeftSidebar'
+import BoardsHome from './components/BoardsHome/BoardsHome'
 import boards from '../../stupidData'
 
 import { Wrapper } from './Home.styles'
@@ -84,7 +85,6 @@ class Home extends Component {
 
     return (
       <div>
-        <h1>Home</h1>
         {testComponent}
         <Wrapper>
           {isAuthenticated() &&
@@ -94,8 +94,8 @@ class Home extends Component {
                 activeComponent={this.state.activeComponent}
                 boards={this.state.boards}
               />
-              {this.state.activeComponent === 'boards' && <span>Boards</span>}
-              {this.state.activeComponent === 'home' && <span>Main content / right sidebar</span>}
+              {this.state.activeComponent === 'boards' && <BoardsHome />}
+              {this.state.activeComponent === 'home' && <span>Home</span>}
             </Fragment>
           }
         </Wrapper>
