@@ -7,11 +7,12 @@ export default class BoardProvider extends React.Component {
 
   state = {
     showModal: false,
-    onShowModal: () => {
-      this.setState({ showModal: true })
+    cardSelected: '',
+    onShowModal: id => {
+      this.setState({ showModal: true, cardSelected: id })
     },
     onHideModal: () => {
-      this.setState({ showModal: false })
+      this.setState({ showModal: false, cardSelected: '' })
     }
   }
 

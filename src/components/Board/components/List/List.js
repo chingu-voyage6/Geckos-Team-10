@@ -60,29 +60,27 @@ class List extends Component {
     const { addingCard, showListMenu } = this.state
     const { cards, listTitle } = this.props
     return (
-      <ListContainer onBlur={this.handleListMenuBlur}>
+      <ListContainer >
         <ListHeader listTitle={listTitle} displayOption={this.handleOption} />
-        {cards.map(({ id, desc, author: { nickname } }) => {
+        {cards.map(({ id, desc, author }) => {
+          const newAuthor = !author ? {} : author
           return (
             <CardTask
-              onCardClick={() => this.props.onShowModal()}
+              onCardClick={() => this.props.onShowModal(id)}
               key={id}
               description={desc}
               dueDate=""
-              member={nickname}
+              member={newAuthor.nickname}
             />
           )
         })}
         {showListMenu && <ListMenu onAddCard={this.onAddCard} />}
         {addingCard && (
           <TextArea
-            autoFocus
-            onBlur={this.handleTextAreaBlur}
             onChange={e => this.newCard(e)}
           />
         )}
         <ListFooter
-          onFocus={this.handleFocus}
           onAddCard={this.onAddCard}
           onSaveCard={this.onSaveCard}
           onCancelCard={this.onCancelCard}
