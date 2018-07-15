@@ -30,6 +30,13 @@ const ModalColumn = styled.div`
   display: flex;
   flex-grow: ${props => props.flexGrow || '1'};
   flex-direction: column;
+  input {
+    border-radius: 5px;
+    border: 1px solid #a9a9a9;
+    height: 20px;
+    padding: 2px;
+    outline: none;
+  }
 `
 
 const AddTagContainerMenu = styled.div`

@@ -70,7 +70,13 @@ const deleteCardMutation = gql`
 
 const updateCardMutation = gql`
   mutation updateCard(
-    $id: ID!, $attachments: [String!], $labels: [String!], $desc: String, $listId: ID, $task: String
+    $id: ID!,
+    $attachments: [String!],
+    $labels: [String!],
+    $desc: String,
+    $listId: ID,
+    $task: String,
+    $dueDate: DateTime
     ) {
     updateCard(
       id: $id,
@@ -78,7 +84,8 @@ const updateCardMutation = gql`
       attachments: $attachments,
       labels: $labels,
       desc: $desc,
-      task: $task
+      task: $task,
+      dueDate: $dueDate
     ) {
       id
     }
@@ -87,9 +94,9 @@ const updateCardMutation = gql`
 
 class Modal extends Component {
   state = {
-    cardTitle: '',
+    cardTitle: this.props.card.task,
     showTitleInput: false,
-    descriptionValue: '',
+    descriptionValue: this.props.card.desc || '',
     lists: [],
     labelTags: this.props.card.labels || [],
     loadTagMenu: false,
@@ -110,6 +117,9 @@ class Modal extends Component {
     const {
       id, attachments, labels, desc, task
     } = this.props.card
+    const {
+      labelTags, cardTitle, descriptionValue, startDueDate
+    } = this.state
 
     try {
       await this.props.client.mutate({
@@ -117,9 +127,10 @@ class Modal extends Component {
         variables: {
           id,
           attachments,
-          labels: !this.state.labelTags ? labels : this.state.labelTags,
-          task: !this.state.cardTitle ? task : this.state.cardTitle,
-          desc: !this.state.descriptionValue ? desc : this.state.descriptionValue
+          labels: !labelTags ? labels : labelTags,
+          task: !cardTitle ? task : cardTitle,
+          desc: !descriptionValue ? desc : descriptionValue,
+          dueDate: moment(startDueDate, 'YYYY-MM-DD HH:mm Z')
         },
         refetchQueries: [{
           query: boardQuery
@@ -154,6 +165,9 @@ class Modal extends Component {
     const {
       id, attachments, labels, desc, task
     } = this.props.card
+    const {
+      labelTags, cardTitle, descriptionValue, startDueDate
+    } = this.state
 
     try {
       await this.props.client.mutate({
@@ -162,9 +176,10 @@ class Modal extends Component {
           id,
           attachments,
           listId,
-          labels: !this.state.labelTags ? labels : this.state.labelTags,
-          task: !this.state.cardTitle ? task : this.state.cardTitle,
-          desc: !this.state.descriptionValue ? desc : this.state.descriptionValue
+          labels: !labelTags ? labels : labelTags,
+          task: !cardTitle ? task : cardTitle,
+          desc: !descriptionValue ? desc : descriptionValue,
+          dueDate: startDueDate
         },
         refetchQueries: [{
           query: boardQuery
@@ -229,7 +244,7 @@ class Modal extends Component {
             !showTitleInput
             ? <Label onClick={() => this.showTitleInput()}>{card.task}</Label>
             : <Input
-              value={cardTitle || card.task}
+              value={cardTitle}
               onChange={e => this.setState({ cardTitle: e.target.value })}
             />
           }
@@ -290,13 +305,9 @@ class Modal extends Component {
               Description
             </Label>
             <TextArea
-              value={descriptionValue || card.desc}
+              value={descriptionValue}
               onChange={e => this.onChangeDescription(e.target.value)}
             />
-            <Label notPointer fontSize="15px" >
-              Add a commentary
-            </Label>
-            <TextArea />
             <Button
               onClick={() => this.updateCard()}
               color="#fff"
@@ -314,7 +325,8 @@ class Modal extends Component {
             </Label>
             <DatePicker
               selected={startDueDate}
-              onChange={() => console.log('ll')}
+              onChange={e => this.setState({ startDueDate: e })}
+              dateFormat="DD/MM/YYYY"
             />
             <Label notPointer fontSize="15px" >
               Actions

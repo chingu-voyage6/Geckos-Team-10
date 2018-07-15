@@ -16,7 +16,7 @@ Chingu Voyage-6 | https://chingu.io/
 | -----| ------ |
 | User can log into app to access features | pending |
 | User can create, remove and edit tasks | pending |
-| User can add or edit tags to identify the priority of the task | pending |
+| User can add or remove tags to identify the priority of the task | done |
 | User can add attachments, assign users, and create a description for a task | pending |
 | User can drag and drop tasks to any column | pending |
 | User can filter tasks by tags | pending |
@@ -29,7 +29,7 @@ This is a list of proposed features to add after MVP is completed.
 | Goal | Status |
 | ----- | ------ |
 | User can see a feed of most recent activity | Not yet started |
-| User can add a time limit to complete a task | Not yet started |
+| User can add a time limit to complete a task | done |
 | Add a calendar to manage his tasks | Not yet started |
 | Support multilanguage | Not yet started |
 
