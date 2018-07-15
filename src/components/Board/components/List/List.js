@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
+import moment from 'moment'
 import ListContainer from './List.styles'
 import BoardProvider from '../../BoardProvider'
 import { CardTask, ListHeader, ListFooter, ListMenu } from './components'
@@ -59,18 +60,21 @@ class List extends Component {
   render() {
     const { addingCard, showListMenu } = this.state
     const { cards, listTitle } = this.props
+
     return (
       <ListContainer >
         <ListHeader listTitle={listTitle} displayOption={this.handleOption} />
-        {cards.map(({ id, desc, author }) => {
+        {cards.map(({
+          id, author, task, dueDate
+        }) => {
           const newAuthor = !author ? {} : author
           return (
             <CardTask
               onCardClick={() => this.props.onShowModal(id)}
               key={id}
-              description={desc}
-              dueDate=""
+              dueDate={dueDate && moment(dueDate, 'YYYY-MM-DD HH:mm Z').format('DD/MM/YYYY')}
               member={newAuthor.nickname}
+              task={task}
             />
           )
         })}

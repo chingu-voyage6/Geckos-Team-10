@@ -23,6 +23,8 @@ const boardQuery = gql`
         cards {
           id
           desc
+          dueDate
+          task
           author {
             id
             name

@@ -1,8 +1,18 @@
 import React, { Component } from 'react'
 import ReactModal from 'react-modal'
+import DatePicker from 'react-datepicker'
+import moment from 'moment'
 import { withApollo, Query } from 'react-apollo'
 import gql from 'graphql-tag'
-import { ModalContainer, ModalColumn, ModalColumnContainer, TextArea } from './Modal.styles'
+import AddTagMenu from './components/AddTagMenu'
+import {
+  ModalContainer,
+  ModalColumn,
+  ModalColumnContainer,
+  TextArea,
+  Input,
+  AddTagContainerMenu
+} from './Modal.styles'
 import BoardProvider from '../../BoardProvider'
 import { Button, Label } from '../../../StyledComponents'
 
@@ -17,6 +27,9 @@ const boardQuery = gql`
         cards {
           id
           desc
+          task
+          dueDate
+          labels
           author {
             id
             name
@@ -56,13 +69,16 @@ const deleteCardMutation = gql`
 `
 
 const updateCardMutation = gql`
-  mutation updateCard($id: ID!, $attachments: [String!], $labels: [String!], $desc: String, $listId: ID) {
+  mutation updateCard(
+    $id: ID!, $attachments: [String!], $labels: [String!], $desc: String, $listId: ID, $task: String
+    ) {
     updateCard(
       id: $id,
       listId: $listId,
       attachments: $attachments,
       labels: $labels,
-      desc: $desc
+      desc: $desc,
+      task: $task
     ) {
       id
     }
@@ -71,8 +87,14 @@ const updateCardMutation = gql`
 
 class Modal extends Component {
   state = {
+    cardTitle: '',
+    showTitleInput: false,
     descriptionValue: '',
-    lists: []
+    lists: [],
+    labelTags: this.props.card.labels || [],
+    loadTagMenu: false,
+    newTagValue: '',
+    startDueDate: moment(this.props.card.dueDate) || moment()
   }
 
   onChangeDescription = value => {
@@ -86,7 +108,7 @@ class Modal extends Component {
 
   updateCard = async () => {
     const {
-      id, attachments, labels, desc
+      id, attachments, labels, desc, task
     } = this.props.card
 
     try {
@@ -95,13 +117,15 @@ class Modal extends Component {
         variables: {
           id,
           attachments,
-          labels,
+          labels: !this.state.labelTags ? labels : this.state.labelTags,
+          task: !this.state.cardTitle ? task : this.state.cardTitle,
           desc: !this.state.descriptionValue ? desc : this.state.descriptionValue
         },
         refetchQueries: [{
           query: boardQuery
         }]
       })
+      this.setState({ showTitleInput: false, cardTitle: '' })
       this.props.onHideModal()
     } catch (err) {
       console.log('err::', err)
@@ -128,7 +152,7 @@ class Modal extends Component {
 
   moveCard = async listId => {
     const {
-      id, attachments, labels, desc
+      id, attachments, labels, desc, task
     } = this.props.card
 
     try {
@@ -137,8 +161,9 @@ class Modal extends Component {
         variables: {
           id,
           attachments,
-          labels,
           listId,
+          labels: !this.state.labelTags ? labels : this.state.labelTags,
+          task: !this.state.cardTitle ? task : this.state.cardTitle,
           desc: !this.state.descriptionValue ? desc : this.state.descriptionValue
         },
         refetchQueries: [{
@@ -167,8 +192,23 @@ class Modal extends Component {
     }
   }
 
+  showTitleInput = () => {
+    this.setState({ cardTitle: this.props.card.task, showTitleInput: true })
+  }
+
+  removeTag = index => {
+    const newTags = [
+      ...this.state.labelTags
+    ]
+    newTags.splice(index, 1)
+    this.setState({ labelTags: newTags })
+  }
+
   render() {
     const { onHideModal, showModal, card } = this.props
+    const {
+      loadTagMenu, cardTitle, showTitleInput, descriptionValue, labelTags, newTagValue, lists, startDueDate
+    } = this.state
     return (
       <ReactModal
         ariaHideApp={false}
@@ -177,16 +217,64 @@ class Modal extends Component {
         onRequestClose={onHideModal}
         style={{
           content: {
+            height: '300px',
+            minHeight: '300px',
             margin: 'auto',
             maxWidth: '768px'
           }
         }}
       >
         <ModalContainer>
-          <Label>
-            {card.task}
-          </Label>
+          {
+            !showTitleInput
+            ? <Label onClick={() => this.showTitleInput()}>{card.task}</Label>
+            : <Input
+              value={cardTitle || card.task}
+              onChange={e => this.setState({ cardTitle: e.target.value })}
+            />
+          }
         </ModalContainer>
+        <ModalColumn>
+          <Label notPointer fontSize="15px" >
+            Tags
+          </Label>
+          <ModalColumnContainer >
+            {labelTags.map((label, index) => {
+              return (
+                <Button
+                  key={index}
+                  onClick={() => this.removeTag(index)}
+                  color="#fff"
+                  backgroundColor="#333384"
+                  hoverBackgroundColor="#6666a5"
+                  hoverColor="#fff"
+                  width="auto"
+                  margin={index !== 0 ? '2px' : '2px 2px 2px 0px'}
+                >
+                  {label}
+                </Button>
+              )
+            })}
+            <AddTagContainerMenu>
+              <Button
+                onClick={() => this.setState({ loadTagMenu: !loadTagMenu })}
+                color="#8c8c8c"
+                backgroundColor="#e2e4e6;"
+                hoverBackgroundColor="#d6dadc"
+                hoverColor="#111"
+                width="30px"
+                margin="2px"
+              >
+                +
+              </Button>
+              <AddTagMenu
+                loadTagMenu={loadTagMenu}
+                onChange={value => this.setState({ newTagValue: value })}
+                addTag={() => this.setState({ labelTags: [...labelTags, newTagValue], loadTagMenu: false })}
+              />
+            </AddTagContainerMenu>
+          </ModalColumnContainer>
+        </ModalColumn>
         <Button
           onClick={() => onHideModal()}
           position="absolute"
@@ -202,26 +290,37 @@ class Modal extends Component {
               Description
             </Label>
             <TextArea
-              value={this.state.descriptionValue || card.desc}
+              value={descriptionValue || card.desc}
               onChange={e => this.onChangeDescription(e.target.value)}
             />
             <Label notPointer fontSize="15px" >
               Add a commentary
             </Label>
             <TextArea />
+            <Button
+              onClick={() => this.updateCard()}
+              color="#fff"
+              backgroundColor="#5aac44"
+              hoverBackgroundColor="#519839"
+              hoverColor="#fff"
+              width="100px"
+            >
+              Save
+            </Button>
           </ModalColumn>
           <ModalColumn>
             <Label notPointer fontSize="15px" >
-              Add
+              Deadline
             </Label>
-            <Button textAlign="left">Team mate</Button>
-            <Button textAlign="left">Tags</Button>
-            <Button textAlign="left">Deadline</Button>
+            <DatePicker
+              selected={startDueDate}
+              onChange={() => console.log('ll')}
+            />
             <Label notPointer fontSize="15px" >
               Actions
             </Label>
             <Button onClick={() => this.showLists()} textAlign="left">Move</Button>
-            {this.state.lists.map(({ id, listTitle }) => {
+            {lists.map(({ id, listTitle }) => {
               return (
                 <Button key={id} onClick={() => this.moveCard(id)} >
                   {listTitle}
@@ -231,16 +330,6 @@ class Modal extends Component {
             <Button onClick={() => this.removeCard(card.id)} textAlign="left">Remove</Button>
           </ModalColumn>
         </ModalColumnContainer>
-        <Button
-          onClick={() => this.updateCard()}
-          color="#fff"
-          backgroundColor="#5aac44"
-          hoverBackgroundColor="#519839"
-          hoverColor="#fff"
-          width="100px"
-        >
-          Save
-        </Button>
       </ReactModal>
     )
   }
