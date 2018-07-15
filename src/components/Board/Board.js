@@ -23,6 +23,8 @@ const boardQuery = gql`
         cards {
           id
           desc
+          dueDate
+          task
           author {
             id
             name
@@ -61,7 +63,6 @@ const Board = () =>
         <ListContainer>
           <Query query={boardQuery} >
             {({ loading, data: { Board: MainBoard } }) => {
-              console.log(MainBoard)
               return (
                 !loading && MainBoard.lists.map(({ id, listTitle, cards }) => {
                   return (

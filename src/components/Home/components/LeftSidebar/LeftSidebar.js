@@ -40,7 +40,8 @@ const LeftSidebar = props => {
         <Icon
           grey
           active={props.activeComponent === 'boards'}
-          className="fa fa-square" />
+          className="fa fa-square"
+        />
         Boards
       </Button>
       <Title light_grey >Teams</Title>

@@ -17,6 +17,7 @@ module.exports = {
     }],
     'function-paren-newline': [0],
     'react/no-array-index-key': 0,
+    'react/no-multi-comp': [0],
     'react/jsx-no-bind': ['warn'],
     'jsx-a11y/html-has-lang': [0],
     'consistent-return': [0],
