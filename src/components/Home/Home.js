@@ -93,6 +93,7 @@ class Home extends Component {
               <LeftSidebar
                 toggleComponents={this.toggleComponents}
                 activeComponent={this.state.activeComponent}
+                userId={this.props.userId}
                 boards={this.state.boards}
               />
               {this.state.activeComponent === 'boards' && <BoardsHome userId={this.props.userId} />}

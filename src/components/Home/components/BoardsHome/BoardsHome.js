@@ -2,7 +2,7 @@ import React, { Fragment } from 'react'
 import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
 
-import { Card, Wrapper, CardTitle } from './BoardsHome.styles'
+import { Card, Wrapper, LinkTitle, StyledLink } from './BoardsHome.styles'
 import { Title, Icon } from '../../../StyledComponents/index'
 
 
@@ -45,9 +45,13 @@ const BoardsHome = props => {
                   {
                     data.User.boards.map(board =>
                       (board.team == null &&
-                        <Card key={board.id} style={{ background: board.background }}>
-                          <CardTitle>{board.title}</CardTitle>
-                        </Card>
+                        <StyledLink
+                          to={`/board/${board.id}`}
+                          key={board.id}
+                          style={{ background: board.background }}
+                        >
+                          <LinkTitle>{board.title}</LinkTitle>
+                        </StyledLink>
                       )
                     )
                   }
@@ -59,9 +63,13 @@ const BoardsHome = props => {
                       <Title><Icon grey medium className="fa fa-users" />{team.name}</Title>
                       <Wrapper>
                         {team.boards.map(board => (
-                          <Card key={board.id} style={{ background: board.background }}>
-                            <CardTitle>{board.title}</CardTitle>
-                          </Card>))
+                          <StyledLink
+                            to={`/board/${board.id}`}
+                            key={board.id}
+                            style={{ background: board.background }}
+                          >
+                            <LinkTitle>{board.title}</LinkTitle>
+                          </StyledLink>))
                         }
                         <Card>Create new board..</Card>
                       </Wrapper>
