@@ -88,7 +88,7 @@ class App extends Component {
       <Fragment>
         <Route exact path="/" render={homeJSX} />
         <Route path="/home" render={homeJSX} />
-        <Route path="/board" component={Board} />
+        <Route path="/board/:boardId" component={Board} />
         <Route path="/profile" component={Profile} />
         <Route
           path="/callback"
