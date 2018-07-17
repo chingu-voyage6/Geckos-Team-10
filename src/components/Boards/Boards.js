@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 
 import { Wrapper, Input, Button, MenuHeader, Text } from './Boards.styles'
 
@@ -18,14 +18,14 @@ class Boards extends Component {
   }
 
   handleClickOutside = event => {
-    if (this.boardsRef && !this.props.keepOpen && !this.boardsRef.contains(event.target)) {
+    if (this.boardsRef && event.target.id !== 'toggle_boards' && !this.boardsRef.contains(event.target)) {
       this.props.toggleBoards(false)
     }
   }
 
   render() {
     const ContentJSX = (
-      <div ref={this.setBoardsRef}>
+      <Fragment>
         {this.props.keepOpen &&
           <MenuHeader>
             <Text black>Menu</Text>
@@ -39,7 +39,7 @@ class Boards extends Component {
         <Button secondary onClick={this.props.toggleFixedMenu}>
           {`${(this.props.keepOpen ? 'Don\'t' : 'Always')} keep this tab open`}
         </Button>
-      </div>
+      </Fragment>
     )
 
     return (
@@ -47,10 +47,11 @@ class Boards extends Component {
         <Wrapper alwaysOpen>
           {ContentJSX}
         </Wrapper> :
-        <Wrapper notAlwaysOpen>
-          {ContentJSX}
-        </Wrapper>
-
+        <div ref={this.setBoardsRef}>
+          <Wrapper notAlwaysOpen>
+            {ContentJSX}
+          </Wrapper>
+        </div>
     )
   }
 }

@@ -14,7 +14,10 @@ class Toolbar extends Component {
   state = { isActive: false }
 
   toggleBoards = nextState => {
-    if (typeof nextState !== 'undefined') {
+    const id = nextState && nextState.target.id // Edge case
+    if (id === 'toggle_boards' && this.state.isActive) {
+      this.setState({ isActive: false })
+    } else if (typeof nextState !== 'undefined') {
       this.setState({ isActive: nextState })
     } else {
       this.setState({ isActive: !this.state.isActive })
@@ -39,7 +42,7 @@ class Toolbar extends Component {
           this.state.isActive && BoardsJSX
         }
         {!this.props.keepOpen &&
-          <Button onClick={this.toggleBoards}>Boards</Button>
+          <Button id="toggle_boards" onClick={this.toggleBoards}>Boards</Button>
         }
         <Input type="search" />
         <Brand>
