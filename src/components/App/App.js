@@ -4,6 +4,9 @@ import {
   Route,
 } from 'react-router-dom'
 import styled, { css } from 'styled-components'
+import { withApollo } from 'react-apollo'
+import gql from 'graphql-tag'
+
 import { Board, Callback, Home, Profile, Toolbar } from '../Components'
 import { Auth, History } from '../../services/Services'
 
@@ -17,11 +20,38 @@ const auth = new Auth()
 
 const { isAuthenticated } = auth
 
-class App extends Component {
-  constructor(props) {
-    super(props)
-    this.state = { keepOpen: false, isAuthenticated }
+const UserIdQuery = gql`
+  query user($key: String) {
+    User (key: $key) {
+      id
+    }
   }
+`
+
+class App extends Component {
+  state = {
+    keepOpen: false,
+    isAuthenticated,
+    userId: ''
+  }
+  //
+  // getUserId is passed as props to Home.js Component and then called when Home.js is rendered
+  //
+  getUserId = async auth0Key => {
+    try {
+      const { data: { User } } = await this.props.client.query({
+        query: UserIdQuery,
+        variables: { key: auth0Key }
+      })
+
+      if (User) {
+        this.setState({ userId: User.id })
+      }
+    } catch (err) {
+      console.log('err::', err)
+    }
+  }
+
 
   authStateChanged = () => {
     if (isAuthenticated() !== this.state.isAuthenticated) {
@@ -49,6 +79,8 @@ class App extends Component {
         authStateChanged={this.authStateChanged}
         keepOpen={this.state.keepOpen}
         resetMenuState={this.resetMenuState}
+        getUserId={this.getUserId}
+        userId={this.state.userId}
       />
     )
 
@@ -68,9 +100,10 @@ class App extends Component {
         />
       </Fragment>
     )
+
     return (
       <Wrapper>
-        <Router history={History}>
+        <Router history={History} >
           <Fragment>
             {this.state.isAuthenticated &&
               <Toolbar
@@ -94,4 +127,6 @@ class App extends Component {
   }
 }
 
-export default App
+const AppWithApollo = withApollo(App)
+
+export default AppWithApollo

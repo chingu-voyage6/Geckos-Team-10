@@ -6,9 +6,8 @@ import { Card, Wrapper, CardTitle } from './BoardsHome.styles'
 import { Title, Icon } from '../../../StyledComponents/index'
 
 const TeamBoardsQuery = gql`
-  {
-    User (key: "github|20284107") {
-      id
+  query user($id: ID){
+    User (id: $id) {
       teams {
         id
         name
@@ -23,8 +22,8 @@ const TeamBoardsQuery = gql`
 `
 
 const PersonalBoardsQuery = gql`
-  {
-    User (key: "github|20284107") {
+  query user($id: ID){
+    User (id: $id) {
       id
       boards {
         id
@@ -39,17 +38,18 @@ const PersonalBoardsQuery = gql`
   }
 `
 
-const BoardsHome = () => {
+const BoardsHome = props => {
   return (
     <div>
-      <Query query={PersonalBoardsQuery} >
+      {console.log(props.userId)}
+      <Query query={PersonalBoardsQuery} variables={{ id: props.userId }}>
         {({ loading, data }) => {
           return (
             <Fragment>
               <Title><Icon grey medium className="fa fa-user" /> Personal</Title>
               <Wrapper>
                 {
-                  !loading && data.User.boards.map(board =>
+                  !loading && data && data.User.boards.map(board =>
                     (board.team == null &&
                       <Card key={board.id} style={{ background: board.background }}>
                         <CardTitle>{board.title}</CardTitle>
@@ -63,12 +63,12 @@ const BoardsHome = () => {
           )
         }}
       </Query>
-      <Query query={TeamBoardsQuery}>
+      <Query query={TeamBoardsQuery} variables={{ id: props.userId }}>
         {({ loading, data }) => {
           return (
             <Fragment>
               {
-                !loading && data.User.teams.map(team => (
+                !loading && data && data.User.teams.map(team => (
                   <Fragment>
                     <Title><Icon grey medium className="fa fa-users" />{team.name}</Title>
                     <Wrapper>
