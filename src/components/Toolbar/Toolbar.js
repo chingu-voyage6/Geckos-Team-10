@@ -11,13 +11,14 @@ const auth = new Auth()
 const { isAuthenticated } = auth
 
 class Toolbar extends Component {
-  constructor(props) {
-    super(props)
-    this.state = { isActive: false }
-  }
+  state = { isActive: false }
 
-  toggleBoards = () => {
-    this.setState({ isActive: !this.state.isActive })
+  toggleBoards = nextState => {
+    if (typeof nextState !== 'undefined') {
+      this.setState({ isActive: nextState })
+    } else {
+      this.setState({ isActive: !this.state.isActive })
+    }
   }
 
   logout = () => {
@@ -28,6 +29,7 @@ class Toolbar extends Component {
     const BoardsJSX = (
       <Boards
         toggleFixedMenu={this.props.toggleFixedMenu}
+        toggleBoards={this.toggleBoards}
         keepOpen={this.props.keepOpen}
       />)
 
