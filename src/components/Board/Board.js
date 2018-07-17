@@ -13,8 +13,8 @@ const auth = new Auth()
 const { isAuthenticated } = auth
 
 const boardQuery = gql`
-  {
-    Board(id: "cjj7smzwg8eco0149e347lcq0") {
+  query board($id: ID){
+    Board(id: $id) {
       id
       title
       lists {
@@ -55,16 +55,16 @@ const BoardContainer = styled.div`
   height: 100vh;
 `
 
-const Board = () =>
+const Board = props =>
   (isAuthenticated() &&
     <BoardProvider>
       <Modal />
       <BoardContainer>
         <ListContainer>
-          <Query query={boardQuery} >
+          <Query query={boardQuery} variables={{ id: props.match.params.boardId }}>
             {({ loading, data: { Board: MainBoard } }) => {
               return (
-                !loading && MainBoard.lists.map(({ id, listTitle, cards }) => {
+                !loading && MainBoard && MainBoard.lists.map(({ id, listTitle, cards }) => {
                   return (
                     <List listTitle={listTitle} cards={cards} key={id} />
                   )

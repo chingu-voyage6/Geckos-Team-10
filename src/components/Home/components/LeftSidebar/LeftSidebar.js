@@ -6,8 +6,8 @@ import { Icon, Title } from '../../../StyledComponents/index'
 import { Wrapper, Button } from './LeftSidebar.styles'
 
 const TeamsQuery = gql`
-  {
-    User (key: "github|20284107") {
+  query user($id: ID) {
+    User (id: $id) {
       id
       teams {
         id
@@ -45,10 +45,13 @@ const LeftSidebar = props => {
         Boards
       </Button>
       <Title light_grey >Teams</Title>
-      <Query query={TeamsQuery}>
+      <Query
+        query={TeamsQuery}
+        variables={{ id: props.userId }}
+      >
         {({ loading, data }) => {
           return (
-            !loading && data.User.teams.map(team => (
+            !loading && data && data.User && data.User.teams.map(team => (
               <Button
                 key={team.id}
                 id={team.name}
