@@ -25,6 +25,7 @@ const boardQuery = gql`
           desc
           dueDate
           task
+          order
           author {
             id
             name

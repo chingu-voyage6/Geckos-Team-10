@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react'
+import { DragDropContext } from 'react-beautiful-dnd'
 import {
   Router,
   Route,
@@ -34,6 +35,18 @@ class App extends Component {
     isAuthenticated,
     userId: ''
   }
+
+  onDragStart = () => {
+
+  }
+
+  onDragUpdate = () => {
+
+  }
+
+  onDragEnd = () => {
+    // the only one that is required
+  }
   //
   // getUserId is passed as props to Home.js Component and then called when Home.js is rendered
   //
@@ -51,7 +64,6 @@ class App extends Component {
       console.log('err::', err)
     }
   }
-
 
   authStateChanged = () => {
     if (isAuthenticated() !== this.state.isAuthenticated) {
@@ -102,27 +114,33 @@ class App extends Component {
     )
 
     return (
-      <Wrapper>
-        <Router history={History} >
-          <Fragment>
-            {this.state.isAuthenticated &&
-              <Toolbar
-                auth={auth}
-                keepOpen={this.state.keepOpen}
-                toggleFixedMenu={this.toggleFixedMenu}
-              />
-            }
-            {this.state.keepOpen ?
-              <Wrapper offset>
-                {routesJSX}
-              </Wrapper> :
-              <Wrapper>
-                {routesJSX}
-              </Wrapper>
-            }
-          </Fragment>
-        </Router>
-      </Wrapper>
+      <DragDropContext
+        onDragStart={this.onDragStart}
+        onDragUpdate={this.onDragUpdate}
+        onDragEnd={this.onDragEnd}
+      >
+        <Wrapper>
+          <Router history={History} >
+            <Fragment>
+              {this.state.isAuthenticated &&
+                <Toolbar
+                  auth={auth}
+                  keepOpen={this.state.keepOpen}
+                  toggleFixedMenu={this.toggleFixedMenu}
+                />
+              }
+              {this.state.keepOpen ?
+                <Wrapper offset>
+                  {routesJSX}
+                </Wrapper> :
+                <Wrapper>
+                  {routesJSX}
+                </Wrapper>
+              }
+            </Fragment>
+          </Router>
+        </Wrapper>
+      </DragDropContext>
     )
   }
 }
