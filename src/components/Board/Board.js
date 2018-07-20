@@ -15,43 +15,57 @@ const auth = new Auth()
 const { isAuthenticated } = auth
 
 
-// const updateCardPos = gql`
-//     mutation updateCardsPos($CardId: ID!, $Order: Int!) {
-//     updateCard(id: $CardId, order: $Order) {
-//       id
-//       task
-//       order
-//     }
-//   }
-// `
-
-const boardQuery = gql`
-  query board($id: ID){
-    Board(id: $id) {
-      id
-      title
-      lists {
-        id
-        listTitle
-        cards (orderBy: order_ASC) {
+const addToListCards = gql`
+  mutation($CardId: ID!, $ListId: ID!) {
+    addToListCards(cardsCardId: $CardId, listListId: $ListId ) {
+      listList {
+        cards {
           id
-          desc
-          dueDate
           task
-          order
-          author {
-            id
-            name
-            nickname
-          }
-          list {
-            id
-            listTitle
-          }
         }
       }
     }
   }
+  `
+
+
+const updateCardPos = gql`
+mutation($id: ID!, $ListId: ID!, $NewPos: Int!) {
+  updateCard(id: $id, listId: $ListId, order: $NewPos) {
+    id
+    task
+    order
+  }
+}
+`
+
+const boardQuery = gql`
+query board($id: ID){
+  Board(id: $id) {
+    id
+    title
+    lists {
+      id
+      listTitle
+      cards(orderBy: order_ASC) {
+        id
+        desc
+        dueDate
+        task
+        order
+        author {
+          id
+          name
+          nickname
+        }
+        list {
+          id
+          listTitle
+        }
+      }
+    }
+  }
+}
 `
 
 class Board extends Component {
@@ -72,8 +86,8 @@ class Board extends Component {
           lists,
           cards: lists.map(({ cards }, index) => {
             return {
-              listId: cards[index].list.id,
-              listCards: cards
+              listId: lists[index].id,
+              listCards: cards || []
             }
           })
         })
@@ -125,6 +139,18 @@ class Board extends Component {
       listsCopy.splice(sourceListIndex, 1, listCopy(sourceList, cardsCopy))
 
       this.setState({ lists: listsCopy })
+
+      // ==== DATABASE OPERATIONS =====
+
+      if (destId !== sourceId) {
+        // moves the card to the new list in our dB
+        this.moveCardToNewList(result.draggableId, destId).then(() => {
+          // sends a request to our backend to save the order of our cards
+          this.updateCardPos(destCardsCopy, destId)
+        })
+      } else {
+        this.updateCardPos(cardsCopy, sourceId)
+      }
     }
   }
 
@@ -137,9 +163,35 @@ class Board extends Component {
     })
   }
 
+  moveCardToNewList = async (CardId, ListId) => {
+    try {
+      await this.props.client.mutate({
+        mutation: addToListCards,
+        variables: { CardId, ListId }
+      })
+    } catch (err) {
+      console.log('err::', err)
+    }
+  }
+
+  updateCardPos = (cards, ListId) => {
+    const batch = []
+
+    cards.forEach((card, NewPos) => {
+      const { id } = card
+      batch.push(this.props.client.mutate({
+        mutation: updateCardPos,
+        variables: { id, ListId, NewPos }
+      }).catch(err => {
+        console.log('err::', err)
+      })
+      )
+    })
+    return Promise.resolve(batch)
+  }
+
   render() {
     const { lists } = this.state
-    console.log(lists)
     return (isAuthenticated() &&
       <BoardProvider>
         <Modal lists={this.state} setBoardState={this.setBoardState} />
