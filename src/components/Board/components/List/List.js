@@ -60,10 +60,10 @@ class List extends Component {
 
   render() {
     const { addingCard, showListMenu } = this.state
-    const { cards, listTitle } = this.props
+    const { cards, listTitle, listId } = this.props
     return (
       <ListContainer >
-        <Droppable droppableId="droppable">
+        <Droppable droppableId={listId} type="CARD">
           {provided => (
             <div
               ref={provided.innerRef}
@@ -71,7 +71,7 @@ class List extends Component {
               {...provided.droppableProps}
             >
               <ListHeader listTitle={listTitle} displayOption={this.handleOption} />
-              {cards.map(({
+              {cards && cards.map(({
                 id, author, task, dueDate, order
               }, index) => {
                 const newAuthor = !author ? {} : author
