@@ -11,13 +11,17 @@ const auth = new Auth()
 const { isAuthenticated } = auth
 
 class Toolbar extends Component {
-  constructor(props) {
-    super(props)
-    this.state = { isActive: false }
-  }
+  state = { isActive: false }
 
-  toggleBoards = () => {
-    this.setState({ isActive: !this.state.isActive })
+  toggleBoards = nextState => {
+    const id = nextState && nextState.target.id // Edge case
+    if (id === 'toggle_boards' && this.state.isActive) {
+      this.setState({ isActive: false })
+    } else if (typeof nextState !== 'undefined') {
+      this.setState({ isActive: nextState })
+    } else {
+      this.setState({ isActive: !this.state.isActive })
+    }
   }
 
   logout = () => {
@@ -28,6 +32,7 @@ class Toolbar extends Component {
     const BoardsJSX = (
       <Boards
         toggleFixedMenu={this.props.toggleFixedMenu}
+        toggleBoards={this.toggleBoards}
         keepOpen={this.props.keepOpen}
       />)
 
@@ -37,7 +42,7 @@ class Toolbar extends Component {
           this.state.isActive && BoardsJSX
         }
         {!this.props.keepOpen &&
-          <Button onClick={this.toggleBoards}>Boards</Button>
+          <Button id="toggle_boards" onClick={this.toggleBoards}>Boards</Button>
         }
         <Input type="search" />
         <Brand>
