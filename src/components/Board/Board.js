@@ -86,23 +86,43 @@ class Board extends Component {
   onDragEnd = result => {
     const { lists } = this.state
     if (result.type === 'CARD') {
-      const listsCopy = [...lists]
-      const sourceList = listsCopy.find(({ id }) => id === result.source.droppableId)
-      const sourceListIndex = listsCopy.indexOf(sourceList)
+      // helpers
+      const destId = result.destination.droppableId
+      const sourceId = result.source.droppableId
 
-      const { cards } = sourceList
+      const listsCopy = [...lists]
+      const sourceList = listsCopy.find(({ id }) => id === sourceId)
+      const destList = listsCopy.find(({ id }) => id === destId)
+
+      const sourceListIndex = listsCopy.indexOf(sourceList)
+      const destListIndex = listsCopy.indexOf(destList)
+
+      const sourceListCard = sourceList.cards[result.source.index]
+
       const oldPos = result.source.index
       const newPos = result.destination.index
 
-      const cardsCopy = [...cards]
+      const cardsCopy = [...sourceList.cards]
+      const destCardsCopy = [...destList.cards]
 
-      cardsCopy.move(oldPos, newPos)
-
-      const listCopy = {
-        id: sourceList.id, listTitle: sourceList.listTitle, cards: cardsCopy
+      const listCopy = (list, cards) => {
+        return { id: list.id, listTitle: list.listTitle, cards }
       }
 
-      listsCopy.splice(sourceListIndex, 1, listCopy)
+      if (destId !== sourceId) {
+        // 1) DELETE card from source list
+        cardsCopy.splice(result.source.index, 1)
+        // 2) ADD card to destination list
+        destCardsCopy.splice(result.destination.index, 0, sourceListCard)
+        // 3) REPLACE destination list with updated one
+        listsCopy.splice(destListIndex, 1, listCopy(destList, destCardsCopy))
+      } else {
+        // MOVE card within source list
+        cardsCopy.move(oldPos, newPos)
+      }
+
+      // REPLACE source list with updated one
+      listsCopy.splice(sourceListIndex, 1, listCopy(sourceList, cardsCopy))
 
       this.setState({ lists: listsCopy })
     }
@@ -119,7 +139,7 @@ class Board extends Component {
 
   render() {
     const { lists } = this.state
-    // console.log(cards)
+    console.log(lists)
     return (isAuthenticated() &&
       <BoardProvider>
         <Modal lists={this.state} setBoardState={this.setBoardState} />
