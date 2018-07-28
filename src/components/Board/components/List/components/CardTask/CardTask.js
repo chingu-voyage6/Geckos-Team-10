@@ -17,8 +17,8 @@ const CardTask = props => {
           {props.dueDate || '07/07/18'}
         </Button>
         <Button
-          borderRadius="100%"
-          width="30px"
+          borderRadius="5px"
+          width="100px"
         >
           {props.member}
         </Button>
