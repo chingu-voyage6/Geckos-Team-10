@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Draggable, Droppable } from 'react-beautiful-dnd'
 import styled from 'styled-components'
 import moment from 'moment'
 import ListContainer from './List.styles'
@@ -59,37 +60,57 @@ class List extends Component {
 
   render() {
     const { addingCard, showListMenu } = this.state
-    const { cards, listTitle } = this.props
-
+    const { cards, listTitle, listId } = this.props
     return (
       <ListContainer >
-        <ListHeader listTitle={listTitle} displayOption={this.handleOption} />
-        {cards.map(({
-          id, author, task, dueDate
-        }) => {
-          const newAuthor = !author ? {} : author
-          return (
-            <CardTask
-              onCardClick={() => this.props.onShowModal(id)}
-              key={id}
-              dueDate={dueDate && moment(dueDate, 'YYYY-MM-DD HH:mm Z').format('DD/MM/YYYY')}
-              member={newAuthor.nickname}
-              task={task}
-            />
-          )
-        })}
-        {showListMenu && <ListMenu onAddCard={this.onAddCard} />}
-        {addingCard && (
-          <TextArea
-            onChange={e => this.newCard(e)}
-          />
-        )}
-        <ListFooter
-          onAddCard={this.onAddCard}
-          onSaveCard={this.onSaveCard}
-          onCancelCard={this.onCancelCard}
-          addingCard={addingCard}
-        />
+        <Droppable droppableId={listId} type="CARD">
+          {provided => (
+            <div
+              ref={provided.innerRef}
+              // style={{ backgroundColor: snapshot.isDraggingOver ? 'blue' : 'grey' }}
+              {...provided.droppableProps}
+            >
+              <ListHeader listTitle={listTitle} displayOption={this.handleOption} />
+              {cards && cards.map(({
+                id, author, task, dueDate, order
+              }, index) => {
+                const newAuthor = !author ? {} : author
+                return (
+                  <Draggable draggableId={id} key={id} index={index}>
+                    {providedDraggable => (
+                      <div
+                        ref={providedDraggable.innerRef}
+                        {...providedDraggable.draggableProps}
+                        {...providedDraggable.dragHandleProps}
+                      >
+                        <CardTask
+                          onCardClick={() => this.props.onShowModal(id)}
+                          key={id}
+                          order={order}
+                          dueDate={dueDate && moment(dueDate, 'YYYY-MM-DD HH:mm Z').format('DD/MM/YYYY')}
+                          member={newAuthor.nickname}
+                          task={task}
+                        />
+                      </div>
+                    )}
+                  </Draggable>
+                )
+              })}
+              {showListMenu && <ListMenu onAddCard={this.onAddCard} />}
+              {addingCard && (
+                <TextArea
+                  onChange={e => this.newCard(e)}
+                />
+              )}
+              <ListFooter
+                onAddCard={this.onAddCard}
+                onSaveCard={this.onSaveCard}
+                onCancelCard={this.onCancelCard}
+                addingCard={addingCard}
+              />
+            </div>
+          )}
+        </Droppable>
       </ListContainer>
     )
   }
