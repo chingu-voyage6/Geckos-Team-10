@@ -38,7 +38,7 @@ const BoardsHome = props => {
       <Query query={BoardsQuery} variables={{ id: props.userId }}>
         {({ loading, data }) => {
           return (
-            !loading && data && (
+            !loading && data && data.User && data.User.boards && (
               <Fragment>
                 <Title><Icon grey medium className="fa fa-user" /> Personal</Title>
                 <Wrapper>

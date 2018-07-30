@@ -3,7 +3,8 @@ import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
 
 import { Icon, Title } from '../../../StyledComponents/index'
-import { Wrapper, Button } from './LeftSidebar.styles'
+import { Button } from '../../Home.styles'
+import { Wrapper } from './LeftSidebar.styles'
 
 const TeamsQuery = gql`
   query user($id: ID) {
@@ -21,19 +22,8 @@ const LeftSidebar = props => {
   return (
     <Wrapper>
       <Button
-        id="home"
-        active={props.activeComponent === 'home'}
-        onClick={el => props.toggleComponents(el)}
-      >
-        <Icon
-          grey
-          className="fa fa-home"
-          active={props.activeComponent === 'home'}
-        />
-        Home
-      </Button>
-      <Button
-        id="boards"
+        bold
+        name="boards"
         active={props.activeComponent === 'boards'}
         onClick={el => props.toggleComponents(el)}
       >
@@ -53,8 +43,10 @@ const LeftSidebar = props => {
           return (
             !loading && data && data.User && data.User.teams.map(team => (
               <Button
+                bold
                 key={team.id}
-                id={team.name}
+                id={team.id}
+                name={team.name}
                 active={props.activeComponent === team.name}
                 onClick={el => props.toggleComponents(el)}
               >

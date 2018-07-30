@@ -7,7 +7,8 @@ import LeftSidebar from './components/LeftSidebar/LeftSidebar'
 import BoardsHome from './components/BoardsHome/BoardsHome'
 import boards from '../../stupidData'
 
-import { Wrapper } from './Home.styles'
+import { FlexWrapper } from './Home.styles'
+import TeamViewer from './components/TeamViewer/TeamViewer'
 
 const auth = new Auth()
 
@@ -16,7 +17,8 @@ class Home extends Component {
     super(props)
     this.state = {
       authMessage: '',
-      activeComponent: 'home',
+      activeComponent: 'boards',
+      teamId: '',
       boards,
     }
   }
@@ -29,7 +31,10 @@ class Home extends Component {
 
   // toggle components that are shown
   toggleComponents = e => {
-    this.setState({ activeComponent: e.target.id })
+    this.setState({
+      teamId: e.target.id || '',
+      activeComponent: e.target.name
+    })
   }
 
   // calls the login method in authentication service
@@ -75,7 +80,6 @@ class Home extends Component {
           <Fragment>
             <button onClick={this.logout}>Logout</button>
             <Link to="/board">Board</Link>
-            <Link to="/profile">Profile</Link>
           </Fragment> :
           <button onClick={this.login}>Login</button>
         }
@@ -87,7 +91,7 @@ class Home extends Component {
     return (
       <div>
         {testComponent}
-        <Wrapper>
+        <FlexWrapper>
           {isAuthenticated() &&
             <Fragment>
               <LeftSidebar
@@ -97,10 +101,14 @@ class Home extends Component {
                 boards={this.state.boards}
               />
               {this.state.activeComponent === 'boards' && <BoardsHome userId={this.props.userId} />}
-              {this.state.activeComponent === 'home' && <span>Home</span>}
+              {this.state.activeComponent !== 'boards' &&
+                <Fragment>
+                  <TeamViewer teamName={this.state.activeComponent} teamId={this.state.teamId} />
+                </Fragment>
+              }
             </Fragment>
           }
-        </Wrapper>
+        </FlexWrapper>
       </div>
     )
   }
