@@ -2,6 +2,7 @@ import styled, { css } from 'styled-components'
 
 const Icon = styled.span`
 width: 20px;
+pointer-events: none;
 
 color: white;
 
@@ -15,6 +16,7 @@ ${props => props.active && css`
     background: #E4F0F6;      
   }
 `}
+${props => props.active_white && css`color: white;`}
 `
 
 export default Icon

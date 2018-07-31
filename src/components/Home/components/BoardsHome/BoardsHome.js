@@ -59,7 +59,7 @@ const BoardsHome = props => {
                 </Wrapper>
                 {
                   data.User.teams.map(team => (
-                    <Fragment>
+                    <Fragment key={team.id}>
                       <Title><Icon grey medium className="fa fa-users" />{team.name}</Title>
                       <Wrapper>
                         {team.boards.map(board => (
