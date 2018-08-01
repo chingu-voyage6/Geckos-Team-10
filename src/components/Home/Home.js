@@ -3,12 +3,9 @@ import { Link } from 'react-router-dom'
 import axios from 'axios'
 
 import Auth from '../../services/auth'
-import LeftSidebar from './components/LeftSidebar/LeftSidebar'
-import BoardsHome from './components/BoardsHome/BoardsHome'
 import boards from '../../stupidData'
-
+import { BoardsHome, LeftSidebar, TeamViewer } from './index'
 import { FlexWrapper } from './Home.styles'
-import TeamViewer from './components/TeamViewer/TeamViewer'
 
 const auth = new Auth()
 

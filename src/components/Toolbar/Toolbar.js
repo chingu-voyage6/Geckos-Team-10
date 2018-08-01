@@ -2,9 +2,9 @@ import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 
 import { Auth } from '../../services/Services'
-import { Wrapper, Button, Brand, Input, Icon } from './Toolbar.styles'
-import Boards from '../Boards/Boards'
-import PopOver from './components/PopOver/PopOver'
+import { Wrapper, Button, Brand, Input, Icon, RowItem } from './Toolbar.styles'
+import { Boards, PopOver } from '../Components'
+import { Avatar, Menu } from './index'
 
 const auth = new Auth()
 
@@ -29,6 +29,18 @@ class Toolbar extends Component {
   }
 
   render() {
+    const CreateButton = props => {
+      return (
+        <Button pull_right onClick={() => props.togglePopOver()}>
+          <Icon className="fa fa-plus" />
+        </Button>
+      )
+    }
+
+    const PopOverMenu = PopOver(Menu, Avatar)
+
+    const PopOverCreate = PopOver(undefined, CreateButton)
+
     const BoardsJSX = (
       <Boards
         toggleFixedMenu={this.props.toggleFixedMenu}
@@ -48,16 +60,10 @@ class Toolbar extends Component {
         <Brand>
           <Link to="/">Trello Clone</Link>
         </Brand>
-        <Button pull_right>
-          <Icon className="fa fa-plus" />
-        </Button>
-        <Button>
-          <Icon className="fa fa-info" />
-        </Button>
-        <Button>
-          <Icon className="fa fa-bell" />
-        </Button>
-        <PopOver logout={this.logout} />
+        <RowItem pull_right>
+          <PopOverCreate />
+        </RowItem>
+        <PopOverMenu logout={this.logout} />
       </Fragment>
     )
 

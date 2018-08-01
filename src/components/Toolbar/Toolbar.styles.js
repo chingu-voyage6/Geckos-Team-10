@@ -16,6 +16,12 @@ const Wrapper = styled.div`
   `}
 `
 
+const RowItem = styled.div`
+  ${props => props.pull_right && css`
+    margin-left: auto;
+  `}
+`
+
 const Icon = styled.span`
   font-size: 20px;
   height: 20px;
@@ -75,6 +81,7 @@ const Avatar = styled.img`
 export {
   Avatar,
   Wrapper,
+  RowItem,
   Brand,
   Input,
   Icon,
