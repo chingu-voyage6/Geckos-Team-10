@@ -3,8 +3,7 @@ import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
 
 import { Icon, Title } from '../../../StyledComponents/index'
-import { CreateTeamButton } from '../../index'
-import { PopOver } from '../../../Components'
+import { PopOver, CreateTeam, CreateTeamButton } from '../../../Components'
 import { Wrapper } from './LeftSidebar.styles'
 import { Button } from '../../Home.styles'
 
@@ -22,7 +21,7 @@ const TeamsQuery = gql`
 
 
 const LeftSidebar = props => {
-  const CreateTeamPopOver = PopOver(undefined, CreateTeamButton)
+  const CreateTeamPopOver = PopOver(CreateTeam, CreateTeamButton)
   return (
     <Wrapper>
       <Button

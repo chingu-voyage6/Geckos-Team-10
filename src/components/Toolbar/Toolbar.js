@@ -1,10 +1,10 @@
 import React, { Component, Fragment } from 'react'
-import { Link } from 'react-router-dom'
 
 import { Auth } from '../../services/Services'
 import { Wrapper, Button, Brand, Input, Icon, RowItem } from './Toolbar.styles'
+import { StyledLink } from '../StyledComponents'
 import { Boards, PopOver } from '../Components'
-import { Avatar, Menu } from './index'
+import { Avatar, Menu, CreateMenu } from './components'
 
 const auth = new Auth()
 
@@ -26,6 +26,7 @@ class Toolbar extends Component {
 
   logout = () => {
     this.props.auth.logout()
+    this.props.auth.login()
   }
 
   render() {
@@ -39,7 +40,7 @@ class Toolbar extends Component {
 
     const PopOverMenu = PopOver(Menu, Avatar)
 
-    const PopOverCreate = PopOver(undefined, CreateButton)
+    const PopOverCreate = PopOver(CreateMenu, CreateButton)
 
     const BoardsJSX = (
       <Boards
@@ -58,7 +59,7 @@ class Toolbar extends Component {
         }
         <Input type="search" />
         <Brand>
-          <Link to="/">Trello Clone</Link>
+          <StyledLink to="/">Trello Clone</StyledLink>
         </Brand>
         <RowItem pull_right>
           <PopOverCreate />

@@ -1,26 +1,15 @@
-import React, { Fragment } from 'react'
-import { Link } from 'react-router-dom'
-import { Pill, Header } from './Menu.styles'
+import React from 'react'
+import { Heading, Button, Wrapper } from '../../../StyledComponents'
 
 const Menu = props => {
   return (
-    <Fragment>
-      <Header>
+    <Wrapper>
+      <Heading>
         {localStorage.getItem('nickname')}
-      </Header>
-      <Pill>
-        <Link to="/profile">Profile</Link>
-      </Pill>
-      <Pill>
-        <Link to="/home">Home</Link>
-      </Pill>
-      <Pill>
-        <Link to="/board">Board</Link>
-      </Pill>
-      <Pill>
-        <button onClick={props.logout}>Logout</button>
-      </Pill>
-    </Fragment>
+      </Heading>
+      <br />
+      <Button solid onClick={props.logout}>Logout</Button>
+    </Wrapper>
   )
 }
 

@@ -2,8 +2,9 @@ import React, { Fragment } from 'react'
 import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
 
-import { Card, Wrapper, LinkTitle, StyledLink } from './BoardsHome.styles'
+import { Wrapper, LinkTitle, StyledLink } from './BoardsHome.styles'
 import { Title, Icon } from '../../../StyledComponents/index'
+import { PopOver, CreateBoardButton, CreateBoard } from '../../../Components'
 
 
 const BoardsQuery = gql`
@@ -33,6 +34,7 @@ const BoardsQuery = gql`
 `
 
 const BoardsHome = props => {
+  const CreateBoardPopOver = PopOver(CreateBoard, CreateBoardButton)
   return (
     <div>
       <Query query={BoardsQuery} variables={{ id: props.userId }}>
@@ -55,14 +57,14 @@ const BoardsHome = props => {
                       )
                     )
                   }
-                  <Card>Create new board..</Card>
+                  <CreateBoardPopOver buttonType="card" />
                 </Wrapper>
                 {
-                  data.User.teams.map(team => (
-                    <Fragment key={team.id}>
-                      <Title><Icon grey medium className="fa fa-users" />{team.name}</Title>
+                  data.User.teams.map(({ id, name, boards }) => (
+                    <Fragment key={id}>
+                      <Title><Icon grey medium className="fa fa-users" />{name}</Title>
                       <Wrapper>
-                        {team.boards.map(board => (
+                        {boards.map(board => (
                           <StyledLink
                             to={`/board/${board.id}`}
                             key={board.id}
@@ -71,7 +73,7 @@ const BoardsHome = props => {
                             <LinkTitle>{board.title}</LinkTitle>
                           </StyledLink>))
                         }
-                        <Card>Create new board..</Card>
+                        <CreateBoardPopOver teamId={id} buttonType="card" />
                       </Wrapper>
                     </Fragment>)
                   )

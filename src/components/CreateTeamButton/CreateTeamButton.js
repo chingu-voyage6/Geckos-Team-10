@@ -1,11 +1,7 @@
 import React, { Component } from 'react'
-import { Button } from '../../Home.styles'
+import { Button } from '../StyledComponents'
 
 class CreateTeamButton extends Component {
-  componentDidMount = () => {
-    // console.log(this.buttonRef.getBoundingClientRect())
-  }
-
   setButtonRef = node => {
     this.buttonRef = node
   }
@@ -16,6 +12,9 @@ class CreateTeamButton extends Component {
       <div ref={this.setButtonRef}>
         <Button
           id="create"
+          width="215px"
+          textAlign="left"
+          color="black"
           onClick={() => togglePopOver(this.buttonRef.getBoundingClientRect())}
         >+ Create a Team
         </Button>

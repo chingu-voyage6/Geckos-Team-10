@@ -3,8 +3,9 @@ import { Query, withApollo } from 'react-apollo'
 import gql from 'graphql-tag'
 
 import { Icon, Title } from '../../../StyledComponents/index'
-import { Button, Wrapper } from './TeamViewer.styles'
-import { EditTeam, Members, Settings } from './index'
+import { Wrapper, Button } from './TeamViewer.styles'
+import { EditTeam, Members, Settings } from './components'
+import { CreateBoardButton, CreateBoard, PopOver } from '../../../Components'
 
 const TeamQuery = gql`
   query ($id: ID){
@@ -25,6 +26,7 @@ class TeamViewer extends Component {
 
   render() {
     const { activeTab } = this.state
+    const CreateBoardPopOver = PopOver(CreateBoard, CreateBoardButton)
     return (
       <Wrapper large>
         <Query query={TeamQuery} variables={{ id: this.props.teamId, }}>
@@ -80,15 +82,10 @@ class TeamViewer extends Component {
                       />Settings
                     </Button>
                     <br />
-                    <Button solid bold>
-                      <Icon grey className="fa fa-plus" />Create a team board
-                    </Button>
+                    <CreateBoardPopOver teamId={Team.id} />
                     <Button solid bold>
                       <Icon grey className="fa fa-user-plus" />Add Member
                     </Button>
-                    {/* <StyledLink to={`/teams/${this.props.teamId}`}>
-                      <Icon grey className="fa fa-gear" />View Team
-                    </StyledLink> */}
                   </Wrapper>
                 </Wrapper>
               )

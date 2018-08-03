@@ -4,9 +4,13 @@ const Icon = styled.span`
 width: 20px;
 pointer-events: none;
 
-color: white;
+color: ${props => props.color || 'white'}
 
 ${props => props.grey && css` color: grey;`}
+${props => props.center && css`
+  margin: auto;
+  display: block;
+`}
 ${props => props.medium && css`font-size: 20px; height: 20px; padding: 6px;`}
 ${props => props.active && css`
   color: #0179BF !important;

@@ -1,10 +1,10 @@
 import React, { Component, Fragment } from 'react'
-import { Link } from 'react-router-dom'
 import axios from 'axios'
 
 import Auth from '../../services/auth'
 import boards from '../../stupidData'
-import { BoardsHome, LeftSidebar, TeamViewer } from './index'
+import { BoardsHome, LeftSidebar, TeamViewer } from './components'
+import { Button, Wrapper } from '../StyledComponents'
 import { FlexWrapper } from './Home.styles'
 
 const auth = new Auth()
@@ -13,7 +13,7 @@ class Home extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      authMessage: '',
+      // authMessage: '',
       activeComponent: 'boards',
       teamId: '',
       boards,
@@ -60,10 +60,11 @@ class Home extends Component {
         user_id: localStorage.getItem('user_id')
       }
     }).then(res => {
-      this.setState({ authMessage: res.data.message })
+      console.log(res)
+      // this.setState({ authMessage: res.data.message })
     }, error => {
       if (error.response.status === 401) {
-        this.setState({ authMessage: error.response.statusText })
+        // this.setState({ authMessage: error.response.statusText })
       }
       return error
     })
@@ -71,23 +72,23 @@ class Home extends Component {
   render() {
     const { isAuthenticated } = auth
 
-    const testComponent = (
-      <Fragment>
-        {isAuthenticated() ?
-          <Fragment>
-            <button onClick={this.logout}>Logout</button>
-            <Link to="/board">Board</Link>
-          </Fragment> :
-          <button onClick={this.login}>Login</button>
-        }
-        <button onClick={() => this.validate(auth.accessToken())}>Validate Token</button>
-        <p>{this.state.authMessage}</p>
-      </Fragment>
-    )
-
     return (
       <div>
-        {testComponent}
+        {!isAuthenticated() &&
+          <Wrapper>
+            <br />
+            <Wrapper width="250px" margin="auto">
+              <div style={{ textAlign: 'center' }}>
+                <span>Please <strong>login</strong> to use trello</span>
+              </div>
+              <br />
+              <div>
+                <Button solid onClick={this.login}>Login</Button>
+              </div>
+            </Wrapper>
+          </Wrapper>
+        }
+        <br />
         <FlexWrapper>
           {isAuthenticated() &&
             <Fragment>

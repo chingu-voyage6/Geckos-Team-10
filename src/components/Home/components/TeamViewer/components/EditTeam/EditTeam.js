@@ -2,8 +2,8 @@ import React, { Component, Fragment } from 'react'
 import { withApollo } from 'react-apollo'
 import gql from 'graphql-tag'
 
-import { Button, Wrapper, Input } from '../../TeamViewer.styles'
-import TextArea from './EditTeam.styles'
+import { Button, Wrapper } from '../../TeamViewer.styles'
+import { Input, TextArea } from '../../../../../StyledComponents/index'
 
 const updateTeam = gql`
   mutation ($teamId: ID!, $name: String, $desc: String, $website: String) {

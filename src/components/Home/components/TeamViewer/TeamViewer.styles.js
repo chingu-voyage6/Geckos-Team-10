@@ -107,19 +107,9 @@ const LinkTitle = styled.span`
   overflow: hidden;
 `
 
-const Input = styled.input`
-  background-color: #e2e4e6;
-  border: 1px solid #cdd2d4;
-  border-radius: 3px;
-  padding: 6px 8px;
-  display: block;
-  width: 250px;
-`
-
 export {
   Button,
   Wrapper,
-  Input,
   StyledLink,
   LinkTitle
 }

@@ -29,7 +29,6 @@ function PopOver(WrappedComponent, ButtonComponent) {
 
     togglePopOver = nextState => {
       if (typeof nextState === 'object') {
-        console.log(true)
         this.setState({
           popOverIsActive: nextState,
           positioned: true,

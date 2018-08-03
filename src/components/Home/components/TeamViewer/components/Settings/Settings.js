@@ -1,16 +1,18 @@
 import React from 'react'
 
-import { Icon } from '../../../../../StyledComponents/index'
-import { Button, Wrapper } from '../../TeamViewer.styles'
+import { Wrapper } from '../../TeamViewer.styles'
+import { PopOver } from '../../../../../Components'
+import { DeleteButton, DeleteTeam } from '../index'
 
-const Settings = () => {
+const Settings = props => {
+  const DeleteTeamPopOver = PopOver(DeleteTeam, DeleteButton)
   return (
     <Wrapper>
-      <div>Settings</div>
+      <div>
+        <span>Team Settings</span>
+      </div>
       <br />
-      <Button danger>
-        <Icon className="fa fa-times" />Delete This Team
-      </Button>
+      <DeleteTeamPopOver {...props} />
     </Wrapper>
   )
 }
