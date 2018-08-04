@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import { withApollo } from 'react-apollo'
 import gql from 'graphql-tag'
+import _ from 'lodash'
 
 import { Button, Wrapper } from '../../TeamViewer.styles'
 import { Input, TextArea } from '../../../../../StyledComponents/index'
@@ -16,66 +17,104 @@ const updateTeam = gql`
 }
 `
 
+const TeamQuery = gql`
+  query ($id: ID){
+    Team(id: $id) {
+      id, name, desc, website, users {
+        id, name, nickname
+      }
+    }
+  }
+`
+
 class EditTeam extends Component {
   state = {
+    isDisabled: true,
+    website: '',
     teamId: '',
     name: '',
-    website: '',
     desc: ''
   }
 
   componentDidMount = () => {
-    const {
-      id,
-      name,
-      desc,
-      website
-    } = this.props.team
-    this.setState({
-      teamId: id,
-      name,
-      desc,
-      website
-    })
+    this.getTeam(this.props.teamId)
   }
 
-  componentWillReceiveProps = nextProps => {
-    const {
-      id,
-      name,
-      desc,
-      website
-    } = nextProps.team
-    this.setState({
-      teamId:
-        id,
-      name,
-      desc,
-      website
-    })
+  componentWillReceiveProps = nextState => {
+    this.getTeam(nextState.teamId)
   }
 
   onChange = e => {
+    const cb = () => {
+      this.setState({ isDisabled: this.compare() })
+    }
+
     switch (e.target.id) {
       case 'name':
-        this.setState({ name: e.target.value })
+        this.setState({ name: e.target.value }, cb)
         break
       case 'desc':
-        this.setState({ desc: e.target.value })
+        this.setState({ desc: e.target.value }, cb)
         break
       case 'website':
-        this.setState({ website: e.target.value })
+        this.setState({ website: e.target.value }, cb)
         break
       default:
     }
   }
 
+  getTeam = async id => {
+    try {
+      const { data: { Team } } = await this.props.client.query({
+        query: TeamQuery,
+        variables: { id }
+      })
+
+      const { name, desc, website } = Team
+
+      if (Team) {
+        this.setState({
+          teamId: id, name, desc, website
+        })
+      }
+    } catch (err) {
+      console.log('err::', err)
+    }
+  }
+
+  initialState = () => {
+    const {
+      website, teamId, name, desc
+    } = this.props
+    return {
+      website, teamId, name, desc
+    }
+  }
+
+  compare = () => {
+    const {
+      website, teamId, name, desc
+    } = this.state
+
+    const newState = {
+      website, teamId, name, desc
+    }
+
+    return _.isEqual(newState, this.initialState())
+  }
+
+
   handleSubmit = async () => {
-    console.log(...this.state)
+    const {
+      website, teamId, name, desc
+    } = this.state
+
     try {
       await this.props.client.mutate({
         mutation: updateTeam,
-        variables: { ...this.state }
+        variables: {
+          website, teamId, name, desc
+        }
       })
     } catch (err) {
       console.log('err::', err)
@@ -83,7 +122,12 @@ class EditTeam extends Component {
   }
 
   render() {
-    const { name, desc, website } = this.state
+    const {
+      isDisabled,
+      website,
+      name,
+      desc,
+    } = this.state
     return (
       <Fragment>
         <span>Name</span>
@@ -108,8 +152,15 @@ class EditTeam extends Component {
         />
         <br />
         <Wrapper flex>
-          <Button solid small onClick={this.handleSubmit}>Save</Button>
-          <Button solid small>Cancel</Button>
+          <Button
+            solid
+            small
+            onClick={this.handleSubmit}
+            disabled={isDisabled}
+            submit={!isDisabled}
+          >Save
+          </Button>
+          <Button solid small >Cancel</Button>
         </Wrapper>
       </Fragment>
     )

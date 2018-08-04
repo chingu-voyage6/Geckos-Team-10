@@ -30,6 +30,9 @@ class Toolbar extends Component {
   }
 
   render() {
+    const { isActive } = this.state
+    const { toggleFixedMenu, keepOpen } = this.props
+
     const CreateButton = props => {
       return (
         <Button pull_right onClick={() => props.togglePopOver()}>
@@ -44,17 +47,17 @@ class Toolbar extends Component {
 
     const BoardsJSX = (
       <Boards
-        toggleFixedMenu={this.props.toggleFixedMenu}
+        toggleFixedMenu={toggleFixedMenu}
         toggleBoards={this.toggleBoards}
-        keepOpen={this.props.keepOpen}
+        keepOpen={keepOpen}
       />)
 
     const ContentJSX = (
       <Fragment>
         {
-          this.state.isActive && BoardsJSX
+          isActive && BoardsJSX
         }
-        {!this.props.keepOpen &&
+        {!keepOpen &&
           <Button id="toggle_boards" onClick={this.toggleBoards}>Boards</Button>
         }
         <Input type="search" />
@@ -62,7 +65,7 @@ class Toolbar extends Component {
           <StyledLink to="/">Trello Clone</StyledLink>
         </Brand>
         <RowItem pull_right>
-          <PopOverCreate />
+          <PopOverCreate {...this.props} />
         </RowItem>
         <PopOverMenu logout={this.logout} />
       </Fragment>
@@ -71,7 +74,7 @@ class Toolbar extends Component {
     return (
       isAuthenticated() &&
       <Fragment>
-        {this.props.keepOpen ?
+        {keepOpen ?
           <Wrapper offset="true">
             {ContentJSX}
           </Wrapper> :

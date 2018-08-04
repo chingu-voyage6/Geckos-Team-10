@@ -51,16 +51,27 @@ const Button = styled.button`
   `}
 
   ${props => props.danger && css`
-  background: #eb5a46 !important;
-  border-bottom-color: #b04632 !important;
-  color: #fff !important;
-  box-shadow: none;
-  transition: background .3s ease;
+    background: #eb5a46 !important;
+    border-bottom-color: #b04632 !important;
+    color: #fff !important;
+    box-shadow: none;
+    transition: background .3s ease;
 
-  &:hover {
-    background: #D0513D !important;
-  }
-`}
+    &:hover {
+      background: #D0513D !important;
+    }
+  `}
+
+  ${props => props.submit && css`
+    background: #5aac44 !important;
+    color: #fff !important;
+    box-shadow: none;
+    transition: background .3s ease;
+
+    &:hover {
+      background: #519839 !important;
+    }
+  `}
 `
 
 export default Button

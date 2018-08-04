@@ -69,6 +69,17 @@ const Button = styled.button`
       color: #4c4c4c;
     }
   `}
+  
+  ${props => props.submit && css`
+    background: #5aac44 !important;
+    color: #fff !important;
+    box-shadow: none;
+    transition: background .3s ease;
+
+    &:hover {
+      background: #519839 !important;
+    }
+  `}
 `
 
 const StyledLink = styled(Link)`

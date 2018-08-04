@@ -2,7 +2,6 @@ import React, { Component, Fragment } from 'react'
 import axios from 'axios'
 
 import Auth from '../../services/auth'
-import boards from '../../stupidData'
 import { BoardsHome, LeftSidebar, TeamViewer } from './components'
 import { Button, Wrapper } from '../StyledComponents'
 import { FlexWrapper } from './Home.styles'
@@ -10,14 +9,12 @@ import { FlexWrapper } from './Home.styles'
 const auth = new Auth()
 
 class Home extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      // authMessage: '',
-      activeComponent: 'boards',
-      teamId: '',
-      boards,
-    }
+  state = {
+    // authMessage: '',
+    activeComponent: 'boards',
+    activeTab: 'edit team',
+    teamId: '',
+    boards: []
   }
 
   // will re-render App.js
@@ -32,6 +29,10 @@ class Home extends Component {
       teamId: e.target.id || '',
       activeComponent: e.target.name
     })
+  }
+
+  changeTab = e => {
+    this.setState({ activeTab: e.target.name })
   }
 
   // calls the login method in authentication service
@@ -71,7 +72,8 @@ class Home extends Component {
   }
   render() {
     const { isAuthenticated } = auth
-
+    const { activeComponent } = this.state
+    const { userId } = this.props
     return (
       <div>
         {!isAuthenticated() &&
@@ -93,15 +95,18 @@ class Home extends Component {
           {isAuthenticated() &&
             <Fragment>
               <LeftSidebar
+                {...this.state}
+                {...this.props}
                 toggleComponents={this.toggleComponents}
-                activeComponent={this.state.activeComponent}
-                userId={this.props.userId}
-                boards={this.state.boards}
               />
-              {this.state.activeComponent === 'boards' && <BoardsHome userId={this.props.userId} />}
-              {this.state.activeComponent !== 'boards' &&
+              {activeComponent === 'boards' && <BoardsHome userId={userId} />}
+              {activeComponent !== 'boards' &&
                 <Fragment>
-                  <TeamViewer teamName={this.state.activeComponent} teamId={this.state.teamId} />
+                  <TeamViewer
+                    {...this.state}
+                    {...this.props}
+                    changeTab={this.changeTab}
+                  />
                 </Fragment>
               }
             </Fragment>

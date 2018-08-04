@@ -13,7 +13,7 @@ const ButtonCard = styled.button`
   transition: 0.1s;
 
   color: white;
-  background: ${props => props.background || '#E2E4E6'}
+  background: ${props => props.background || '#E2E4E6'};
 
   &:hover {
     filter: brightness(80%);

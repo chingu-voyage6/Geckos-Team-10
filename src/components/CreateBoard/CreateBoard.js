@@ -1,21 +1,44 @@
 import React, { Component } from 'react'
+import gql from 'graphql-tag'
 
 import { Button, Icon, ButtonCard, Heading, Input, Wrapper } from '../StyledComponents'
 
-const RandomColor = () => `#${(Math.floor(Math.random() * 16777215).toString(16))}`
+const CreateNewBoard = gql`
+  mutation ($title: String!, $authorId: ID!, $background: String!, $teamId: ID) {
+    createBoard(title: $title, background: $background, authorId: $authorId, teamId: $teamId) {
+      id
+      title
+      author {
+        id, name, nickname
+      }
+      team {
+        id, name
+      }
+    }
+  }
+`
+
+const RandomColor = () => {
+  const hexColor = `#${(Math.floor(Math.random() * 16777215).toString(16))}`
+  if (hexColor.length === 6) {
+    return `${hexColor}0`
+  }
+  return hexColor
+}
 
 class CreateBoard extends Component {
   state = {
+    title: '',
     colors: [
       RandomColor(),
       RandomColor(),
       RandomColor()
     ],
-    colorChoice: ''
+    background: ''
   }
 
-  selectColor = e => {
-    this.setState({ colorChoice: e.target.id })
+  onChange = e => {
+    this.setState({ title: e.target.value })
   }
 
   randomColorSet = () => {
@@ -27,9 +50,28 @@ class CreateBoard extends Component {
     this.setState({ colors: newColors })
   }
 
+  selectColor = e => {
+    this.setState({ background: e.target.id })
+  }
+
+  handleSubmit = async () => {
+    const { userId, teamId } = this.props
+    const { title, background } = this.state
+    try {
+      await this.props.client.mutate({
+        mutation: CreateNewBoard,
+        variables: {
+          authorId: userId, title, background, teamId
+        }
+      })
+    } catch (err) {
+      console.log('err::', err)
+    }
+  }
+
   render() {
     // const { teamId } = this.props
-    const { colors, colorChoice } = this.state
+    const { colors, background } = this.state
     const { hasChevron, goBack } = this.props
     return (
       <Wrapper width="100%">
@@ -50,7 +92,7 @@ class CreateBoard extends Component {
         </Heading>
         <br />
         <span>Board Title</span>
-        <Input wide />
+        <Input wide onChange={this.onChange} />
         <br />
         <Wrapper flex align>
           <span>Color</span>
@@ -66,13 +108,13 @@ class CreateBoard extends Component {
                 background={color}
                 onClick={this.selectColor}
               >
-                {(color === colorChoice) && <Icon center className="fa fa-check" />}
+                {(color === background) && <Icon center className="fa fa-check" />}
               </ButtonCard>
             )
           })}
         </Wrapper>
         <br />
-        <Button solid>Create Board</Button>
+        <Button solid onClick={this.handleSubmit}>Create Board</Button>
       </Wrapper>
     )
   }

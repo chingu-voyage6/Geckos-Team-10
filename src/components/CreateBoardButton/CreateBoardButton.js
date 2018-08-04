@@ -11,21 +11,20 @@ class CreateBoardButton extends Component {
     const { togglePopOver, buttonType } = this.props
     return (
       <div ref={this.setButtonRef}>
-        {
-          this.props && buttonType && buttonType === 'card' ?
-            <ButtonCard
-              id="create"
-              onClick={() => togglePopOver(this.buttonRef.getBoundingClientRect())}
-            >Create new board..
-            </ButtonCard> :
-            <Button
-              solid
-              bold
-              id="create"
-              onClick={() => togglePopOver(this.buttonRef.getBoundingClientRect())}
-            >
-              <Icon grey className="fa fa-plus" />Create a Team Board
-            </Button>
+        {buttonType && buttonType === 'card' ?
+          <ButtonCard
+            id="create"
+            onClick={() => togglePopOver(this.buttonRef.getBoundingClientRect())}
+          >Create new board..
+          </ButtonCard> :
+          <Button
+            solid
+            bold
+            id="create"
+            onClick={() => togglePopOver(this.buttonRef.getBoundingClientRect())}
+          >
+            <Icon grey className="fa fa-plus" />Create a Team Board
+          </Button>
         }
       </div >
     )

@@ -20,10 +20,28 @@ const auth = new Auth()
 
 const { isAuthenticated } = auth
 
-const UserIdQuery = gql`
+const UserWithAuthQuery = gql`
   query user($key: String) {
     User (key: $key) {
       id
+      teams {
+        id, name, desc, website, users {
+          id, name, nickname
+        }
+      }
+    }
+  }
+`
+
+const UsersTeamsQuery = gql`
+  query user($id: ID) {
+    User (id: $id) {
+      id
+      teams {
+        id, name, desc, website, users {
+          id, name, nickname
+        }
+      }
     }
   }
 `
@@ -32,7 +50,8 @@ class App extends Component {
   state = {
     keepOpen: false,
     isAuthenticated,
-    userId: ''
+    userId: '',
+    teams: []
   }
   //
   // getUserId is passed as props to Home.js Component and then called when Home.js is rendered
@@ -40,12 +59,27 @@ class App extends Component {
   getUserId = async auth0Key => {
     try {
       const { data: { User } } = await this.props.client.query({
-        query: UserIdQuery,
+        query: UserWithAuthQuery,
         variables: { key: auth0Key }
+      })
+      if (User) {
+        this.setState({ userId: User.id, teams: User.teams })
+      }
+    } catch (err) {
+      console.log('err::', err)
+    }
+  }
+
+  getTeams = async () => {
+    const { userId } = this.props
+    try {
+      const { data: { User } } = await this.props.client.query({
+        query: UsersTeamsQuery,
+        variables: { id: userId }
       })
 
       if (User) {
-        this.setState({ userId: User.id })
+        this.setState({ teams: User.teams })
       }
     } catch (err) {
       console.log('err::', err)
@@ -76,10 +110,9 @@ class App extends Component {
     const homeJSX = () => (
       <Home
         authStateChanged={this.authStateChanged}
-        keepOpen={this.state.keepOpen}
         resetMenuState={this.resetMenuState}
         getUserId={this.getUserId}
-        userId={this.state.userId}
+        {...this.state}
       />
     )
 
@@ -107,7 +140,8 @@ class App extends Component {
             {this.state.isAuthenticated &&
               <Toolbar
                 auth={auth}
-                keepOpen={this.state.keepOpen}
+                {...this.state}
+                getTeams={this.getTeams}
                 toggleFixedMenu={this.toggleFixedMenu}
               />
             }

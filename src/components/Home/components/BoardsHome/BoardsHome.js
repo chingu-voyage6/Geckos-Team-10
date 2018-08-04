@@ -57,7 +57,7 @@ const BoardsHome = props => {
                       )
                     )
                   }
-                  <CreateBoardPopOver buttonType="card" />
+                  <CreateBoardPopOver buttonType="card" userId={props.userId} />
                 </Wrapper>
                 {
                   data.User.teams.map(({ id, name, boards }) => (
@@ -73,7 +73,7 @@ const BoardsHome = props => {
                             <LinkTitle>{board.title}</LinkTitle>
                           </StyledLink>))
                         }
-                        <CreateBoardPopOver teamId={id} buttonType="card" />
+                        <CreateBoardPopOver teamId={id} userId={props.userId} buttonType="card" />
                       </Wrapper>
                     </Fragment>)
                   )

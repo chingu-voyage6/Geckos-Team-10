@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Query, withApollo } from 'react-apollo'
 import gql from 'graphql-tag'
 
@@ -17,84 +17,82 @@ const TeamQuery = gql`
   }
 `
 
-class TeamViewer extends Component {
-  state = { activeTab: 'edit team' }
-
-  changeTab = e => {
-    this.setState({ activeTab: e.target.name })
-  }
-
-  render() {
-    const { activeTab } = this.state
-    const CreateBoardPopOver = PopOver(CreateBoard, CreateBoardButton)
-    return (
-      <Wrapper large>
-        <Query query={TeamQuery} variables={{ id: this.props.teamId, }}>
-          {({ loading, data: { Team } }) => {
-            return (
-              !loading && Team && (
-                <Wrapper flex>
-                  <Wrapper large>
-                    <Title><Icon grey className="fa fa-user" />{Team.name}</Title>
-                    <br />
-                    {activeTab === 'settings' && <Settings team={Team} />}
-                    {activeTab === 'members' && <Members team={Team} />}
-                    {activeTab === 'edit team' && <EditTeam team={Team} />}
-                  </Wrapper>
-                  <Wrapper small>
-                    <Button
-                      solid
-                      bold
-                      name="edit team"
-                      active={activeTab === 'edit team'}
-                      onClick={el => this.changeTab(el)}
-                    >
-                      <Icon
-                        grey
-                        active_white={activeTab === 'edit team'}
-                        className="fa fa-edit"
-                      />Edit Team
-                    </Button>
-                    <Button
-                      solid
-                      bold
-                      name="members"
-                      active={activeTab === 'members'}
-                      onClick={el => this.changeTab(el)}
-                    >
-                      <Icon
-                        grey
-                        active_white={activeTab === 'members'}
-                        className="fa fa-user"
-                      />Members
-                    </Button>
-                    <Button
-                      solid
-                      bold
-                      name="settings"
-                      active={activeTab === 'settings'}
-                      onClick={el => this.changeTab(el)}
-                    >
-                      <Icon
-                        grey
-                        active_white={activeTab === 'settings'}
-                        className="fa fa-gear"
-                      />Settings
-                    </Button>
-                    <br />
-                    <CreateBoardPopOver teamId={Team.id} />
-                    <Button solid bold>
-                      <Icon grey className="fa fa-user-plus" />Add Member
-                    </Button>
-                  </Wrapper>
+const TeamViewer = props => {
+  const CreateBoardPopOver = PopOver(CreateBoard, CreateBoardButton)
+  return (
+    <Wrapper large>
+      <Query query={TeamQuery} variables={{ id: props.teamId, }}>
+        {({ loading, data: { Team } }) => {
+          return (
+            !loading && Team && (
+              <Wrapper flex>
+                <Wrapper large>
+                  <Title><Icon grey className="fa fa-user" />{Team.name}</Title>
+                  <br />
+                  {props.activeTab === 'settings' && <Settings team={Team} />}
+                  {props.activeTab === 'members' && <Members team={Team} />}
+                  {props.activeTab === 'edit team' &&
+                    <EditTeam
+                      website={Team.website}
+                      teamId={Team.id}
+                      name={Team.name}
+                      desc={Team.desc}
+                    />
+                  }
                 </Wrapper>
-              )
+                <Wrapper small>
+                  <Button
+                    solid
+                    bold
+                    name="edit team"
+                    active={props.activeTab === 'edit team'}
+                    onClick={el => props.changeTab(el)}
+                  >
+                    <Icon
+                      grey
+                      active_white={props.activeTab === 'edit team'}
+                      className="fa fa-edit"
+                    />Edit Team
+                  </Button>
+                  <Button
+                    solid
+                    bold
+                    name="members"
+                    active={props.activeTab === 'members'}
+                    onClick={el => props.changeTab(el)}
+                  >
+                    <Icon
+                      grey
+                      active_white={props.activeTab === 'members'}
+                      className="fa fa-user"
+                    />Members
+                  </Button>
+                  <Button
+                    solid
+                    bold
+                    name="settings"
+                    active={props.activeTab === 'settings'}
+                    onClick={el => props.changeTab(el)}
+                  >
+                    <Icon
+                      grey
+                      active_white={props.activeTab === 'settings'}
+                      className="fa fa-gear"
+                    />Settings
+                  </Button>
+                  <br />
+                  <CreateBoardPopOver teamId={Team.id} />
+                  <Button solid bold>
+                    <Icon grey className="fa fa-user-plus" />Add Member
+                  </Button>
+                </Wrapper>
+              </Wrapper>
             )
-          }}
-        </Query>
-      </Wrapper>
-    )
-  }
+          )
+        }}
+      </Query>
+    </Wrapper>
+  )
 }
 
 const TeamViewerWithApollo = withApollo(TeamViewer)
