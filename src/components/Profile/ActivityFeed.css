@@ -1,0 +1,37 @@
+.header{
+  max-width: 600px;
+  margin: auto;
+}
+.header h2{
+  font-size: 20px;
+  font-weight: 520;
+  padding: 5px 5px;
+}
+.header h4{
+  font-weight: normal;
+  border-top: 1px solid lightgray;
+  padding:10px 10px;
+  color:    #2e2f30;
+}
+.header h6{
+  font-weight: normal;
+  font-size: 14px;
+  text-decoration: underline;
+  padding-left: 20px;
+  color: #2e2f30;
+}
+.header h6:hover{
+  border: 1px solid lightgray;
+  background-color: lightgray;
+  padding: 20px 20px;
+  cursor: pointer;
+}
+
+span{
+  text-decoration: underline;
+
+}
+span:hover{
+  color: #000;
+  cursor: pointer;
+}

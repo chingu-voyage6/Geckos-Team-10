@@ -1,0 +1,38 @@
+.set{
+  max-width: 600px;
+  margin: auto;
+}
+.set h2{
+  font-size: 20px;
+  font-weight: 520;
+  padding: 5px 5px;
+}
+.set h4{
+  font-weight: normal;
+  border-top: 1px solid lightgray;
+  padding:10px 10px;
+  color:    #2e2f30;
+  text-decoration: underline;
+}
+
+.set h6{
+  font-weight: normal;
+  font-size: 14px;
+  padding-left: 20px;
+  color: #2e2f30;
+  max-width:180px;
+  padding: 10px 10px;
+  border: 1px solid #e5e7e9;
+  background-color: #e5e7e9;
+}
+.set h6:hover{
+  background-color:  #d5dbdb;
+  color:#000;
+  cursor: pointer;
+}
+.set h4:hover{
+  border: 1px solid #e5e7e9;
+  background-color: #e5e7e9;
+  padding: 10px 10px;
+  cursor: pointer;
+}
