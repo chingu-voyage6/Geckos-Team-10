@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
 import moment from 'moment'
+import { withApollo } from 'react-apollo'
+import { withRouter } from 'react-router-dom'
+import gql from 'graphql-tag'
 import ListContainer from './List.styles'
 import BoardProvider from '../../BoardProvider'
 import { CardTask, ListHeader, ListFooter, ListMenu } from './components'
@@ -17,6 +20,64 @@ const TextArea = styled.textarea`
   margin: 2px;
 `
 
+const boardQuery = gql`
+  query board($id: ID){
+    Board(id: $id) {
+      id
+      title
+      lists {
+        id
+        listTitle
+        cards {
+          id
+          desc
+          dueDate
+          task
+          author {
+            id
+            name
+            nickname
+          }
+        }
+      }
+    }
+  }
+`
+
+const createCardTaskMutation = gql`
+  mutation createCard(
+    $attachments: [String!],
+    $labels: [String!],
+    $order: Int!,
+    $task: String!,
+    $authorId: ID,
+    $listId: ID
+  ) {
+    createCard(
+      attachments: $attachments,
+      labels: $labels,
+      order: $order,
+      task: $task,
+      authorId: $authorId,
+      listId: $listId
+    ) {
+      id
+    }
+  }
+`
+
+const deleteListMutation = gql`
+  mutation deleteList(
+    $id: ID!
+  ) {
+    deleteList(
+      id: $id
+    ) {
+      id
+    }
+  }
+`
+
 class List extends Component {
   state = {
     addingCard: false,
@@ -28,13 +89,47 @@ class List extends Component {
     this.setState({ addingCard: true, showListMenu: false })
   }
 
-  onSaveCard = () => {
-    if (this.state.newCardValue.length === 0) {
-      alert('You must type something xD')
-    } else {
-      alert('New card was created succesfully')
+  onSaveCard = async () => {
+    if (!this.state.newCardValue) return
+
+    try {
+      await this.props.client.mutate({
+        mutation: createCardTaskMutation,
+        variables: {
+          attachments: [],
+          labels: [],
+          order: 1,
+          task: this.state.newCardValue,
+          authorId: localStorage.getItem('grapUserId'),
+          listId: this.props.listId
+        },
+        refetchQueries: [{
+          query: boardQuery,
+          variables: { id: this.props.match.params.boardId }
+        }]
+      })
+      this.setState({ addingCard: false, newCardValue: '' })
+    } catch (err) {
+      console.log('err::', err)
     }
-    this.setState({ addingCard: false, newCardValue: '' })
+  }
+
+  onRemoveCard = async () => {
+    try {
+      await this.props.client.mutate({
+        mutation: deleteListMutation,
+        variables: {
+          id: this.props.listId
+        },
+        refetchQueries: [{
+          query: boardQuery,
+          variables: { id: this.props.match.params.boardId }
+        }]
+      })
+      this.setState({ addingCard: false, newCardValue: '' })
+    } catch (err) {
+      console.log('err::', err)
+    }
   }
 
   onCancelCard = () => {
@@ -78,7 +173,7 @@ class List extends Component {
             />
           )
         })}
-        {showListMenu && <ListMenu onAddCard={this.onAddCard} />}
+        {showListMenu && <ListMenu onAddCard={this.onAddCard} onRemoveCard={this.onRemoveCard} />}
         {addingCard && (
           <TextArea
             onChange={e => this.newCard(e)}
@@ -95,8 +190,11 @@ class List extends Component {
   }
 }
 
+const ListWithApollo = withApollo(List)
+const ListWithRouter = withRouter(ListWithApollo)
+
 export default props => (
   <BoardProvider.Consumer>
-    {value => <List {...value} {...props} />}
+    {value => <ListWithRouter {...value} {...props} />}
   </BoardProvider.Consumer>
 )

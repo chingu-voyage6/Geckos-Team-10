@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import ReactModal from 'react-modal'
 import DatePicker from 'react-datepicker'
+import { withRouter } from 'react-router-dom'
 import moment from 'moment'
 import { withApollo, Query } from 'react-apollo'
 import gql from 'graphql-tag'
@@ -17,8 +18,8 @@ import BoardProvider from '../../BoardProvider'
 import { Button, Label } from '../../../StyledComponents'
 
 const boardQuery = gql`
-  {
-    Board(id: "cjj7smzwg8eco0149e347lcq0") {
+  query boardQuery($id: ID) {
+    Board(id: $id) {
       id
       title
       lists {
@@ -101,7 +102,7 @@ class Modal extends Component {
     labelTags: this.props.card.labels || [],
     loadTagMenu: false,
     newTagValue: '',
-    startDueDate: moment(this.props.card.dueDate) || moment()
+    startDueDate: this.props.card.dueDate ? moment(this.props.card.dueDate) : moment()
   }
 
   onChangeDescription = value => {
@@ -133,7 +134,8 @@ class Modal extends Component {
           dueDate: moment(startDueDate, 'YYYY-MM-DD HH:mm Z')
         },
         refetchQueries: [{
-          query: boardQuery
+          query: boardQuery,
+          variables: { id: this.props.match.params.boardId }
         }]
       })
       this.setState({ showTitleInput: false, cardTitle: '' })
@@ -151,7 +153,7 @@ class Modal extends Component {
     try {
       const { data: { Board } } = await this.props.client.query({
         query: boardQuery,
-        variables: { id: 'cjj7smzwg8eco0149e347lcq0' }
+        variables: { id: this.props.match.params.boardId }
       })
       if (Board) {
         this.setState({ lists: Board.lists })
@@ -182,7 +184,8 @@ class Modal extends Component {
           dueDate: startDueDate
         },
         refetchQueries: [{
-          query: boardQuery
+          query: boardQuery,
+          variables: { id: this.props.match.params.boardId }
         }]
       })
       this.setState({ lists: [] })
@@ -198,7 +201,8 @@ class Modal extends Component {
         mutation: deleteCardMutation,
         variables: { id },
         refetchQueries: [{
-          query: boardQuery
+          query: boardQuery,
+          variables: { id: this.props.match.params.boardId }
         }]
       })
       this.props.onHideModal()
@@ -224,6 +228,7 @@ class Modal extends Component {
     const {
       loadTagMenu, cardTitle, showTitleInput, descriptionValue, labelTags, newTagValue, lists, startDueDate
     } = this.state
+    console.log('this.props::', this.props)
     return (
       <ReactModal
         ariaHideApp={false}
@@ -348,6 +353,7 @@ class Modal extends Component {
 }
 
 const ModalWithApollo = withApollo(Modal)
+const ModalWithRouter = withRouter(ModalWithApollo)
 
 class ModalQueryWrapper extends Component {
   render() {
@@ -357,7 +363,7 @@ class ModalQueryWrapper extends Component {
         {({ loading, data: { Card } }) => {
           return (
             !loading && Card && (
-              <ModalWithApollo
+              <ModalWithRouter
                 {...this.props}
                 card={Card}
               />

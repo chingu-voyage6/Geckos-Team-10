@@ -1,12 +1,19 @@
-import React from 'react'
-import styled from 'styled-components'
-import { Query } from 'react-apollo'
+import React, { Component } from 'react'
+import { Query, withApollo } from 'react-apollo'
 import gql from 'graphql-tag'
-// import { boardQuery } from '../../graphql/queries'
 import List from './components/List/List'
 import { Auth } from '../../services/Services'
 import BoardProvider from './BoardProvider'
 import Modal from './components/Modal/Modal'
+import { Button } from '../StyledComponents'
+import {
+  ListContainer,
+  BoardContainer,
+  CreateListButton,
+  CreateListFormContainer,
+  CreateListActions,
+  TextArea
+} from './Board.styles'
 
 const auth = new Auth()
 
@@ -36,45 +43,126 @@ const boardQuery = gql`
   }
 `
 
-const ListContainer = styled.div`
-  overflow-x: auto;
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  display: flex;
-  align-items: flex-start;
-  background-color: #7a88b9;
+const createListMutation = gql`
+  mutation createList(
+    $listTitle: String!,
+    $order: Int!,
+    $authorId: ID,
+    $boardId: ID,
+    $cardsIds: [ID!],
+    $cards: [ListcardsCard!]
+  ) {
+    createList(
+      listTitle: $listTitle,
+      order: $order,
+      authorId: $authorId,
+      cardsIds: $cardsIds,
+      boardId: $boardId,
+      cards: $cards
+    ) {
+      id
+      listTitle
+    }
+  }
 `
 
-const BoardContainer = styled.div`
-  display: flex;
-  position: relative;
-  flex-grow: 1;
-  height: 100vh;
-`
+class Board extends Component {
+  state = {
+    showAddList: false,
+    newListTitle: ''
+  }
 
-const Board = props =>
-  (isAuthenticated() &&
-    <BoardProvider>
-      <Modal />
-      <BoardContainer>
-        <ListContainer>
-          <Query query={boardQuery} variables={{ id: props.match.params.boardId }}>
-            {({ loading, data: { Board: MainBoard } }) => {
-              return (
-                !loading && MainBoard && MainBoard.lists.map(({ id, listTitle, cards }) => {
+  onCreateNewList = async () => {
+    if (!this.state.newListTitle) return
+
+    try {
+      await this.props.client.mutate({
+        mutation: createListMutation,
+        variables: {
+          listTitle: this.state.newListTitle,
+          order: 3,
+          authorId: localStorage.getItem('grapUserId'),
+          cardsIds: [],
+          boardId: this.props.match.params.boardId,
+          cards: []
+        },
+        refetchQueries: [{
+          query: boardQuery,
+          variables: { id: this.props.match.params.boardId }
+        }]
+      })
+      this.setState({ showAddList: false, newListTitle: '' })
+    } catch (err) {
+      console.log('err::', err)
+    }
+  }
+
+  handleShowAddList = () => {
+    this.setState(prevState => {
+      return { showAddList: !prevState.showAddList, newListTitle: '' }
+    })
+  }
+
+  handleTextArea = content => {
+    this.setState({ newListTitle: content })
+  }
+
+  render() {
+    const { showAddList } = this.state
+
+    return (
+      (isAuthenticated() &&
+        <BoardProvider>
+          <Modal />
+          <BoardContainer>
+            <ListContainer>
+              <Query query={boardQuery} variables={{ id: this.props.match.params.boardId }}>
+                {({ loading, data: { Board: MainBoard } }) => {
                   return (
-                    <List listTitle={listTitle} cards={cards} key={id} />
+                    !loading && MainBoard && MainBoard.lists.map(({ id, listTitle, cards }) => {
+                      return (
+                        <List listId={id} listTitle={listTitle} cards={cards} key={id} />
+                      )
+                    })
                   )
-                })
-              )
-            }}
-          </Query>
-        </ListContainer>
-      </BoardContainer>
-    </BoardProvider>
-  )
+                }}
+              </Query>
+              {showAddList
+                ? (
+                  <CreateListFormContainer>
+                    <TextArea onChange={e => this.handleTextArea(e.target.value)} />
+                    <CreateListActions>
+                      <Button
+                        width="50px"
+                        onClick={this.onCreateNewList}
+                        backgroundColor="#5aac44"
+                        hoverBackgroundColor="#519839"
+                        color="#fff"
+                        hoverColor="#fff"
+                        margin="0 5px 0 0"
+                      >
+                        Save
+                      </Button>
+                      <Button width="50px" onClick={this.handleShowAddList}>
+                        X
+                      </Button>
+                    </CreateListActions>
+                  </CreateListFormContainer>
+                )
+                : (
+                  <CreateListButton>
+                    <Button onClick={this.handleShowAddList} >
+                      Create new list
+                    </Button>
+                  </CreateListButton>
+                )
+              }
+            </ListContainer>
+          </BoardContainer>
+        </BoardProvider>
+      )
+    )
+  }
+}
 
-export default Board
+export default withApollo(Board)

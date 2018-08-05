@@ -14,11 +14,10 @@ Chingu Voyage-6 | https://chingu.io/
 ### MVP User Stories
 | Goal | Status |
 | -----| ------ |
-| User can log into app to access features | pending |
-| User can create, remove and edit tasks | pending |
+| User can log into app to access features | done |
+| User can create, remove and edit tasks | done |
 | User can add or remove tags to identify the priority of the task | done |
-| User can add attachments, assign users, and create a description for a task | pending |
-| User can drag and drop tasks to any column | pending |
+| User can drag and drop tasks to any column | done |
 | User can filter tasks by tags | pending |
 | User can search tasks | pending |
 | User can share a task when it's done | pending |

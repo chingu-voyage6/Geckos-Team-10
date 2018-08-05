@@ -37,13 +37,14 @@ const BoardsHome = props => {
     <div>
       <Query query={BoardsQuery} variables={{ id: props.userId }}>
         {({ loading, data }) => {
+          !loading && data && localStorage.setItem('grapUserId', data.User.id)
           return (
             !loading && data && (
               <Fragment>
                 <Title><Icon grey medium className="fa fa-user" /> Personal</Title>
                 <Wrapper>
                   {
-                    data.User.boards.map(board =>
+                    data.User && data.User.boards.map(board =>
                       (board.team == null &&
                         <StyledLink
                           to={`/board/${board.id}`}
@@ -58,7 +59,7 @@ const BoardsHome = props => {
                   <Card>Create new board..</Card>
                 </Wrapper>
                 {
-                  data.User.teams.map(team => (
+                  data.User && data.User.teams.map(team => (
                     <Fragment>
                       <Title><Icon grey medium className="fa fa-users" />{team.name}</Title>
                       <Wrapper>

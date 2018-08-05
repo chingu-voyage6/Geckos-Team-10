@@ -27,7 +27,15 @@ const Label = styled.label`
   cursor: pointer;
 `
 
+const Avatar = styled.img`
+  width: 30px;
+  height: 30px;
+  border-radius: 50px;
+  margin-left: auto;
+`
+
 export {
+  Avatar,
   CardTaskContainer,
   Label,
   LineContainer
