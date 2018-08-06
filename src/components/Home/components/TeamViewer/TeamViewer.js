@@ -19,10 +19,10 @@ const TeamQuery = gql`
 
 const TeamViewer = props => {
   const CreateBoardPopOver = PopOver(CreateBoard, CreateBoardButton)
-  console.log(props)
+  // console.log(props)
   return (
     <Wrapper large>
-      <Query query={TeamQuery} variables={{ id: props.teamId, }}>
+      <Query query={TeamQuery} variables={{ id: props.activeTeam, }}>
         {({ loading, data: { Team } }) => {
           return (
             !loading && Team && (
@@ -30,7 +30,7 @@ const TeamViewer = props => {
                 <Wrapper large>
                   <Title><Icon grey className="fa fa-user" />{Team.name}</Title>
                   <br />
-                  {props.activeTab === 'settings' && <Settings team={Team} />}
+                  {props.activeTab === 'settings' && <Settings team={Team} {...props} />}
                   {props.activeTab === 'members' && <Members team={Team} />}
                   {props.activeTab === 'edit team' &&
                     <EditTeam

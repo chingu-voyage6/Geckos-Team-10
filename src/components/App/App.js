@@ -20,6 +20,20 @@ const auth = new Auth()
 
 const { isAuthenticated, login, logout } = auth
 
+const DeleteTeam = gql`
+  mutation ($teamId: ID!) {
+    deleteTeam(id: $teamId) {
+      id, name, desc, website
+      users {
+        name, nickname
+        teams {
+          id, name
+        }
+      }
+    }
+  }
+`
+
 const CreateNewBoard = gql`
   mutation ($title: String!, $authorId: ID!, $background: String!, $teamId: ID) {
     createBoard(title: $title, background: $background, authorId: $authorId, teamId: $teamId) {
@@ -88,7 +102,10 @@ class App extends Component {
   state = {
     keepOpen: false,
     isAuthenticated,
+    activeComponent: 'boards',
     auth0IdToken: localStorage.getItem('user_id') || false,
+    activeTab: 'edit team',
+    activeTeam: '',
     userId: '',
     boards: [],
     teams: []
@@ -131,13 +148,52 @@ class App extends Component {
     }
   }
 
+  deleteTeam = async teamId => {
+    await this.props.client.mutate({
+      mutation: DeleteTeam,
+      variables: { teamId },
+      update: (store, { data: { deleteTeam } }) => {
+        const data = store.readQuery({
+          query: UserWithAuthQuery,
+          variables: { key: localStorage.getItem('user_id') }
+        })
+
+        // find team by id and remove it from the cache
+        data.User.teams.forEach((team, index) => {
+          if (team.id === deleteTeam.id) {
+            data.User.teams.splice(index, 1)
+            data.User.boards.push(...team.boards)
+          }
+        })
+
+        console.log(data.User.boards)
+
+        store.writeQuery({ query: UserWithAuthQuery, data })
+        this.setState({
+          boards: data.User.boards,
+          teams: data.User.teams,
+          activeComponent: 'boards',
+          activeTab: 'edit team'
+        })
+      }
+    })
+  }
+
   createBoard = async (userId, title, background, teamId) => {
+    // console.log(teamId)
+    const variables = {
+      authorId: userId, title, background
+    }
+    if (teamId) {
+      variables.teamId = teamId
+    }
+
+    console.log(variables)
+
     try {
       await this.props.client.mutate({
         mutation: CreateNewBoard,
-        variables: {
-          authorId: userId, title, background, teamId
-        },
+        variables,
         update: (store, { data: { createBoard } }) => {
           const data = store.readQuery({
             query: UserWithAuthQuery,
@@ -172,9 +228,11 @@ class App extends Component {
           // Read the data from our cache for this query.
           const data = store.readQuery({
             query: UserWithAuthQuery,
-            variables: { key: localStorage.getItem('user_id') }
+            variables: { key: localStorage.getItem('user_id') },
+            fetchPolicy: 'network-only'
           })
           data.User.teams.push(createTeam)
+          console.log(data.User.teams)
           store.writeQuery({ query: UserWithAuthQuery, data })
           this.setState({ teams: data.User.teams })
         }
@@ -182,6 +240,18 @@ class App extends Component {
     } catch (err) {
       console.log('err::', err)
     }
+  }
+
+  // toggle components that are shown
+  toggleComponents = e => {
+    this.setState({
+      activeTeam: e.target.id || '',
+      activeComponent: e.target.name
+    })
+  }
+
+  changeTab = e => {
+    this.setState({ activeTab: e.target.name })
   }
 
   handleAuthentication = nextState => {
@@ -215,11 +285,14 @@ class App extends Component {
       <Home
         getUserDataWithAuth={this.getUserDataWithAuth}
         authStateChanged={this.authStateChanged}
+        toggleComponents={this.toggleComponents}
         getTeamsWithId={this.getTeamsWithId}
         resetMenuState={this.resetMenuState}
         getUserData={this.getUserData}
         createBoard={this.createBoard}
+        deleteTeam={this.deleteTeam}
         createTeam={this.createTeam}
+        changeTab={this.changeTab}
         {...this.state}
       />
     )
@@ -234,6 +307,7 @@ class App extends Component {
                 <Toolbar
                   {...this.state}
                   createTeam={this.createTeam}
+                  createBoard={this.createBoard}
                   logoutWithRedirect={this.logoutWithRedirect}
                   getTeamsWithId={this.getTeamsWithId}
                   toggleFixedMenu={this.toggleFixedMenu}

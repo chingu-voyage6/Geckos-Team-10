@@ -40,7 +40,7 @@ class CreateBoard extends Component {
   }
 
   handleSubmit = async () => {
-    const { userId, teamId, createBoard } = this.props
+    const { userId, createBoard, teamId } = this.props
     const { title, background } = this.state
 
     createBoard(userId, title, background, teamId)

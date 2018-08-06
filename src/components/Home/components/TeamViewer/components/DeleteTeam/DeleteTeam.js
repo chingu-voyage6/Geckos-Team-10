@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 import { Button, Heading, Input, Wrapper } from '../../../../../StyledComponents'
 
-class DeleteTeam extends Component {
+export default class DeleteTeam extends Component {
   state = {
     isDisabled: true
   }
@@ -14,6 +14,10 @@ class DeleteTeam extends Component {
     } else {
       this.setState({ isDisabled: true })
     }
+  }
+
+  handleSubmit = () => {
+    this.props.deleteTeam(this.props.activeTeam)
   }
 
   render() {
@@ -34,11 +38,10 @@ class DeleteTeam extends Component {
           solid
           // disabled={isDisabled}
           danger={!isDisabled}
+          onClick={this.handleSubmit}
         >Delete this Team
         </Button>
       </Wrapper>
     )
   }
 }
-
-export default DeleteTeam

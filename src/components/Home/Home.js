@@ -7,34 +7,12 @@ import { Button, Wrapper } from '../StyledComponents'
 import { FlexWrapper } from './Home.styles'
 
 const auth = new Auth()
-const { isAuthenticated } = auth
 
 class Home extends Component {
-  state = {
-    isAuthenticated,
-    activeComponent: 'boards',
-    activeTab: 'edit team',
-    // teamId: '',
-    // boards: [],
-  }
-
   // will re-render App.js
   componentDidMount = () => {
-    console.log(this.props)
     this.props.getUserDataWithAuth(localStorage.getItem('user_id'))
     this.props.authStateChanged()
-  }
-
-  // toggle components that are shown
-  toggleComponents = e => {
-    this.setState({
-      teamId: e.target.id || '',
-      activeComponent: e.target.name
-    })
-  }
-
-  changeTab = e => {
-    this.setState({ activeTab: e.target.name })
   }
 
   // calls the login method in authentication service
@@ -73,10 +51,10 @@ class Home extends Component {
     })
   }
   render() {
-    const { activeComponent } = this.state
+    const { activeComponent, isAuthenticated } = this.props
     return (
       <div>
-        {!this.state.isAuthenticated() &&
+        {!isAuthenticated &&
           <Wrapper>
             <br />
             <Wrapper width="250px" margin="auto">
@@ -92,20 +70,18 @@ class Home extends Component {
         }
         <br />
         <FlexWrapper>
-          {isAuthenticated() &&
+          {isAuthenticated &&
             <Fragment>
               <LeftSidebar
                 {...this.state}
                 {...this.props}
-                toggleComponents={this.toggleComponents}
               />
-              {activeComponent === 'boards' && <BoardsHome {...this.state} {...this.props} />}
+              {activeComponent === 'boards' && <BoardsHome {...this.props} />}
               {activeComponent !== 'boards' &&
                 <Fragment>
                   <TeamViewer
                     {...this.state}
                     {...this.props}
-                    changeTab={this.changeTab}
                   />
                 </Fragment>
               }

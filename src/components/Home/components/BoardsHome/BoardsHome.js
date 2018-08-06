@@ -7,7 +7,7 @@ import { PopOver, CreateBoardButton, CreateBoard } from '../../../Components'
 const BoardsHome = props => {
   const CreateBoardPopOver = PopOver(CreateBoard, CreateBoardButton)
   return (
-    props.boards &&
+    props.boards && props.teams &&
     <div>
       <Fragment>
         <Title><Icon grey medium className="fa fa-user" /> Personal</Title>
@@ -25,6 +25,7 @@ const BoardsHome = props => {
         {
           props.teams.map(({ id, name, boards }) => (
             <Fragment key={id}>
+              {console.log(id, name)}
               <Title><Icon grey medium className="fa fa-users" />{name}</Title>
               <Wrapper>
                 {boards.map(board => (
