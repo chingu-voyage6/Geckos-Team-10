@@ -2,7 +2,7 @@ import auth0 from 'auth0-js'
 
 import history from '../services/history'
 
-class Auth {
+export default class Auth {
   auth0 = new auth0.WebAuth({
     domain: 'geckos-team-10.auth0.com',
     clientID: 'cSlJoIh8NZT9AdOdPm8GFwJjW42Y07PX',
@@ -71,5 +71,3 @@ class Auth {
     return localStorage.getItem('id_token')
   }
 }
-
-export default Auth

@@ -19,6 +19,7 @@ const TeamQuery = gql`
 
 const TeamViewer = props => {
   const CreateBoardPopOver = PopOver(CreateBoard, CreateBoardButton)
+  console.log(props)
   return (
     <Wrapper large>
       <Query query={TeamQuery} variables={{ id: props.teamId, }}>

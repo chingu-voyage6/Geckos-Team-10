@@ -1,23 +1,7 @@
 import React, { Component } from 'react'
 import { withApollo } from 'react-apollo'
-import gql from 'graphql-tag'
 
 import { Button, Heading, Icon, Input, TextArea, Wrapper } from '../StyledComponents'
-
-
-const CreateNewTeam = gql`
-  mutation CreateTeam($name: String!, $authorId: [ID!]!, $desc: String) {
-    createTeam(name: $name, usersIds: $authorId, desc: $desc) {
-      id, name, desc,
-      users {
-        name, nickname,
-        teams {
-          id, name
-        }
-      }
-    }
-  }
-`
 
 class CreateTeam extends Component {
   state = {
@@ -32,19 +16,11 @@ class CreateTeam extends Component {
     }
   }
 
-  handleSubmit = async () => {
-    const { userId } = this.props
+  handleSubmit = () => {
+    const { userId, createTeam } = this.props
     const { name, desc } = this.state
-    try {
-      await this.props.client.mutate({
-        mutation: CreateNewTeam,
-        variables: {
-          authorId: userId, name, desc
-        }
-      })
-    } catch (err) {
-      console.log('err::', err)
-    }
+
+    createTeam(userId, name, desc)
   }
 
   render() {

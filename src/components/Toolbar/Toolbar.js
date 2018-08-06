@@ -1,16 +1,11 @@
 import React, { Component, Fragment } from 'react'
-
-import { Auth } from '../../services/Services'
 import { Wrapper, Button, Brand, Input, Icon, RowItem } from './Toolbar.styles'
 import { StyledLink } from '../StyledComponents'
 import { Boards, PopOver } from '../Components'
 import { Avatar, Menu, CreateMenu } from './components'
 
-const auth = new Auth()
 
-const { isAuthenticated } = auth
-
-class Toolbar extends Component {
+export default class Toolbar extends Component {
   state = { isActive: false }
 
   toggleBoards = nextState => {
@@ -24,14 +19,10 @@ class Toolbar extends Component {
     }
   }
 
-  logout = () => {
-    this.props.auth.logout()
-    this.props.auth.login()
-  }
 
   render() {
     const { isActive } = this.state
-    const { toggleFixedMenu, keepOpen } = this.props
+    const { toggleFixedMenu, keepOpen, isAuthenticated } = this.props
 
     const CreateButton = props => {
       return (
@@ -45,46 +36,30 @@ class Toolbar extends Component {
 
     const PopOverCreate = PopOver(CreateMenu, CreateButton)
 
-    const BoardsJSX = (
-      <Boards
-        toggleFixedMenu={toggleFixedMenu}
-        toggleBoards={this.toggleBoards}
-        keepOpen={keepOpen}
-      />)
-
-    const ContentJSX = (
-      <Fragment>
-        {
-          isActive && BoardsJSX
-        }
-        {!keepOpen &&
-          <Button id="toggle_boards" onClick={this.toggleBoards}>Boards</Button>
-        }
-        <Input type="search" />
-        <Brand>
-          <StyledLink to="/">Trello Clone</StyledLink>
-        </Brand>
-        <RowItem pull_right>
-          <PopOverCreate {...this.props} />
-        </RowItem>
-        <PopOverMenu logout={this.logout} />
-      </Fragment>
-    )
-
     return (
-      isAuthenticated() &&
+      isAuthenticated &&
       <Fragment>
-        {keepOpen ?
-          <Wrapper offset="true">
-            {ContentJSX}
-          </Wrapper> :
-          <Wrapper>
-            {ContentJSX}
-          </Wrapper>
-        }
+        <Wrapper offset={keepOpen}>
+          {isActive &&
+            <Boards
+              toggleFixedMenu={toggleFixedMenu}
+              toggleBoards={this.toggleBoards}
+              keepOpen={keepOpen}
+            />
+          }
+          {!keepOpen &&
+            <Button id="toggle_boards" onClick={this.toggleBoards}>Boards</Button>
+          }
+          <Input type="search" />
+          <Brand>
+            <StyledLink to="/">Trello Clone</StyledLink>
+          </Brand>
+          <RowItem pull_right>
+            <PopOverCreate {...this.props} />
+          </RowItem>
+          <PopOverMenu {...this.props} />
+        </Wrapper>
       </Fragment>
     )
   }
 }
-
-export default Toolbar

@@ -1,22 +1,7 @@
 import React, { Component } from 'react'
-import gql from 'graphql-tag'
 
 import { Button, Icon, ButtonCard, Heading, Input, Wrapper } from '../StyledComponents'
 
-const CreateNewBoard = gql`
-  mutation ($title: String!, $authorId: ID!, $background: String!, $teamId: ID) {
-    createBoard(title: $title, background: $background, authorId: $authorId, teamId: $teamId) {
-      id
-      title
-      author {
-        id, name, nickname
-      }
-      team {
-        id, name
-      }
-    }
-  }
-`
 
 const RandomColor = () => {
   const hexColor = `#${(Math.floor(Math.random() * 16777215).toString(16))}`
@@ -55,24 +40,17 @@ class CreateBoard extends Component {
   }
 
   handleSubmit = async () => {
-    const { userId, teamId } = this.props
+    const { userId, teamId, createBoard } = this.props
     const { title, background } = this.state
-    try {
-      await this.props.client.mutate({
-        mutation: CreateNewBoard,
-        variables: {
-          authorId: userId, title, background, teamId
-        }
-      })
-    } catch (err) {
-      console.log('err::', err)
-    }
+
+    createBoard(userId, title, background, teamId)
   }
 
   render() {
-    // const { teamId } = this.props
     const { colors, background } = this.state
     const { hasChevron, goBack } = this.props
+
+    console.log(this.props)
     return (
       <Wrapper width="100%">
         <Heading>

@@ -8,7 +8,7 @@ const Menu = props => {
         {localStorage.getItem('nickname')}
       </Heading>
       <br />
-      <Button solid onClick={props.logout}>Logout</Button>
+      <Button solid onClick={props.logoutWithRedirect}>Logout</Button>
     </Wrapper>
   )
 }

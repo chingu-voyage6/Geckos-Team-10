@@ -39,10 +39,18 @@ class CreateMenu extends Component {
           </Wrapper>
         }
         {activeComponent === 'createBoard' &&
-          <CreateBoard hasChevron={hasChevron} goBack={this.goBack} />
+          <CreateBoard
+            {...this.props}
+            goBack={this.goBack}
+            hasChevron={hasChevron}
+          />
         }
         {activeComponent === 'createTeam' &&
-          <CreateTeam hasChevron={hasChevron} goBack={this.goBack} />
+          <CreateTeam
+            {...this.props}
+            goBack={this.goBack}
+            hasChevron={hasChevron}
+          />
         }
       </Fragment>
     )

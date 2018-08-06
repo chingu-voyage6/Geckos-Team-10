@@ -10,39 +10,41 @@ import { Button } from '../../Home.styles'
 const LeftSidebar = props => {
   const CreateTeamPopOver = PopOver(CreateTeam, CreateTeamButton)
   return (
-    <Wrapper>
-      <Button
-        bold
-        name="boards"
-        active={props.activeComponent === 'boards'}
-        onClick={el => props.toggleComponents(el)}
-      >
-        <Icon
-          grey
+    <div>
+      <Wrapper>
+        <Button
+          bold
+          name="boards"
           active={props.activeComponent === 'boards'}
-          className="fa fa-square"
-        />
-        Boards
-      </Button>
-      <Title light_grey >Teams</Title>
-      {props.teams && props.teams.map(({ id, name }) => {
-        return (
-          <Button
-            bold
-            id={id}
-            key={id}
-            name={name}
-            active={props.activeComponent === name}
-            onClick={el => props.toggleComponents(el)}
-          >
-            <Icon grey className="fa fa-users" active={props.activeComponent === name} />
-            {name}
-          </Button>
-        )
-      })
-      }
-      <CreateTeamPopOver {...props} />
-    </Wrapper>
+          onClick={el => props.toggleComponents(el)}
+        >
+          <Icon
+            grey
+            active={props.activeComponent === 'boards'}
+            className="fa fa-square"
+          />
+          Boards
+        </Button>
+        <Title light_grey >Teams</Title>
+        {props.teams && props.teams.map(({ id, name }) => {
+          return (
+            <Button
+              bold
+              id={id}
+              key={id}
+              name={name}
+              active={props.activeComponent === name}
+              onClick={el => props.toggleComponents(el)}
+            >
+              <Icon grey className="fa fa-users" active={props.activeComponent === name} />
+              {name}
+            </Button>
+          )
+        })
+        }
+        <CreateTeamPopOver {...props} />
+      </Wrapper>
+    </div>
   )
 }
 

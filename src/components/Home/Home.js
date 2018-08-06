@@ -1,25 +1,27 @@
 import React, { Component, Fragment } from 'react'
 import axios from 'axios'
 
-import Auth from '../../services/auth'
+import { Auth } from '../../services'
 import { BoardsHome, LeftSidebar, TeamViewer } from './components'
 import { Button, Wrapper } from '../StyledComponents'
 import { FlexWrapper } from './Home.styles'
 
 const auth = new Auth()
+const { isAuthenticated } = auth
 
 class Home extends Component {
   state = {
-    // authMessage: '',
+    isAuthenticated,
     activeComponent: 'boards',
     activeTab: 'edit team',
-    teamId: '',
-    boards: []
+    // teamId: '',
+    // boards: [],
   }
 
   // will re-render App.js
-  componentDidMount() {
-    this.props.getUserId(localStorage.getItem('user_id'))
+  componentDidMount = () => {
+    console.log(this.props)
+    this.props.getUserDataWithAuth(localStorage.getItem('user_id'))
     this.props.authStateChanged()
   }
 
@@ -71,12 +73,10 @@ class Home extends Component {
     })
   }
   render() {
-    const { isAuthenticated } = auth
     const { activeComponent } = this.state
-    const { userId } = this.props
     return (
       <div>
-        {!isAuthenticated() &&
+        {!this.state.isAuthenticated() &&
           <Wrapper>
             <br />
             <Wrapper width="250px" margin="auto">
@@ -99,7 +99,7 @@ class Home extends Component {
                 {...this.props}
                 toggleComponents={this.toggleComponents}
               />
-              {activeComponent === 'boards' && <BoardsHome userId={userId} />}
+              {activeComponent === 'boards' && <BoardsHome {...this.state} {...this.props} />}
               {activeComponent !== 'boards' &&
                 <Fragment>
                   <TeamViewer
