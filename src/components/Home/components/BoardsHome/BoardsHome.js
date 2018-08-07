@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react'
 
 import { Wrapper, LinkTitle, StyledLink } from './BoardsHome.styles'
-import { Title, Icon } from '../../../StyledComponents/index'
+import { Title, Icon } from '../../../StyledComponents'
 import { PopOver, CreateBoardButton, CreateBoard } from '../../../Components'
 
 const BoardsHome = props => {
@@ -9,7 +9,7 @@ const BoardsHome = props => {
   return (
     props.boards && props.teams &&
     <div>
-      <Fragment>
+      <div style={{ width: '95%', display: 'block', margin: 'auto' }}>
         <Title><Icon grey medium className="fa fa-user" /> Personal</Title>
         <Wrapper>
           {
@@ -25,7 +25,6 @@ const BoardsHome = props => {
         {
           props.teams.map(({ id, name, boards }) => (
             <Fragment key={id}>
-              {console.log(id, name)}
               <Title><Icon grey medium className="fa fa-users" />{name}</Title>
               <Wrapper>
                 {boards.map(board => (
@@ -42,7 +41,7 @@ const BoardsHome = props => {
             </Fragment>)
           )
         }
-      </Fragment>
+      </div>
     </div>
   )
 }

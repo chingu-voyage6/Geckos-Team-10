@@ -9,7 +9,7 @@ const Title = styled.span`
   display: block;
   width: 100%;
 
-
+  ${props => props.black && css` color: black;`}
   ${props => props.light_grey && css` color: #838C91;`}
   ${props => props.small && css`
     font-size: 10px !important;

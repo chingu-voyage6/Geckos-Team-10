@@ -51,7 +51,7 @@ class Home extends Component {
     })
   }
   render() {
-    const { activeComponent, isAuthenticated } = this.props
+    const { activeComponent, isAuthenticated, keepOpen } = this.props
     return (
       <div>
         {!isAuthenticated &&
@@ -69,7 +69,8 @@ class Home extends Component {
           </Wrapper>
         }
         <br />
-        <FlexWrapper>
+        {console.log(keepOpen)}
+        <FlexWrapper width={keepOpen ? '98%' : '80%'}>
           {isAuthenticated &&
             <Fragment>
               <LeftSidebar
@@ -88,7 +89,7 @@ class Home extends Component {
             </Fragment>
           }
         </FlexWrapper>
-      </div>
+      </div >
     )
   }
 }

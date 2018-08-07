@@ -4,7 +4,7 @@ const FlexWrapper = styled.div`
   display: flex;
   margin: auto;
   height: 100%;
-  width: 80%;
+  width: ${props => props.width || '80%'};
 `
 
 const Button = styled.button`

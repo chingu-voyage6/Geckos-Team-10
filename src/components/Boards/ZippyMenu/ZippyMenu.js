@@ -1,6 +1,7 @@
-import React, { Component } from 'react'
-import { Button, Text, Icon } from '../Boards.styles'
-import { Pills, Pill } from './ZippyMenu.styles'
+import React, { Component, Fragment } from 'react'
+import { Icon, Title } from '../../StyledComponents'
+import { Button, Text } from '../Boards.styles'
+import { Pills, Pill, StyledLink } from './ZippyMenu.styles'
 
 class ZippyMenu extends Component {
   constructor(props) {
@@ -13,17 +14,31 @@ class ZippyMenu extends Component {
   }
 
   render() {
+    const { open } = this.state
+    const { title, boards } = this.props
+
     return (
       <Pills>
-        <Text>{this.props.title}</Text>
+        <Text><Icon grey medium className="fa fa-user" />{title}</Text>
         <Button zippy pull_right onClick={this.toggleZippy}>
           {
-            this.state.open ? <Icon className="fa fa-minus" /> :
-            <Icon className="fa fa-plus" />
+            open ? <Icon dark className="fa fa-minus" />
+              : <Icon dark className="fa fa-plus" />
           }
         </Button>
         {
-          this.state.open ? <Pill><span>No Boards Made yet</span></Pill> : ''
+          open &&
+          <Fragment>
+            {boards && boards.length ? boards.map(board => {
+              return (
+                <StyledLink key={board.id} to={`/board/${board.id}`} background={board.background}>
+                  <Title black>{board.title}</Title>
+                </StyledLink>
+              )
+            })
+              : <Pill><span>No Boards Made yet</span></Pill>
+            }
+          </Fragment>
         }
       </Pills>
     )

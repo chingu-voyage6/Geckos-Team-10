@@ -45,6 +45,7 @@ export default class Toolbar extends Component {
               toggleFixedMenu={toggleFixedMenu}
               toggleBoards={this.toggleBoards}
               keepOpen={keepOpen}
+              {...this.props}
             />
           }
           {!keepOpen &&

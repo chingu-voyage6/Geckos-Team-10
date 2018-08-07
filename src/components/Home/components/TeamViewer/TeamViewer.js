@@ -22,76 +22,78 @@ const TeamViewer = props => {
   // console.log(props)
   return (
     <Wrapper large>
-      <Query query={TeamQuery} variables={{ id: props.activeTeam, }}>
-        {({ loading, data: { Team } }) => {
-          return (
-            !loading && Team && (
-              <Wrapper flex>
-                <Wrapper large>
-                  <Title><Icon grey className="fa fa-user" />{Team.name}</Title>
-                  <br />
-                  {props.activeTab === 'settings' && <Settings team={Team} {...props} />}
-                  {props.activeTab === 'members' && <Members team={Team} />}
-                  {props.activeTab === 'edit team' &&
-                    <EditTeam
-                      website={Team.website}
-                      teamId={Team.id}
-                      name={Team.name}
-                      desc={Team.desc}
-                    />
-                  }
+      <div style={{ width: '95%', display: 'block', margin: 'auto' }}>
+        <Query query={TeamQuery} variables={{ id: props.activeTeam }}>
+          {({ loading, data: { Team } }) => {
+            return (
+              !loading && Team && (
+                <Wrapper flex>
+                  <Wrapper large>
+                    <Title><Icon grey className="fa fa-user" />{Team.name}</Title>
+                    <br />
+                    {props.activeTab === 'settings' && <Settings team={Team} {...props} />}
+                    {props.activeTab === 'members' && <Members team={Team} />}
+                    {props.activeTab === 'edit team' &&
+                      <EditTeam
+                        website={Team.website}
+                        teamId={Team.id}
+                        name={Team.name}
+                        desc={Team.desc}
+                      />
+                    }
+                  </Wrapper>
+                  <Wrapper small>
+                    <Button
+                      solid
+                      bold
+                      name="edit team"
+                      active={props.activeTab === 'edit team'}
+                      onClick={el => props.changeTab(el)}
+                    >
+                      <Icon
+                        grey
+                        active_white={props.activeTab === 'edit team'}
+                        className="fa fa-edit"
+                      />Edit Team
+                    </Button>
+                    <Button
+                      solid
+                      bold
+                      name="members"
+                      active={props.activeTab === 'members'}
+                      onClick={el => props.changeTab(el)}
+                    >
+                      <Icon
+                        grey
+                        active_white={props.activeTab === 'members'}
+                        className="fa fa-user"
+                      />Members
+                    </Button>
+                    <Button
+                      solid
+                      bold
+                      name="settings"
+                      active={props.activeTab === 'settings'}
+                      onClick={el => props.changeTab(el)}
+                    >
+                      <Icon
+                        grey
+                        active_white={props.activeTab === 'settings'}
+                        className="fa fa-gear"
+                      />Settings
+                    </Button>
+                    <br />
+                    <CreateBoardPopOver teamId={Team.id} />
+                    <Button solid bold>
+                      <Icon grey className="fa fa-user-plus" />Add Member
+                    </Button>
+                  </Wrapper>
                 </Wrapper>
-                <Wrapper small>
-                  <Button
-                    solid
-                    bold
-                    name="edit team"
-                    active={props.activeTab === 'edit team'}
-                    onClick={el => props.changeTab(el)}
-                  >
-                    <Icon
-                      grey
-                      active_white={props.activeTab === 'edit team'}
-                      className="fa fa-edit"
-                    />Edit Team
-                  </Button>
-                  <Button
-                    solid
-                    bold
-                    name="members"
-                    active={props.activeTab === 'members'}
-                    onClick={el => props.changeTab(el)}
-                  >
-                    <Icon
-                      grey
-                      active_white={props.activeTab === 'members'}
-                      className="fa fa-user"
-                    />Members
-                  </Button>
-                  <Button
-                    solid
-                    bold
-                    name="settings"
-                    active={props.activeTab === 'settings'}
-                    onClick={el => props.changeTab(el)}
-                  >
-                    <Icon
-                      grey
-                      active_white={props.activeTab === 'settings'}
-                      className="fa fa-gear"
-                    />Settings
-                  </Button>
-                  <br />
-                  <CreateBoardPopOver teamId={Team.id} />
-                  <Button solid bold>
-                    <Icon grey className="fa fa-user-plus" />Add Member
-                  </Button>
-                </Wrapper>
-              </Wrapper>
+              )
             )
-          )
-        }}
-      </Query>
+          }}
+        </Query>
+      </div>
     </Wrapper>
   )
 }

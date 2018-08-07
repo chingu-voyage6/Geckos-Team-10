@@ -82,10 +82,16 @@ class Board extends Component {
     lists: []
   }
 
-  componentDidMount = async () => {
+  componentDidMount = () => {
     const { boardId } = this.props.match.params
-    // console.log(boardId || 'github|20284107')
-    this.getBoardById(boardId || 'github|20284107')
+    console.log(boardId)
+    this.getBoardById(boardId)
+  }
+
+  componentWillReceiveProps = nextState => {
+    const { boardId } = nextState.match.params
+    console.log(boardId)
+    this.getBoardById(boardId)
   }
 
   onDragEnd = result => {
