@@ -16,10 +16,6 @@ const Wrapper = styled.section`
   `}
 `
 
-const auth = new Auth()
-
-const { isAuthenticated, login, logout } = auth
-
 const DeleteTeam = gql`
   mutation ($teamId: ID!) {
     deleteTeam(id: $teamId) {
@@ -98,10 +94,13 @@ const UsersTeamsQuery = gql`
   }
 `
 
+const auth = new Auth()
+
 class App extends Component {
   state = {
+    auth,
     keepOpen: false,
-    isAuthenticated,
+    isAuthenticated: auth.isAuthenticated(),
     activeComponent: 'boards',
     auth0IdToken: localStorage.getItem('user_id') || false,
     activeTab: 'edit team',
@@ -113,6 +112,10 @@ class App extends Component {
   //
   // getUserId is passed as props to Home.js Component and then called when Home.js is rendered
   //
+  componentWillUnmount = () => {
+    console.log('unmount')
+  }
+
   getUserDataWithAuth = async auth0Key => {
     try {
       const { data: { User } } = await this.props.client.query({
@@ -231,9 +234,11 @@ class App extends Component {
             variables: { key: localStorage.getItem('user_id') },
             fetchPolicy: 'network-only'
           })
+
           data.User.teams.push(createTeam)
           console.log(data.User.teams)
           store.writeQuery({ query: UserWithAuthQuery, data })
+
           this.setState({ teams: data.User.teams })
         }
       })
@@ -261,6 +266,7 @@ class App extends Component {
   }
 
   authStateChanged = () => {
+    const { isAuthenticated } = this.state.auth
     if (isAuthenticated() !== this.state.isAuthenticated) {
       this.setState({ isAuthenticated: isAuthenticated() })
     }
@@ -275,11 +281,13 @@ class App extends Component {
   }
 
   logoutWithRedirect = () => {
-    logout(); login()
+    this.setState({ isAuthenticated: false, keepOpen: false })
+    this.state.auth.logout()
+    this.state.auth.login()
   }
 
   render() {
-    const { keepOpen } = this.state
+    const { keepOpen, isAuthenticated } = this.state
 
     const homeJSX = () => (
       <Home
@@ -303,7 +311,7 @@ class App extends Component {
           <Router history={History} >
             <Fragment>
               {
-                isAuthenticated() &&
+                isAuthenticated &&
                 <Toolbar
                   {...this.state}
                   createTeam={this.createTeam}
