@@ -26,10 +26,10 @@ const boardQuery = gql`
     Board(id: $id) {
       id
       title
-      lists {
+      lists (orderBy: order_ASC) {
         id
         listTitle
-        cards {
+        cards (orderBy: order_ASC) {
           id
           desc
           dueDate
@@ -170,7 +170,7 @@ class List extends Component {
   render() {
     const { addingCard, showListMenu } = this.state
     const { cards, listTitle, listId } = this.props
-    console.log('LIST_ID', listId)
+    // console.log('LIST_ID', listId)
     return (
       <ListContainer >
         <Droppable droppableId={listId} type="CARD">

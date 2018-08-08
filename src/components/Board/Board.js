@@ -63,6 +63,11 @@ const createListMutation = gql`
     ) {
       id
       listTitle
+      cards {
+        id,
+        task,
+        order
+      }
     }
   }
 `
@@ -150,7 +155,12 @@ class Board extends Component {
           data.Board.lists.push(createList)
           // Write our data back to the cache.
           store.writeQuery({ query: boardQuery, data })
-          this.setState({ showAddList: false, newListTitle: '', lists: data.Board.lists })
+          this.setState({
+            showAddList: false,
+            newListTitle: '',
+            lists: data.Board.lists,
+            cards: []
+          })
         }
       })
     } catch (err) {
