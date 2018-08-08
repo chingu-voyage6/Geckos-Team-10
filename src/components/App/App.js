@@ -52,7 +52,6 @@ class App extends Component {
     }
   }
 
-
   authStateChanged = () => {
     if (isAuthenticated() !== this.state.isAuthenticated) {
       this.setState({ isAuthenticated: isAuthenticated() })

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Draggable, Droppable } from 'react-beautiful-dnd'
 import styled from 'styled-components'
 import moment from 'moment'
 import { withApollo } from 'react-apollo'
@@ -62,6 +63,7 @@ const createCardTaskMutation = gql`
       listId: $listId
     ) {
       id
+      task
     }
   }
 `
@@ -103,10 +105,23 @@ class List extends Component {
           authorId: localStorage.getItem('grapUserId'),
           listId: this.props.listId
         },
-        refetchQueries: [{
+        update: (store, { data: { createCard } }) => {
+          // Read the data from our cache for this query.
+          const data = store.readQuery({
+            query: boardQuery,
+            variables: { id: this.props.match.params.boardId },
+            fetchPolicy: 'network-only'
+          })
+          // Add our comment from the mutation to the end.
+          data.Board.lists[this.props.listId].push(createCard)
+          // Write our data back to the cache.
+          store.writeQuery({ query: boardQuery, data })
+          // this.setState({ showAddList: false, newListTitle: '', lists: data.Board.lists })
+        },
+        /* refetchQueries: [{
           query: boardQuery,
           variables: { id: this.props.match.params.boardId }
-        }]
+        }] */
       })
       this.setState({ addingCard: false, newCardValue: '' })
     } catch (err) {
@@ -154,37 +169,58 @@ class List extends Component {
 
   render() {
     const { addingCard, showListMenu } = this.state
-    const { cards, listTitle } = this.props
-
+    const { cards, listTitle, listId } = this.props
+    console.log('LIST_ID', listId)
     return (
       <ListContainer >
-        <ListHeader listTitle={listTitle} displayOption={this.handleOption} />
-        {cards.map(({
-          id, author, task, dueDate
-        }) => {
-          const newAuthor = !author ? {} : author
-          return (
-            <CardTask
-              onCardClick={() => this.props.onShowModal(id)}
-              key={id}
-              dueDate={dueDate && moment(dueDate, 'YYYY-MM-DD HH:mm Z').format('DD/MM/YYYY')}
-              member={newAuthor.nickname}
-              task={task}
-            />
-          )
-        })}
-        {showListMenu && <ListMenu onAddCard={this.onAddCard} onRemoveCard={this.onRemoveCard} />}
-        {addingCard && (
-          <TextArea
-            onChange={e => this.newCard(e)}
-          />
-        )}
-        <ListFooter
-          onAddCard={this.onAddCard}
-          onSaveCard={this.onSaveCard}
-          onCancelCard={this.onCancelCard}
-          addingCard={addingCard}
-        />
+        <Droppable droppableId={listId} type="CARD">
+          {provided => (
+            <div
+              ref={provided.innerRef}
+              // style={{ backgroundColor: snapshot.isDraggingOver ? 'blue' : 'grey' }}
+              {...provided.droppableProps}
+            >
+              <ListHeader listTitle={listTitle} displayOption={this.handleOption} />
+              {cards && cards.map(({
+                id, author, task, dueDate, order
+              }, index) => {
+                const newAuthor = !author ? {} : author
+                return (
+                  <Draggable draggableId={id} key={id} index={index}>
+                    {providedDraggable => (
+                      <div
+                        ref={providedDraggable.innerRef}
+                        {...providedDraggable.draggableProps}
+                        {...providedDraggable.dragHandleProps}
+                      >
+                        <CardTask
+                          onCardClick={() => this.props.onShowModal(id)}
+                          key={id}
+                          order={order}
+                          dueDate={dueDate && moment(dueDate, 'YYYY-MM-DD HH:mm Z').format('DD/MM/YYYY')}
+                          member={newAuthor.nickname}
+                          task={task}
+                        />
+                      </div>
+                    )}
+                  </Draggable>
+                )
+              })}
+              {showListMenu && <ListMenu onAddCard={this.onAddCard} onRemoveCard={this.onRemoveCard} />}
+              {addingCard && (
+                <TextArea
+                  onChange={e => this.newCard(e)}
+                />
+              )}
+              <ListFooter
+                onAddCard={this.onAddCard}
+                onSaveCard={this.onSaveCard}
+                onCancelCard={this.onCancelCard}
+                addingCard={addingCard}
+              />
+            </div>
+          )}
+        </Droppable>
       </ListContainer>
     )
   }
