@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 
-import { Wrapper, Input, Button, MenuHeader, Text } from './Boards.styles'
+import { Wrapper, Button, MenuHeader, Text } from './Boards.styles'
 
 import ZippyMenu from './ZippyMenu/ZippyMenu'
 
@@ -24,6 +24,7 @@ class Boards extends Component {
   }
 
   render() {
+    const { boards, teams } = this.props
     const ContentJSX = (
       <Fragment>
         {this.props.keepOpen &&
@@ -31,11 +32,13 @@ class Boards extends Component {
             <Text black>Menu</Text>
           </MenuHeader>
         }
-        <Input type="search" placeholder="Find boards by name..." />
-        <ZippyMenu title="Starred Boards" />
-        <ZippyMenu title="Recent Boards" />
-        <ZippyMenu title="Personal Boards" />
-        <ZippyMenu title="Shared Boards" />
+        {/* <Input type="search" placeholder="Find boards by name..." /> */
+        /* <ZippyMenu title="Starred Boards" /> */
+        /* <ZippyMenu title="Recent Boards" /> */}
+        <ZippyMenu title="All Boards" boards={boards} />
+        {teams && teams.map(team => {
+          return <ZippyMenu key={team.id} teamId={team.id} title={team.name} boards={team.boards} />
+        })}
         <Button secondary onClick={this.props.toggleFixedMenu}>
           {`${(this.props.keepOpen ? 'Don\'t' : 'Always')} keep this tab open`}
         </Button>

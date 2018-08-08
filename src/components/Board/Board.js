@@ -5,7 +5,7 @@ import gql from 'graphql-tag'
 import 'array.prototype.move'
 // import { boardQuery } from '../../graphql/queries'
 import List from './components/List/List'
-import { Auth } from '../../services/Services'
+import { Auth } from '../../services'
 import { BoardContainer } from './Board.styles'
 import BoardProvider from './BoardProvider'
 import Modal from './components/Modal/Modal'
@@ -82,10 +82,16 @@ class Board extends Component {
     lists: []
   }
 
-  componentDidMount = async () => {
+  componentDidMount = () => {
     const { boardId } = this.props.match.params
-    // console.log(boardId || 'github|20284107')
-    this.getBoardById(boardId || 'github|20284107')
+    console.log(boardId)
+    this.getBoardById(boardId)
+  }
+
+  componentWillReceiveProps = nextState => {
+    const { boardId } = nextState.match.params
+    console.log(boardId)
+    this.getBoardById(boardId)
   }
 
   onDragEnd = result => {
