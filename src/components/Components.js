@@ -1,17 +1,12 @@
-import App from './App/App'
-import Board from './Board/Board'
-import Boards from './Boards/Boards'
-import Callback from './Callback/Callback'
-import Home from './Home/Home'
-import Profile from './Profile/Profile'
-import Toolbar from './Toolbar/Toolbar'
-
-export {
-  App,
-  Board,
-  Boards,
-  Callback,
-  Home,
-  Profile,
-  Toolbar,
-}
+export { default as App } from './App/App'
+export { default as Board } from './Board/Board'
+export { default as Boards } from './Boards/Boards'
+export { default as Callback } from './Callback/Callback'
+export { default as CreateBoard } from './CreateBoard/CreateBoard'
+export { default as CreateTeam } from './CreateTeam/CreateTeam'
+export { default as CreateTeamButton } from './CreateTeamButton/CreateTeamButton'
+export { default as CreateBoardButton } from './CreateBoardButton/CreateBoardButton'
+export { default as PopOver } from './PopOver/PopOver'
+export { default as Home } from './Home/Home'
+export { default as Profile } from './Profile/Profile'
+export { default as Toolbar } from './Toolbar/Toolbar'

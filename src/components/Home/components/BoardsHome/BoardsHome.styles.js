@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 
 const Wrapper = styled.div`
   display: flex;
+  flex-wrap: wrap;
   margin: auto;
   width: 100%;
 `

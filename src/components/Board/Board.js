@@ -4,7 +4,7 @@ import { withApollo } from 'react-apollo'
 import gql from 'graphql-tag'
 import 'array.prototype.move'
 import List from './components/List/List'
-import { Auth } from '../../services/Services'
+import { Auth } from '../../services'
 import BoardProvider from './BoardProvider'
 import Modal from './components/Modal/Modal'
 import { Button } from '../StyledComponents'
@@ -113,10 +113,16 @@ class Board extends Component {
     newListTitle: ''
   }
 
-  componentDidMount = async () => {
+  componentDidMount = () => {
     const { boardId } = this.props.match.params
-    // console.log(boardId || 'github|20284107')
-    this.getBoardById(boardId || 'github|20284107')
+    console.log(boardId)
+    this.getBoardById(boardId)
+  }
+
+  componentWillReceiveProps = nextState => {
+    const { boardId } = nextState.match.params
+    console.log(boardId)
+    this.getBoardById(boardId)
   }
 
   onCreateNewList = async () => {

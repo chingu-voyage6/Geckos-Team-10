@@ -1,79 +1,50 @@
 import React from 'react'
-import { Query } from 'react-apollo'
-import gql from 'graphql-tag'
+// import { Query } from 'react-apollo'
+// import gql from 'graphql-tag'
 
 import { Icon, Title } from '../../../StyledComponents/index'
-import { Wrapper, Button } from './LeftSidebar.styles'
-
-const TeamsQuery = gql`
-  query user($id: ID) {
-    User (id: $id) {
-      id
-      teams {
-        id
-        name
-      }
-    }
-  }
-`
+import { PopOver, CreateTeam, CreateTeamButton } from '../../../Components'
+import { Wrapper } from './LeftSidebar.styles'
+import { Button } from '../../Home.styles'
 
 const LeftSidebar = props => {
+  const CreateTeamPopOver = PopOver(CreateTeam, CreateTeamButton)
   return (
-    <Wrapper>
-      <Button
-        id="home"
-        active={props.activeComponent === 'home'}
-        onClick={el => props.toggleComponents(el)}
-      >
-        <Icon
-          grey
-          className="fa fa-home"
-          active={props.activeComponent === 'home'}
-        />
-        Home
-      </Button>
-      <Button
-        id="boards"
-        active={props.activeComponent === 'boards'}
-        onClick={el => props.toggleComponents(el)}
-      >
-        <Icon
-          grey
+    <div>
+      <Wrapper>
+        <Button
+          bold
+          name="boards"
           active={props.activeComponent === 'boards'}
-          className="fa fa-square"
-        />
-        Boards
-      </Button>
-      <Title light_grey >Teams</Title>
-      <Query
-        query={TeamsQuery}
-        variables={{ id: props.userId }}
-      >
-        {({ loading, data }) => {
+          onClick={el => props.toggleComponents(el)}
+        >
+          <Icon
+            grey
+            active={props.activeComponent === 'boards'}
+            className="fa fa-square"
+          />
+          Boards
+        </Button>
+        <Title light_grey >Teams</Title>
+        {props.teams && props.teams.map(({ id, name }) => {
           return (
-            !loading && data && data.User && data.User.teams.map(team => (
-              <Button
-                key={team.id}
-                id={team.name}
-                active={props.activeComponent === team.name}
-                onClick={el => props.toggleComponents(el)}
-              >
-                <Icon
-                  grey
-                  className="fa fa-users"
-                  active={props.activeComponent === team.name}
-                />
-                {team.name}
-              </Button>
-            ))
+            <Button
+              bold
+              id={id}
+              key={id}
+              name={name}
+              active={props.activeComponent === name}
+              onClick={el => props.toggleComponents(el)}
+            >
+              <Icon grey className="fa fa-users" active={props.activeComponent === name} />
+              {name}
+            </Button>
           )
-        }}
-      </Query>
-      <Button
-        id="create"
-      >+ Create a Team
-      </Button>
-    </Wrapper>
+        })
+        }
+        <CreateTeamPopOver {...props} />
+      </Wrapper>
+    </div>
   )
 }
 

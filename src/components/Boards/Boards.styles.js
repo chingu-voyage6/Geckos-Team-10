@@ -6,7 +6,7 @@ const Wrapper = styled.div`
   width: 280px;
   z-index: 99;
   
-  background: #9999FF;
+  background: white;
 
   ${props => props.notAlwaysOpen && css`
     top: 44px;
@@ -41,7 +41,7 @@ const Input = styled.input`
 `
 
 const MenuHeader = styled.div`
-  background: #7171bd;
+  background: #E2E4E6;
   padding: 11px 13px;
   height: 18px;
 `
@@ -60,7 +60,7 @@ const Icon = styled.span`
 `
 
 const Text = styled.span`
-  color: #DDDDDD;
+  color: black;
 `
 
 const Button = styled.button`
@@ -70,8 +70,8 @@ const Button = styled.button`
   outline: none;
   border: none;
 
-  color: #DDDDDD;  
-  background: #9999FF;
+  color: #DDDDDD;
+  background: white;
 
   ${props => props.pull_right && css`
     margin-left: auto;
@@ -99,7 +99,7 @@ const Button = styled.button`
 
     &:hover {
       color: grey;
-      background: #DDDDDD;
+      background: #808080;
     }
 `}
 `
