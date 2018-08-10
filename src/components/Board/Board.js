@@ -96,6 +96,7 @@ query board($id: ID){
         dueDate
         task
         order
+        labels
         author {
           id
           name
@@ -318,6 +319,10 @@ class Board extends Component {
     return Promise.resolve(batch)
   }
 
+  changeListsState = lists => {
+    this.setState({ lists })
+  }
+
   render() {
     const { lists, showAddList } = this.state
     const { boardId } = this.props.match.params
@@ -336,7 +341,7 @@ class Board extends Component {
 
     return (isAuthenticated() &&
       <BoardProvider>
-        <Modal lists={this.state} setBoardState={this.setBoardState} />
+        <Modal lists={this.state} changeListsState={this.changeListsState} />
         <DragDropContext onDragEnd={this.onDragEnd}>
           <BoardContainer>
             <Droppable droppableId={boardId} type="COLUMN" direction="horizontal">
@@ -355,7 +360,14 @@ class Board extends Component {
                             {...providedDraggable.draggableProps}
                             {...providedDraggable.dragHandleProps}
                           >
-                            <List listTitle={listTitle} index={index} cards={cards} listId={id} key={id} />
+                            <List
+                              listTitle={listTitle}
+                              index={index}
+                              cards={cards}
+                              listId={id}
+                              key={id}
+                              changeListsState={this.changeListsState}
+                            />
                           </div>
                         )}
                       </Draggable>

@@ -64,6 +64,11 @@ const createCardTaskMutation = gql`
     ) {
       id
       task
+      desc
+      dueDate
+      author {
+        id
+      }
     }
   }
 `
@@ -112,16 +117,12 @@ class List extends Component {
             variables: { id: this.props.match.params.boardId },
             fetchPolicy: 'network-only'
           })
-          // Add our comment from the mutation to the end.
-          data.Board.lists[this.props.listId].push(createCard)
-          // Write our data back to the cache.
+          const selectedListId = data.Board.lists.filter(list => list.id === this.props.listId)
+          selectedListId[0].cards.push(createCard)
+
           store.writeQuery({ query: boardQuery, data })
-          // this.setState({ showAddList: false, newListTitle: '', lists: data.Board.lists })
-        },
-        /* refetchQueries: [{
-          query: boardQuery,
-          variables: { id: this.props.match.params.boardId }
-        }] */
+          this.props.changeListsState(data.Board.lists)
+        }
       })
       this.setState({ addingCard: false, newCardValue: '' })
     } catch (err) {
@@ -136,10 +137,20 @@ class List extends Component {
         variables: {
           id: this.props.listId
         },
-        refetchQueries: [{
-          query: boardQuery,
-          variables: { id: this.props.match.params.boardId }
-        }]
+        update: store => {
+          // Read the data from our cache for this query.
+          const data = store.readQuery({
+            query: boardQuery,
+            variables: { id: this.props.match.params.boardId },
+            fetchPolicy: 'network-only'
+          })
+          // Add our comment from the mutation to the end.
+          const newData = data.Board.lists.filter(list => list.id !== this.props.listId)
+          // data.Board.lists = newData
+          // Write our data back to the cache.
+          store.writeQuery({ query: boardQuery, data })
+          this.props.changeListsState(newData)
+        }
       })
       this.setState({ addingCard: false, newCardValue: '' })
     } catch (err) {
