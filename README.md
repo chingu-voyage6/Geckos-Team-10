@@ -15,9 +15,8 @@ Chingu Voyage-6 | https://chingu.io/
 | Goal | Status |
 | -----| ------ |
 | User can log into app to access features | :white_check_mark: |
-| User can create, remove and edit tasks | pending |
+| User can create, remove and edit tasks | :white_check_mark: |
 | User can add or remove tags to identify the priority of the task | :white_check_mark: |
-| User can add attachments, assign users, and create a description for a task | pending |
 | User can drag and drop tasks to any column | :white_check_mark: |
 | User can filter tasks by tags | pending |
 | User can search tasks | pending |

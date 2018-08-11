@@ -46,7 +46,7 @@ const Button = styled.button`
     background: #E4F0F6;
 
     &:hover {
-      background: #E4F0F6;      
+      background: #E4F0F6;
     }
   `}
 
