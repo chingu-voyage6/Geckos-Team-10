@@ -84,7 +84,7 @@ class Board extends Component {
 
   componentDidMount = () => {
     const { boardId } = this.props.match.params
-    console.log(boardId)
+    // console.log(this.props.route.setBackground)
     this.getBoardById(boardId)
   }
 

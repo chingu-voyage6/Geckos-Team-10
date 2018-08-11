@@ -14,7 +14,6 @@ class Home extends Component {
     this.props.getUserDataWithAuth(localStorage.getItem('user_id'))
     this.props.authStateChanged()
   }
-
   // calls the login method in authentication service
   login = () => {
     auth.login()

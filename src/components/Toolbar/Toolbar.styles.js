@@ -8,7 +8,6 @@ const Wrapper = styled.div`
   padding: 4px 0;
 
   box-shadow: 0 1px 1px rgba(0,0,0,.1);
-  background: ${props => props.background || '#026AA7'};
 
   ${props => props.offset && css`
     margin-left: 280px;
@@ -46,12 +45,12 @@ const Input = styled.input`
   width: 210px;
   border-radius: 3px;
   margin: 0 5px 0 5px;
+  filter: brightness(115%);
+  transition: background .3s ease;
   border: none;
 
-  background: #3F8BB7;
-
   &:hover {
-    background: #73ACCD;
+    filter: brightness(120%);  
   }
 `
 
@@ -60,11 +59,12 @@ const Button = styled.button`
   font-weight: 700;
   margin: 0 5px 0 5px;
   border-radius: 4px;
+  transition: background .3s ease;
+  filter: brightness(115%);
   outline: none;
   border: none;
 
   color: white;
-  background: #3F8BB7;
 
   ${props => props.pull_right && css`
     margin-left: auto;
@@ -79,7 +79,7 @@ const Button = styled.button`
   `}
 
   &:hover {
-    background: #137CB8;
+    filter: brightness(120%);
   }
 `
 

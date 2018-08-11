@@ -100,6 +100,7 @@ class App extends Component {
   state = {
     auth,
     keepOpen: false,
+    background: '#026AA7',
     isAuthenticated: auth.isAuthenticated(),
     activeComponent: 'boards',
     auth0IdToken: localStorage.getItem('user_id') || false,
@@ -114,6 +115,12 @@ class App extends Component {
   //
   componentWillUnmount = () => {
     console.log('unmount')
+  }
+
+  setBackground = (background, boardId) => {
+    const board = this.state.boards.map(({ id }) => boardId === id)
+    console.log(board)
+    // this.setState({ background })
   }
 
   getUserDataWithAuth = async auth0Key => {
@@ -300,6 +307,7 @@ class App extends Component {
         createBoard={this.createBoard}
         deleteTeam={this.deleteTeam}
         createTeam={this.createTeam}
+        setBackground={this.setBackground}
         changeTab={this.changeTab}
         {...this.state}
       />
@@ -324,7 +332,11 @@ class App extends Component {
               <Wrapper offset={keepOpen}>
                 <Route exact path="/" render={homeJSX} />
                 <Route path="/home" render={homeJSX} />
-                <Route path="/board/:boardId" component={Board} />
+                <Route
+                  path="/board/:boardId"
+                  setBackground={this.setBackground}
+                  component={Board}
+                />
                 <Route path="/profile" component={Profile} />
                 <Route
                   path="/callback"

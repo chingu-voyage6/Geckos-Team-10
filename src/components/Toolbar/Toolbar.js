@@ -19,14 +19,19 @@ export default class Toolbar extends Component {
     }
   }
 
-
   render() {
     const { isActive } = this.state
-    const { toggleFixedMenu, keepOpen, isAuthenticated } = this.props
+    const {
+      toggleFixedMenu, keepOpen, isAuthenticated, background
+    } = this.props
 
     const CreateButton = props => {
       return (
-        <Button pull_right onClick={() => props.togglePopOver()}>
+        <Button
+          pull_right
+          style={{ background }}
+          onClick={() => props.togglePopOver()}
+        >
           <Icon className="fa fa-plus" />
         </Button>
       )
@@ -39,9 +44,10 @@ export default class Toolbar extends Component {
     return (
       isAuthenticated &&
       <Fragment>
-        <Wrapper offset={keepOpen}>
+        <Wrapper offset={keepOpen} style={{ background }}>
           {isActive &&
             <Boards
+              setBackground={this.setBackground}
               toggleFixedMenu={toggleFixedMenu}
               toggleBoards={this.toggleBoards}
               keepOpen={keepOpen}
@@ -49,7 +55,12 @@ export default class Toolbar extends Component {
             />
           }
           {!keepOpen &&
-            <Button id="toggle_boards" onClick={this.toggleBoards}>Boards</Button>
+            <Button
+              id="toggle_boards"
+              style={{ background }}
+              onClick={this.toggleBoards}
+            >Boards
+            </Button>
           }
           <Input type="search" />
           <Brand>
