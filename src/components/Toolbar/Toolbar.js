@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react'
+import Color from 'color'
 import { Wrapper, Button, Brand, Input, Icon, RowItem } from './Toolbar.styles'
 import { StyledLink } from '../StyledComponents'
 import { Boards, PopOver } from '../Components'
@@ -25,11 +26,27 @@ export default class Toolbar extends Component {
       toggleFixedMenu, keepOpen, isAuthenticated, background
     } = this.props
 
+    let primary = Color(background)
+    let secondary = Color(background)
+    let tertiary = Color(background)
+
+    if (secondary.isLight()) {
+      // console.log('light color!')
+      primary = primary.darken(0.15).desaturate(0.1)
+      secondary = secondary.lighten(0.2)
+      tertiary = tertiary.desaturate(0.1)
+    } else {
+      // console.log('dark color!')
+      secondary = secondary.lighten(0.5).desaturate(0.5)
+      tertiary = tertiary.lighten(0.25).desaturate(0.25)
+    }
+
     const CreateButton = props => {
       return (
         <Button
           pull_right
-          style={{ background }}
+          hover={tertiary.hex()}
+          background={secondary.hex()}
           onClick={() => props.togglePopOver()}
         >
           <Icon className="fa fa-plus" />
@@ -44,7 +61,7 @@ export default class Toolbar extends Component {
     return (
       isAuthenticated &&
       <Fragment>
-        <Wrapper offset={keepOpen} style={{ background }}>
+        <Wrapper offset={keepOpen} background={primary.hex()}>
           {isActive &&
             <Boards
               setBackground={this.setBackground}
@@ -57,14 +74,19 @@ export default class Toolbar extends Component {
           {!keepOpen &&
             <Button
               id="toggle_boards"
-              style={{ background }}
+              hover={tertiary.hex()}
+              background={secondary.hex()}
               onClick={this.toggleBoards}
             >Boards
             </Button>
           }
-          <Input type="search" />
+          <Input
+            type="search"
+            hover={tertiary.hex()}
+            background={secondary.hex()}
+          />
           <Brand>
-            <StyledLink to="/">Trello Clone</StyledLink>
+            <StyledLink to="/" color={secondary.hex()}>Trello Clone</StyledLink>
           </Brand>
           <RowItem pull_right>
             <PopOverCreate {...this.props} />

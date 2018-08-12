@@ -1,12 +1,13 @@
 import styled, { css } from 'styled-components'
 
 const Wrapper = styled.div`
-  height: 32px;
+  height: 34px;
   display: flex;
   overflow: hidden;
   justify-content: space-between;
   padding: 4px 0;
 
+  background: ${props => props.background || 'grey'};
   box-shadow: 0 1px 1px rgba(0,0,0,.1);
 
   ${props => props.offset && css`
@@ -34,7 +35,6 @@ const Brand = styled.div`
   position: absolute;
   left: 45%;
   height: 35px;
-  line-height: 2;
   vertical-align: middle;
   ${props => props.pretty && css`
     text-decoration: none;
@@ -45,26 +45,28 @@ const Input = styled.input`
   width: 210px;
   border-radius: 3px;
   margin: 0 5px 0 5px;
-  filter: brightness(115%);
   transition: background .3s ease;
   border: none;
 
+  background: ${props => props.background || 'grey'};
+  
   &:hover {
-    filter: brightness(120%);  
+    transition: 0.3s;
+    background: ${props => props.hover || 'grey'}
   }
 `
 
 const Button = styled.button`
   cursor: pointer;
   font-weight: 700;
-  margin: 0 5px 0 5px;
+  margin: 0 0 0 5px;
   border-radius: 4px;
-  transition: background .3s ease;
-  filter: brightness(115%);
+  transition: 0.3s;
   outline: none;
   border: none;
 
   color: white;
+  background: ${props => props.background || 'grey'};
 
   ${props => props.pull_right && css`
     margin-left: auto;
@@ -79,7 +81,8 @@ const Button = styled.button`
   `}
 
   &:hover {
-    filter: brightness(120%);
+    transition: 0.3s;
+    background: ${props => props.hover || 'grey'}
   }
 `
 
