@@ -33,9 +33,9 @@ const Icon = styled.span`
 
 const Brand = styled.div`
   position: absolute;
-  left: 45%;
   height: 35px;
   vertical-align: middle;
+  left: ${props => props.re_center || '45%'};
   ${props => props.pretty && css`
     text-decoration: none;
   `}

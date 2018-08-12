@@ -94,8 +94,8 @@ class Board extends Component {
   componentWillReceiveProps = nextState => {
     if (this.props.match.params.boardId !== nextState.match.params.boardId) {
       this.getBoardById(nextState.match.params.boardId)
+      this.props.setBackground(nextState.match.params.boardId)
     }
-    console.log(nextState)
   }
 
   componentWillUnmount = () => {

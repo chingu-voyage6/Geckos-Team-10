@@ -85,7 +85,7 @@ export default class Toolbar extends Component {
             hover={tertiary.hex()}
             background={secondary.hex()}
           />
-          <Brand>
+          <Brand re_center={keepOpen ? '55%' : '45%'}>
             <StyledLink to="/" color={secondary.hex()}>Trello Clone</StyledLink>
           </Brand>
           <RowItem pull_right>
