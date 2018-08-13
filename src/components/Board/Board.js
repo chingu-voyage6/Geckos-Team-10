@@ -116,22 +116,22 @@ class Board extends Component {
   state = {
     lists: [],
     showAddList: false,
-    newListTitle: ''
+    newListTitle: '',
+    cardsRemovedId: []
   }
 
   componentDidMount = () => {
     const { boardId } = this.props.match.params
-    console.log(boardId)
     this.getBoardById(boardId)
   }
 
   componentWillReceiveProps = nextState => {
     const { boardId } = nextState.match.params
-    console.log(boardId)
     this.getBoardById(boardId)
   }
 
-  onCreateNewList = async () => {
+  onCreateNewList = async e => {
+    // if(e.key && e.key !== 'Enter') return
     if (!this.state.newListTitle) return
 
     try {
@@ -153,6 +153,15 @@ class Board extends Component {
             fetchPolicy: 'network-only'
           })
           // Add our comment from the mutation to the end.
+          data.Board.lists.map((list, index) => { // eslint-disable-next-line
+            const res = data.Board.lists[index].cards = list.cards.filter(card => {
+              if (card.id) {
+                return !this.state.cardsRemovedId.includes(card.id)
+              }
+              return false
+            })
+            return res
+          })
           data.Board.lists.push(createList)
           // Write our data back to the cache.
           store.writeQuery({ query: boardQuery, data })
@@ -173,6 +182,8 @@ class Board extends Component {
     const { lists } = this.state
 
     const listsCopy = [...lists]
+
+    if (!result.destination) return
 
     if (result.type === 'CARD') {
       // helpers
@@ -220,7 +231,7 @@ class Board extends Component {
 
       if (destId !== sourceId) {
         // moves the card to the new list in our dB
-        this.moveCardToNewList(result.draggableId, destId)
+        this.moveCardToNewList(result.draggableId, destId, sourceId, oldPos, newPos)
         // sends a request to our backend to save the order of our cards
         this.updateCardPos(destCardsCopy, destId)
       } else {
@@ -268,11 +279,34 @@ class Board extends Component {
     }
   }
 
-  moveCardToNewList = async (CardId, ListId) => {
+  moveCardToNewList = async (CardId, ListId, sourceListId, sourceIndex, destIndex) => {
     try {
       await this.props.client.mutate({
         mutation: addToListCards,
-        variables: { CardId, ListId }
+        variables: { CardId, ListId },
+        update: (store, { data: { createCard } }) => {
+          // Read the data from our cache for this query.
+          const data = store.readQuery({
+            query: boardQuery,
+            variables: { id: this.props.match.params.boardId },
+            fetchPolicy: 'network-only'
+          })
+
+          const { lists } = data.Board
+
+          const sourceList = lists.find(list => list.id === sourceListId)
+          const destList = lists.find(list => list.id === ListId)
+          const cardToMove = sourceList.cards[sourceIndex]
+
+          // 1) DELETE card from source list
+          sourceList.cards.splice(sourceIndex, 1)
+
+          // 2) ADD card to destination list
+          destList.cards.splice(destIndex, 0, cardToMove)
+
+          // console.log(data.Board.lists.map(({ cards }) => cards.map(card => card)))
+          store.writeQuery({ query: boardQuery, data })
+        }
       })
     } catch (err) {
       console.log('err::', err)
@@ -323,6 +357,14 @@ class Board extends Component {
     this.setState({ lists })
   }
 
+  cardsRemoved = id => {
+    const cardsRemoved = [
+      ...this.state.cardsRemovedId,
+      id
+    ]
+    this.setState({ cardsRemovedId: cardsRemoved })
+  }
+
   render() {
     const { lists, showAddList } = this.state
     const { boardId } = this.props.match.params
@@ -341,7 +383,7 @@ class Board extends Component {
 
     return (isAuthenticated() &&
       <BoardProvider>
-        <Modal lists={this.state} changeListsState={this.changeListsState} />
+        <Modal lists={this.state} changeListsState={this.changeListsState} cardsRemoved={this.cardsRemoved} />
         <DragDropContext onDragEnd={this.onDragEnd}>
           <BoardContainer>
             <Droppable droppableId={boardId} type="COLUMN" direction="horizontal">
@@ -365,6 +407,7 @@ class Board extends Component {
                               index={index}
                               cards={cards}
                               listId={id}
+                              lists={lists}
                               key={id}
                               changeListsState={this.changeListsState}
                             />
@@ -377,7 +420,10 @@ class Board extends Component {
                   {showAddList
                     ? (
                       <CreateListFormContainer>
-                        <TextArea onChange={e => this.handleTextArea(e.target.value)} />
+                        <TextArea
+                          onChange={e => this.handleTextArea(e.target.value)}
+                          onKeyPress={e => e.key === 'Enter' && this.onCreateNewList(e)}
+                        />
                         <CreateListActions>
                           <Button
                             width="50px"
