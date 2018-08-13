@@ -48,7 +48,7 @@ const CreateListActions = styled.div`
   width: 100%;
 `
 
-const TextArea = styled.textarea`
+const TextArea = styled.input`
   box-sizing: border-box;
   padding: 10px;
   width: 100%;

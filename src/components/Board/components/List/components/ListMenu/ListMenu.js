@@ -6,7 +6,7 @@ const ListMenu = props => {
   return (
     <ListMenuContainer>
       <Button onClick={props.onAddCard}>Add Card</Button>
-      <Button onClick={props.onRemoveCard}>Remove List</Button>
+      <Button onClick={props.onRemoveList}>Remove List</Button>
     </ListMenuContainer>
   )
 }

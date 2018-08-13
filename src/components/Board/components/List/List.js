@@ -140,7 +140,7 @@ class List extends Component {
     }
   }
 
-  onRemoveCard = async () => {
+  onRemoveList = async () => {
     try {
       await this.props.client.mutate({
         mutation: deleteListMutation,
@@ -159,14 +159,13 @@ class List extends Component {
             return list.id !== this.props.listId
           }) // eslint-disable-next-line
           const newData = data.Board.lists = stateList
-          // data.Board.lists = newData
+          data.Board.lists = newData
           // Write our data back to the cache.
           store.writeQuery({ query: boardQuery, data })
 
           this.props.changeListsState(newData)
         }
       })
-      this.setState({ addingCard: false, newCardValue: '' })
     } catch (err) {
       console.log('err::', err)
     }
@@ -231,7 +230,7 @@ class List extends Component {
                   </Draggable>
                 )
               })}
-              {showListMenu && <ListMenu onAddCard={this.onAddCard} onRemoveCard={this.onRemoveCard} />}
+              {showListMenu && <ListMenu onAddCard={this.onAddCard} onRemoveList={this.onRemoveList} />}
               {addingCard && (
                 <TextArea
                   onChange={e => this.newCard(e)}

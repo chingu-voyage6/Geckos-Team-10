@@ -130,7 +130,8 @@ class Board extends Component {
     this.getBoardById(boardId)
   }
 
-  onCreateNewList = async () => {
+  onCreateNewList = async e => {
+    // if(e.key && e.key !== 'Enter') return
     if (!this.state.newListTitle) return
 
     try {
@@ -394,7 +395,10 @@ class Board extends Component {
                   {showAddList
                     ? (
                       <CreateListFormContainer>
-                        <TextArea onChange={e => this.handleTextArea(e.target.value)} />
+                        <TextArea 
+                          onChange={e => this.handleTextArea(e.target.value)}
+                          onKeyPress={e => e.key === 'Enter' && this.onCreateNewList(e)}
+                        />
                         <CreateListActions>
                           <Button
                             width="50px"
