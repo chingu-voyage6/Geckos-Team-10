@@ -130,7 +130,9 @@ class List extends Component {
     }
   }
 
+  // THIS SHOULD BE CALLED : "onRemoveList()"
   onRemoveCard = async () => {
+    console.log('remove card?')
     try {
       await this.props.client.mutate({
         mutation: deleteListMutation,
@@ -148,11 +150,16 @@ class List extends Component {
           const newData = data.Board.lists.filter(list => list.id !== this.props.listId)
           // data.Board.lists = newData
           // Write our data back to the cache.
+
+          data.Board.lists = newData
+          console.log(data.Board.lists)
+
           store.writeQuery({ query: boardQuery, data })
           this.props.changeListsState(newData)
         }
       })
-      this.setState({ addingCard: false, newCardValue: '' })
+      // THE PROBLEM..SETTING STATE HERE
+      // this.setState({ addingCard: false, newCardValue: '' })
     } catch (err) {
       console.log('err::', err)
     }

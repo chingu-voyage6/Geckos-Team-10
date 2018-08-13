@@ -237,10 +237,16 @@ class Modal extends Component {
             variables: { id: this.props.match.params.boardId },
             fetchPolicy: 'network-only'
           })
+
           data.Board.lists.map((list, index) => { // eslint-disable-next-line
             const res = data.Board.lists[index].cards = list.cards.filter(card => card.id !== id)
             return res
           })
+
+          console.log(data)
+
+          store.writeQuery({ query: boardQuery, data })
+
           this.props.changeListsState(data.Board.lists)
         }
       })
