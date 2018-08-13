@@ -6,7 +6,7 @@ export default class Auth {
   auth0 = new auth0.WebAuth({
     domain: 'geckos-team-10.auth0.com',
     clientID: 'cSlJoIh8NZT9AdOdPm8GFwJjW42Y07PX',
-    redirectUri: 'http://localhost:3000/callback',
+    redirectUri: 'https://geckos-team-10.herokuapp.com/callback',
     audience: 'https://geckos-team-10.auth0.com/userinfo',
     responseType: 'token id_token',
     scope: 'openid profile'
