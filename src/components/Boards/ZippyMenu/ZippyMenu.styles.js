@@ -9,15 +9,27 @@ const Pills = styled.div`
   min-height: 35px;
 `
 
+const Filter = styled.div`
+  width: 82%;
+  position: absolute;
+  top: 0;
+  background: white;
+  opacity: 0.75;
+  right: 0;
+  height: 100%;
+  z-index: 1;
+`
+
 const StyledLink = styled(Link)`
   cursor: pointer;
+  position: relative;
   min-height: 24px;
   text-decoration: none;
   text-align: left;
   outline: none;
   border: none;
   border-radius: 3px;
-  margin-top: 2px;
+  margin-top: 4px;
   padding: 6px;
   width: 100%;
   opacity: 0.7;
@@ -48,6 +60,7 @@ const Pill = styled.div`
 
 export {
   StyledLink,
+  Filter,
   Pills,
   Pill
 }
