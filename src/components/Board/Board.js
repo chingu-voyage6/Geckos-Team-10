@@ -4,12 +4,19 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { withApollo } from 'react-apollo'
 import gql from 'graphql-tag'
 import 'array.prototype.move'
-// import { boardQuery } from '../../graphql/queries'
 import List from './components/List/List'
 import { Auth } from '../../services'
-import { BoardContainer, BackgroundFilter } from './Board.styles'
 import BoardProvider from './BoardProvider'
 import Modal from './components/Modal/Modal'
+import { Button } from '../StyledComponents'
+import {
+  BoardContainer,
+  BackgroundFilter,
+  CreateListButton,
+  CreateListFormContainer,
+  CreateListActions,
+  TextArea
+} from './Board.styles'
 
 const auth = new Auth()
 
@@ -39,6 +46,34 @@ mutation($id: ID!, $NewPos: Int!) {
 }
 `
 
+const createListMutation = gql`
+  mutation createList(
+    $listTitle: String!,
+    $order: Int!,
+    $authorId: ID,
+    $boardId: ID,
+    $cardsIds: [ID!],
+    $cards: [ListcardsCard!]
+  ) {
+    createList(
+      listTitle: $listTitle,
+      order: $order,
+      authorId: $authorId,
+      cardsIds: $cardsIds,
+      boardId: $boardId,
+      cards: $cards
+    ) {
+      id
+      listTitle
+      cards {
+        id,
+        task,
+        order
+      }
+    }
+  }
+`
+
 const updateCardPos = gql`
 mutation($id: ID!, $ListId: ID!, $NewPos: Int!) {
   updateCard(id: $id, listId: $ListId, order: $NewPos) {
@@ -64,6 +99,7 @@ query board($id: ID){
         dueDate
         task
         order
+        labels
         author {
           id
           name
@@ -83,6 +119,9 @@ class Board extends Component {
   state = {
     boardId: '',
     lists: [],
+    showAddList: false,
+    newListTitle: '',
+    cardsRemovedId: []
   }
 
   componentDidMount = () => {
@@ -102,10 +141,59 @@ class Board extends Component {
     this.props.setBackground()
   }
 
+  onCreateNewList = async () => {
+    if (!this.state.newListTitle) return
+
+    try {
+      await this.props.client.mutate({
+        mutation: createListMutation,
+        variables: {
+          listTitle: this.state.newListTitle,
+          order: 3,
+          authorId: localStorage.getItem('grapUserId'),
+          cardsIds: [],
+          boardId: this.props.match.params.boardId,
+          cards: []
+        },
+        update: (store, { data: { createList } }) => {
+          // Read the data from our cache for this query.
+          const data = store.readQuery({
+            query: boardQuery,
+            variables: { id: this.props.match.params.boardId },
+            fetchPolicy: 'network-only'
+          })
+          // Add our comment from the mutation to the end.
+          data.Board.lists.map((list, index) => { // eslint-disable-next-line
+            const res = data.Board.lists[index].cards = list.cards.filter(card => {
+              if (card.id) {
+                return !this.state.cardsRemovedId.includes(card.id)
+              }
+              return false
+            })
+            return res
+          })
+          data.Board.lists.push(createList)
+          // Write our data back to the cache.
+          store.writeQuery({ query: boardQuery, data })
+          this.setState({
+            showAddList: false,
+            newListTitle: '',
+            lists: data.Board.lists,
+            cards: []
+          })
+        }
+      })
+    } catch (err) {
+      console.log('err::', err)
+    }
+  }
+
   onDragEnd = result => {
     const { lists } = this.state
 
     const listsCopy = [...lists]
+
+    if (!result.destination) return
 
     if (result.type === 'CARD') {
       // helpers
@@ -153,7 +241,7 @@ class Board extends Component {
 
       if (destId !== sourceId) {
         // moves the card to the new list in our dB
-        this.moveCardToNewList(result.draggableId, destId)
+        this.moveCardToNewList(result.draggableId, destId, sourceId, oldPos, newPos)
         // sends a request to our backend to save the order of our cards
         this.updateCardPos(destCardsCopy, destId)
       } else {
@@ -204,15 +292,48 @@ class Board extends Component {
     }
   }
 
-  moveCardToNewList = async (CardId, ListId) => {
+  moveCardToNewList = async (CardId, ListId, sourceListId, sourceIndex, destIndex) => {
     try {
       await this.props.client.mutate({
         mutation: addToListCards,
-        variables: { CardId, ListId }
+        variables: { CardId, ListId },
+        update: store => {
+          // Read the data from our cache for this query.
+          const data = store.readQuery({
+            query: boardQuery,
+            variables: { id: this.props.match.params.boardId },
+            fetchPolicy: 'network-only'
+          })
+
+          const { lists } = data.Board
+
+          const sourceList = lists.find(list => list.id === sourceListId)
+          const destList = lists.find(list => list.id === ListId)
+          const cardToMove = sourceList.cards[sourceIndex]
+
+          // 1) DELETE card from source list
+          sourceList.cards.splice(sourceIndex, 1)
+
+          // 2) ADD card to destination list
+          destList.cards.splice(destIndex, 0, cardToMove)
+
+          // console.log(data.Board.lists.map(({ cards }) => cards.map(card => card)))
+          store.writeQuery({ query: boardQuery, data })
+        }
       })
     } catch (err) {
       console.log('err::', err)
     }
+  }
+
+  handleShowAddList = () => {
+    this.setState(prevState => {
+      return { showAddList: !prevState.showAddList, newListTitle: '' }
+    })
+  }
+
+  handleTextArea = content => {
+    this.setState({ newListTitle: content })
   }
 
   updateCardPos = (cards, ListId) => {
@@ -245,9 +366,21 @@ class Board extends Component {
     return Promise.resolve(batch)
   }
 
+  changeListsState = lists => {
+    this.setState({ lists })
+  }
+
+  cardsRemoved = id => {
+    const cardsRemoved = [
+      ...this.state.cardsRemovedId,
+      id
+    ]
+    this.setState({ cardsRemovedId: cardsRemoved })
+  }
+
   render() {
-    const { lists } = this.state
     const { background } = this.props
+    const { lists, showAddList } = this.state
     const { boardId } = this.props.match.params
 
     let secondary = Color(background)
@@ -275,7 +408,7 @@ class Board extends Component {
 
     return (isAuthenticated() &&
       <BoardProvider>
-        <Modal lists={this.state} setBoardState={this.setBoardState} />
+        <Modal lists={this.state} changeListsState={this.changeListsState} cardsRemoved={this.cardsRemoved} />
         <DragDropContext onDragEnd={this.onDragEnd}>
           <BoardContainer background={background}>
             <BackgroundFilter />
@@ -295,14 +428,54 @@ class Board extends Component {
                             {...providedDraggable.draggableProps}
                             {...providedDraggable.dragHandleProps}
                           >
-                            <List listTitle={listTitle} index={index} cards={cards} listId={id} key={id} />
+                            <List
+                              listTitle={listTitle}
+                              index={index}
+                              cards={cards}
+                              listId={id}
+                              lists={lists}
+                              key={id}
+                              changeListsState={this.changeListsState}
+                            />
                           </div>
                         )}
                       </Draggable>
-
                     )
                   })}
                   {provided.placeholder}
+                  {showAddList
+                    ? (
+                      <CreateListFormContainer>
+                        <TextArea
+                          onChange={e => this.handleTextArea(e.target.value)}
+                          onKeyPress={e => e.key === 'Enter' && this.onCreateNewList(e)}
+                        />
+                        <CreateListActions>
+                          <Button
+                            width="50px"
+                            onClick={this.onCreateNewList}
+                            backgroundColor="#5aac44"
+                            hoverBackgroundColor="#519839"
+                            color="#fff"
+                            hoverColor="#fff"
+                            margin="0 5px 0 0"
+                          >
+                            Save
+                          </Button>
+                          <Button width="50px" onClick={this.handleShowAddList}>
+                            X
+                          </Button>
+                        </CreateListActions>
+                      </CreateListFormContainer>
+                    )
+                    : (
+                      <CreateListButton>
+                        <Button onClick={this.handleShowAddList} >
+                          Create new list
+                        </Button>
+                      </CreateListButton>
+                    )
+                  }
                 </div>
               )}
             </Droppable>
@@ -313,6 +486,4 @@ class Board extends Component {
   }
 }
 
-const BoardWithApollo = withApollo(Board)
-
-export default BoardWithApollo
+export default withApollo(Board)

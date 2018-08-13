@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import ReactModal from 'react-modal'
 import DatePicker from 'react-datepicker'
+import { withRouter } from 'react-router-dom'
 import moment from 'moment'
 import { withApollo, Query } from 'react-apollo'
 import gql from 'graphql-tag'
@@ -17,14 +18,14 @@ import BoardProvider from '../../BoardProvider'
 import { Button, Label } from '../../../StyledComponents'
 
 const boardQuery = gql`
-  {
-    Board(id: "cjj7smzwg8eco0149e347lcq0") {
+  query boardQuery($id: ID) {
+    Board(id: $id) {
       id
       title
-      lists {
+      lists(orderBy: order_ASC) {
         id
         listTitle
-        cards {
+        cards(orderBy: order_ASC) {
           id
           desc
           task
@@ -88,6 +89,10 @@ const updateCardMutation = gql`
       dueDate: $dueDate
     ) {
       id
+      dueDate
+      labels
+      task
+      attachments
     }
   }
 `
@@ -101,7 +106,7 @@ class Modal extends Component {
     labelTags: this.props.card.labels || [],
     loadTagMenu: false,
     newTagValue: '',
-    startDueDate: moment(this.props.card.dueDate) || moment()
+    startDueDate: this.props.card.dueDate ? moment(this.props.card.dueDate) : moment()
   }
 
   onChangeDescription = value => {
@@ -132,9 +137,25 @@ class Modal extends Component {
           desc: !descriptionValue ? desc : descriptionValue,
           dueDate: moment(startDueDate, 'YYYY-MM-DD HH:mm Z')
         },
-        refetchQueries: [{
-          query: boardQuery
-        }]
+        update: (store, { data: { updateCard } }) => {
+          const data = store.readQuery({
+            query: boardQuery,
+            variables: { id: this.props.match.params.boardId },
+            fetchPolicy: 'network-only'
+          })
+          data.Board.lists.map((list, index) => {
+            const toUpdate = list.cards.find((card, i) => {
+              if (card.id === updateCard.id) { // eslint-disable-next-line
+                const res = data.Board.lists[index].cards[i] = updateCard
+                return res
+              }
+              return null
+            })
+            return toUpdate
+          })
+
+          this.props.changeListsState(data.Board.lists)
+        }
       })
       this.setState({ showTitleInput: false, cardTitle: '' })
       this.props.onHideModal()
@@ -151,7 +172,7 @@ class Modal extends Component {
     try {
       const { data: { Board } } = await this.props.client.query({
         query: boardQuery,
-        variables: { id: 'cjj7smzwg8eco0149e347lcq0' }
+        variables: { id: this.props.match.params.boardId }
       })
       if (Board) {
         this.setState({ lists: Board.lists })
@@ -181,9 +202,21 @@ class Modal extends Component {
           desc: !descriptionValue ? desc : descriptionValue,
           dueDate: startDueDate
         },
-        refetchQueries: [{
-          query: boardQuery
-        }]
+        update: (store, { data: { updateCard } }) => {
+          const data = store.readQuery({
+            query: boardQuery,
+            variables: { id: this.props.match.params.boardId },
+            fetchPolicy: 'network-only'
+          })
+          data.Board.lists.map((list, index) => { // eslint-disable-next-line
+            const res = data.Board.lists[index].cards = list.cards.filter(card => card.id !== updateCard.id)
+            return res
+          })
+          const selectedListId = data.Board.lists.filter(list => list.id === listId)
+          selectedListId[0].cards.push(updateCard)
+
+          this.props.changeListsState(data.Board.lists)
+        }
       })
       this.setState({ lists: [] })
       this.props.onHideModal()
@@ -197,9 +230,23 @@ class Modal extends Component {
       await this.props.client.mutate({
         mutation: deleteCardMutation,
         variables: { id },
-        refetchQueries: [{
-          query: boardQuery
-        }]
+        update: store => {
+          // Read the data from our cache for this query.
+          const data = store.readQuery({
+            query: boardQuery,
+            variables: { id: this.props.match.params.boardId },
+            fetchPolicy: 'network-only'
+          })
+          this.props.cardsRemoved(id)
+
+          data.Board.lists.map((list, index) => { // eslint-disable-next-line
+            const res = data.Board.lists[index].cards = list.cards.filter(card => {
+              return card.id !== id && !this.props.lists.cardsRemovedId.includes(card.id)
+            })
+            return res
+          })
+          this.props.changeListsState(data.Board.lists)
+        }
       })
       this.props.onHideModal()
     } catch (err) {
@@ -224,6 +271,7 @@ class Modal extends Component {
     const {
       loadTagMenu, cardTitle, showTitleInput, descriptionValue, labelTags, newTagValue, lists, startDueDate
     } = this.state
+
     return (
       <ReactModal
         ariaHideApp={false}
@@ -348,6 +396,7 @@ class Modal extends Component {
 }
 
 const ModalWithApollo = withApollo(Modal)
+const ModalWithRouter = withRouter(ModalWithApollo)
 
 class ModalQueryWrapper extends Component {
   render() {
@@ -357,7 +406,7 @@ class ModalQueryWrapper extends Component {
         {({ loading, data: { Card } }) => {
           return (
             !loading && Card && (
-              <ModalWithApollo
+              <ModalWithRouter
                 {...this.props}
                 card={Card}
               />

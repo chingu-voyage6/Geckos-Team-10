@@ -25,8 +25,53 @@ const BackgroundFilter = styled.div`
   width: 100%;
 `
 
+const CreateListButton = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 270px;
+  height: 50px;
+  cursor: pointer;
+  background-color: #e2e4e6;
+  border-radius: 5px;
+  margin: 5px;
+  padding: 5px;
+`
+
+const CreateListFormContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-color: #e2e4e6;
+  border-radius: 5px;
+  margin: 5px;
+  padding: 5px;
+  width: 270px;
+`
+
+const CreateListActions = styled.div`
+  width: 100%;
+`
+
+const TextArea = styled.input`
+  box-sizing: border-box;
+  padding: 10px;
+  width: 100%;
+  min-height: 50px;
+  border: none;
+  border-radius: 5px;
+  resize: none;
+  outline: none;
+  margin: 2px;
+`
+
 export {
-  BackgroundFilter,
-  BoardContainer,
   ListContainer,
+  BoardContainer,
+  BackgroundFilter,
+  CreateListButton,
+  CreateListFormContainer,
+  CreateListActions,
+  TextArea
 }
