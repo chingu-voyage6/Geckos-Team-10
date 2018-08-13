@@ -162,7 +162,7 @@ class List extends Component {
           // data.Board.lists = newData
           // Write our data back to the cache.
           store.writeQuery({ query: boardQuery, data })
-          console.log('newData', newData)
+
           this.props.changeListsState(newData)
         }
       })
@@ -195,7 +195,7 @@ class List extends Component {
   render() {
     const { addingCard, showListMenu } = this.state
     const { cards, listTitle, listId } = this.props
-    // console.log('LIST_ID', listId)
+
     return (
       <ListContainer >
         <Droppable droppableId={listId} type="CARD">

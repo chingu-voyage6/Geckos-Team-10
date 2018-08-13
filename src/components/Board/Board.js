@@ -122,13 +122,11 @@ class Board extends Component {
 
   componentDidMount = () => {
     const { boardId } = this.props.match.params
-    console.log(boardId)
     this.getBoardById(boardId)
   }
 
   componentWillReceiveProps = nextState => {
     const { boardId } = nextState.match.params
-    console.log(boardId)
     this.getBoardById(boardId)
   }
 
@@ -330,7 +328,6 @@ class Board extends Component {
   }
 
   changeListsState = lists => {
-    console.log('lists:', lists)
     this.setState({ lists })
   }
 
