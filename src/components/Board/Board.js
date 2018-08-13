@@ -116,7 +116,8 @@ class Board extends Component {
   state = {
     lists: [],
     showAddList: false,
-    newListTitle: ''
+    newListTitle: '',
+    cardsRemovedId: []
   }
 
   componentDidMount = () => {
@@ -153,6 +154,15 @@ class Board extends Component {
             fetchPolicy: 'network-only'
           })
           // Add our comment from the mutation to the end.
+          data.Board.lists.map((list, index) => { // eslint-disable-next-line
+            const res = data.Board.lists[index].cards = list.cards.filter(card => {
+              if (card.id) {
+                return !this.state.cardsRemovedId.includes(card.id)
+              }
+              return false
+            })
+            return res
+          })
           data.Board.lists.push(createList)
           // Write our data back to the cache.
           store.writeQuery({ query: boardQuery, data })
@@ -320,7 +330,16 @@ class Board extends Component {
   }
 
   changeListsState = lists => {
+    console.log('lists:', lists)
     this.setState({ lists })
+  }
+
+  cardsRemoved = id => {
+    const cardsRemoved = [
+      ...this.state.cardsRemovedId,
+      id
+    ]
+    this.setState({ cardsRemovedId: cardsRemoved })
   }
 
   render() {
@@ -341,7 +360,7 @@ class Board extends Component {
 
     return (isAuthenticated() &&
       <BoardProvider>
-        <Modal lists={this.state} changeListsState={this.changeListsState} />
+        <Modal lists={this.state} changeListsState={this.changeListsState} cardsRemoved={this.cardsRemoved} />
         <DragDropContext onDragEnd={this.onDragEnd}>
           <BoardContainer>
             <Droppable droppableId={boardId} type="COLUMN" direction="horizontal">
@@ -365,6 +384,7 @@ class Board extends Component {
                               index={index}
                               cards={cards}
                               listId={id}
+                              lists={lists}
                               key={id}
                               changeListsState={this.changeListsState}
                             />

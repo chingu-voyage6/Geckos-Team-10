@@ -237,8 +237,12 @@ class Modal extends Component {
             variables: { id: this.props.match.params.boardId },
             fetchPolicy: 'network-only'
           })
+          this.props.cardsRemoved(id)
+
           data.Board.lists.map((list, index) => { // eslint-disable-next-line
-            const res = data.Board.lists[index].cards = list.cards.filter(card => card.id !== id)
+            const res = data.Board.lists[index].cards = list.cards.filter(card => {
+              return card.id !== id && !this.props.lists.cardsRemovedId.includes(card.id)
+            })
             return res
           })
           this.props.changeListsState(data.Board.lists)

@@ -34,6 +34,7 @@ const boardQuery = gql`
           desc
           dueDate
           task
+          order
           author {
             id
             name
@@ -65,6 +66,13 @@ const createCardTaskMutation = gql`
       id
       task
       desc
+      order
+      labels
+      list {
+        id
+        listTitle
+        order
+      }
       dueDate
       author {
         id
@@ -117,7 +125,9 @@ class List extends Component {
             variables: { id: this.props.match.params.boardId },
             fetchPolicy: 'network-only'
           })
-          const selectedListId = data.Board.lists.filter(list => list.id === this.props.listId)
+          const selectedListId = data.Board.lists.filter(list => {
+            return list.id === this.props.listId
+          })
           selectedListId[0].cards.push(createCard)
 
           store.writeQuery({ query: boardQuery, data })
@@ -145,10 +155,14 @@ class List extends Component {
             fetchPolicy: 'network-only'
           })
           // Add our comment from the mutation to the end.
-          const newData = data.Board.lists.filter(list => list.id !== this.props.listId)
+          const stateList = this.props.lists.filter(list => {
+            return list.id !== this.props.listId
+          }) // eslint-disable-next-line
+          const newData = data.Board.lists = stateList
           // data.Board.lists = newData
           // Write our data back to the cache.
           store.writeQuery({ query: boardQuery, data })
+          console.log('newData', newData)
           this.props.changeListsState(newData)
         }
       })
