@@ -183,6 +183,8 @@ class Board extends Component {
 
     const listsCopy = [...lists]
 
+    if (!result.destination) return
+
     if (result.type === 'CARD') {
       // helpers
       const destId = result.destination.droppableId
@@ -229,7 +231,7 @@ class Board extends Component {
 
       if (destId !== sourceId) {
         // moves the card to the new list in our dB
-        this.moveCardToNewList(result.draggableId, destId)
+        this.moveCardToNewList(result.draggableId, destId, sourceId, oldPos, newPos)
         // sends a request to our backend to save the order of our cards
         this.updateCardPos(destCardsCopy, destId)
       } else {
@@ -277,11 +279,34 @@ class Board extends Component {
     }
   }
 
-  moveCardToNewList = async (CardId, ListId) => {
+  moveCardToNewList = async (CardId, ListId, sourceListId, sourceIndex, destIndex) => {
     try {
       await this.props.client.mutate({
         mutation: addToListCards,
-        variables: { CardId, ListId }
+        variables: { CardId, ListId },
+        update: (store, { data: { createCard } }) => {
+          // Read the data from our cache for this query.
+          const data = store.readQuery({
+            query: boardQuery,
+            variables: { id: this.props.match.params.boardId },
+            fetchPolicy: 'network-only'
+          })
+
+          const { lists } = data.Board
+
+          const sourceList = lists.find(list => list.id === sourceListId)
+          const destList = lists.find(list => list.id === ListId)
+          const cardToMove = sourceList.cards[sourceIndex]
+
+          // 1) DELETE card from source list
+          sourceList.cards.splice(sourceIndex, 1)
+
+          // 2) ADD card to destination list
+          destList.cards.splice(destIndex, 0, cardToMove)
+
+          // console.log(data.Board.lists.map(({ cards }) => cards.map(card => card)))
+          store.writeQuery({ query: boardQuery, data })
+        }
       })
     } catch (err) {
       console.log('err::', err)
@@ -395,7 +420,7 @@ class Board extends Component {
                   {showAddList
                     ? (
                       <CreateListFormContainer>
-                        <TextArea 
+                        <TextArea
                           onChange={e => this.handleTextArea(e.target.value)}
                           onKeyPress={e => e.key === 'Enter' && this.onCreateNewList(e)}
                         />

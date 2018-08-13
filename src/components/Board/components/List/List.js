@@ -132,6 +132,7 @@ class List extends Component {
 
           store.writeQuery({ query: boardQuery, data })
           this.props.changeListsState(data.Board.lists)
+          console.log(data.Board.lists)
         }
       })
       this.setState({ addingCard: false, newCardValue: '' })
