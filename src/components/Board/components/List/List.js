@@ -34,6 +34,7 @@ const boardQuery = gql`
           desc
           dueDate
           task
+          order
           author {
             id
             name
@@ -65,6 +66,13 @@ const createCardTaskMutation = gql`
       id
       task
       desc
+      order
+      labels
+      list {
+        id
+        listTitle
+        order
+      }
       dueDate
       author {
         id
@@ -117,11 +125,14 @@ class List extends Component {
             variables: { id: this.props.match.params.boardId },
             fetchPolicy: 'network-only'
           })
-          const selectedListId = data.Board.lists.filter(list => list.id === this.props.listId)
+          const selectedListId = data.Board.lists.filter(list => {
+            return list.id === this.props.listId
+          })
           selectedListId[0].cards.push(createCard)
 
           store.writeQuery({ query: boardQuery, data })
           this.props.changeListsState(data.Board.lists)
+          console.log(data.Board.lists)
         }
       })
       this.setState({ addingCard: false, newCardValue: '' })
@@ -130,7 +141,7 @@ class List extends Component {
     }
   }
 
-  onRemoveCard = async () => {
+  onRemoveList = async () => {
     try {
       await this.props.client.mutate({
         mutation: deleteListMutation,
@@ -145,14 +156,17 @@ class List extends Component {
             fetchPolicy: 'network-only'
           })
           // Add our comment from the mutation to the end.
-          const newData = data.Board.lists.filter(list => list.id !== this.props.listId)
-          // data.Board.lists = newData
+          const stateList = this.props.lists.filter(list => {
+            return list.id !== this.props.listId
+          }) // eslint-disable-next-line
+          const newData = data.Board.lists = stateList
+          data.Board.lists = newData
           // Write our data back to the cache.
           store.writeQuery({ query: boardQuery, data })
+
           this.props.changeListsState(newData)
         }
       })
-      this.setState({ addingCard: false, newCardValue: '' })
     } catch (err) {
       console.log('err::', err)
     }
@@ -181,7 +195,7 @@ class List extends Component {
   render() {
     const { addingCard, showListMenu } = this.state
     const { cards, listTitle, listId } = this.props
-    // console.log('LIST_ID', listId)
+
     return (
       <ListContainer >
         <Droppable droppableId={listId} type="CARD">
@@ -217,7 +231,7 @@ class List extends Component {
                   </Draggable>
                 )
               })}
-              {showListMenu && <ListMenu onAddCard={this.onAddCard} onRemoveCard={this.onRemoveCard} />}
+              {showListMenu && <ListMenu onAddCard={this.onAddCard} onRemoveList={this.onRemoveList} />}
               {addingCard && (
                 <TextArea
                   onChange={e => this.newCard(e)}
