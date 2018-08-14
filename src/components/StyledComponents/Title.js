@@ -2,12 +2,15 @@ import styled, { css } from 'styled-components'
 
 const Title = styled.span`
   line-height: 24px;
-  margin: 3px 0 0;
   font-size: 16px;
   font-weight: 700;
-  margin-top: 5px;
+  margin-top: 8px;
+  margin-left: 8px;
+  text-align: left;
   display: block;
-  width: 100%;
+  position: relative;
+  color: black;
+  z-index: 3;
 
   ${props => props.black && css` color: black;`}
   ${props => props.light_grey && css` color: #838C91;`}

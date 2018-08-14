@@ -11,6 +11,8 @@ import { Board, Callback, Home, Profile, Toolbar } from '../Components'
 import { Auth, History } from '../../services'
 
 const Wrapper = styled.section`
+  background: #F8F9F9;
+
   ${props => props.offset && css`
     margin-left: 280px;
   `}
@@ -100,6 +102,7 @@ class App extends Component {
   state = {
     auth,
     keepOpen: false,
+    background: '#026AA7',
     isAuthenticated: auth.isAuthenticated(),
     activeComponent: 'boards',
     auth0IdToken: localStorage.getItem('user_id') || false,
@@ -112,8 +115,20 @@ class App extends Component {
   //
   // getUserId is passed as props to Home.js Component and then called when Home.js is rendered
   //
-  componentWillUnmount = () => {
-    console.log('unmount')
+  setBackground = boardId => {
+    const board = this.state.boards.find(({ id }) => boardId === id)
+    const theme = localStorage.getItem('theme')
+
+    if (!boardId) {
+      this.setState({ background: '#026AA7' })
+    } else if (board) {
+      localStorage.setItem('theme', board.background)
+      this.setState({ background: board.background })
+    } else if (theme) {
+      this.setState({ background: theme })
+    } else {
+      console.error('err:: board not found')
+    }
   }
 
   getUserDataWithAuth = async auth0Key => {
@@ -287,7 +302,17 @@ class App extends Component {
   }
 
   render() {
-    const { keepOpen, isAuthenticated } = this.state
+    const { keepOpen, isAuthenticated, background } = this.state
+
+    const BoardWithProps = props => {
+      return (
+        <Board
+          setBackground={this.setBackground}
+          background={background}
+          {...props}
+        />
+      )
+    }
 
     const homeJSX = () => (
       <Home
@@ -300,6 +325,7 @@ class App extends Component {
         createBoard={this.createBoard}
         deleteTeam={this.deleteTeam}
         createTeam={this.createTeam}
+        setBackground={this.setBackground}
         changeTab={this.changeTab}
         {...this.state}
       />
@@ -307,7 +333,7 @@ class App extends Component {
 
     return (
       <div>
-        <Wrapper>
+        <Wrapper background={background === '#026AA7' ? undefined : background}>
           <Router history={History} >
             <Fragment>
               {
@@ -321,10 +347,13 @@ class App extends Component {
                   toggleFixedMenu={this.toggleFixedMenu}
                 />
               }
-              <Wrapper offset={keepOpen}>
+              <Wrapper offset={keepOpen} background>
                 <Route exact path="/" render={homeJSX} />
                 <Route path="/home" render={homeJSX} />
-                <Route path="/board/:boardId" component={Board} />
+                <Route
+                  path="/board/:boardId"
+                  render={BoardWithProps}
+                />
                 <Route path="/profile" component={Profile} />
                 <Route
                   path="/callback"
