@@ -297,7 +297,7 @@ class App extends Component {
   }
 
   render() {
-    const { keepOpen, isAuthenticated, background } = this.state
+    const { keepOpen, background } = this.state
 
     const BoardWithProps = props => {
       return (

@@ -1,6 +1,7 @@
 export { default as App } from './App/App'
 export { default as Board } from './Board/Board'
 export { default as Boards } from './Boards/Boards'
+export { default as CreateUser } from './CreateUser/CreateUser'
 export { default as Callback } from './Callback/Callback'
 export { default as CreateBoard } from './CreateBoard/CreateBoard'
 export { default as CreateTeam } from './CreateTeam/CreateTeam'

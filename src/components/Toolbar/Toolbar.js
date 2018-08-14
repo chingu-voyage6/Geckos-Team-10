@@ -23,7 +23,7 @@ export default class Toolbar extends Component {
   render() {
     const { isActive } = this.state
     const {
-      toggleFixedMenu, keepOpen, isAuthenticated, background
+      toggleFixedMenu, keepOpen, background
     } = this.props
 
     let primary = Color(background)
