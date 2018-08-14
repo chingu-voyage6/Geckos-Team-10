@@ -8,5 +8,4 @@ export { default as CreateTeamButton } from './CreateTeamButton/CreateTeamButton
 export { default as CreateBoardButton } from './CreateBoardButton/CreateBoardButton'
 export { default as PopOver } from './PopOver/PopOver'
 export { default as Home } from './Home/Home'
-export { default as Profile } from './Profile/Profile'
 export { default as Toolbar } from './Toolbar/Toolbar'

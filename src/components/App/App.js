@@ -7,7 +7,7 @@ import styled, { css } from 'styled-components'
 import { withApollo } from 'react-apollo'
 import gql from 'graphql-tag'
 
-import { Board, Callback, Home, Profile, Toolbar } from '../Components'
+import { Board, Home, Toolbar } from '../Components'
 import { Auth, History } from '../../services'
 
 const Wrapper = styled.section`
@@ -100,7 +100,6 @@ class App extends Component {
   state = {
     auth,
     keepOpen: false,
-    isAuthenticated: auth.isAuthenticated(),
     activeComponent: 'boards',
     auth0IdToken: localStorage.getItem('user_id') || false,
     activeTab: 'edit team',
@@ -112,8 +111,8 @@ class App extends Component {
   //
   // getUserId is passed as props to Home.js Component and then called when Home.js is rendered
   //
-  componentWillUnmount = () => {
-    console.log('unmount')
+  componentDidMount = () => {
+
   }
 
   getUserDataWithAuth = async auth0Key => {
@@ -265,13 +264,6 @@ class App extends Component {
     }
   }
 
-  authStateChanged = () => {
-    const { isAuthenticated } = this.state.auth
-    if (isAuthenticated() !== this.state.isAuthenticated) {
-      this.setState({ isAuthenticated: isAuthenticated() })
-    }
-  }
-
   toggleFixedMenu = () => {
     this.setState({ keepOpen: !this.state.keepOpen })
   }
@@ -281,18 +273,17 @@ class App extends Component {
   }
 
   logoutWithRedirect = () => {
-    this.setState({ isAuthenticated: false, keepOpen: false })
-    this.state.auth.logout()
-    this.state.auth.login()
+    // this.setState({ isAuthenticated: false, keepOpen: false })
+    // this.state.auth.logout()
+    // this.state.auth.login()
   }
 
   render() {
-    const { keepOpen, isAuthenticated } = this.state
+    const { keepOpen } = this.state
 
     const homeJSX = () => (
       <Home
         getUserDataWithAuth={this.getUserDataWithAuth}
-        authStateChanged={this.authStateChanged}
         toggleComponents={this.toggleComponents}
         getTeamsWithId={this.getTeamsWithId}
         resetMenuState={this.resetMenuState}
@@ -310,30 +301,18 @@ class App extends Component {
         <Wrapper>
           <Router history={History} >
             <Fragment>
-              {
-                isAuthenticated &&
-                <Toolbar
-                  {...this.state}
-                  createTeam={this.createTeam}
-                  createBoard={this.createBoard}
-                  logoutWithRedirect={this.logoutWithRedirect}
-                  getTeamsWithId={this.getTeamsWithId}
-                  toggleFixedMenu={this.toggleFixedMenu}
-                />
-              }
+              <Toolbar
+                {...this.state}
+                createTeam={this.createTeam}
+                createBoard={this.createBoard}
+                logoutWithRedirect={this.logoutWithRedirect}
+                getTeamsWithId={this.getTeamsWithId}
+                toggleFixedMenu={this.toggleFixedMenu}
+              />
               <Wrapper offset={keepOpen}>
                 <Route exact path="/" render={homeJSX} />
                 <Route path="/home" render={homeJSX} />
                 <Route path="/board/:boardId" component={Board} />
-                <Route path="/profile" component={Profile} />
-                <Route
-                  path="/callback"
-                  render={props => {
-                    this.handleAuthentication(props)
-                    return <Callback {...props} />
-                  }
-                  }
-                />
               </Wrapper>
             </Fragment>
           </Router>

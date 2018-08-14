@@ -19,10 +19,9 @@ export default class Toolbar extends Component {
     }
   }
 
-
   render() {
     const { isActive } = this.state
-    const { toggleFixedMenu, keepOpen, isAuthenticated } = this.props
+    const { toggleFixedMenu, keepOpen } = this.props
 
     const CreateButton = props => {
       return (
@@ -37,7 +36,6 @@ export default class Toolbar extends Component {
     const PopOverCreate = PopOver(CreateMenu, CreateButton)
 
     return (
-      isAuthenticated &&
       <Fragment>
         <Wrapper offset={keepOpen}>
           {isActive &&

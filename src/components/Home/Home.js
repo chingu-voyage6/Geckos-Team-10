@@ -1,30 +1,26 @@
 import React, { Component, Fragment } from 'react'
 import axios from 'axios'
 
-import { Auth } from '../../services'
 import { BoardsHome, LeftSidebar, TeamViewer } from './components'
-import { Button, Wrapper } from '../StyledComponents'
+// import { Button, Wrapper } from '../StyledComponents'
 import { FlexWrapper } from './Home.styles'
-
-const auth = new Auth()
 
 class Home extends Component {
   // will re-render App.js
   componentDidMount = () => {
     this.props.getUserDataWithAuth(localStorage.getItem('user_id'))
-    this.props.authStateChanged()
   }
 
   // calls the login method in authentication service
   login = () => {
-    auth.login()
+    // auth.login()
   }
   // calls the logout method in authentication service
   logout = () => {
     this.props.resetMenuState()
-    auth.logout()
+    // auth.logout()
     // redirects the user to the auth0 login form
-    auth.login()
+    // auth.login()
   }
   // sends our access token to the server so
   // we can access restricted routes
@@ -51,41 +47,34 @@ class Home extends Component {
     })
   }
   render() {
-    const { activeComponent, isAuthenticated, keepOpen } = this.props
+    const { activeComponent, keepOpen } = this.props
     return (
       <div>
-        {!isAuthenticated &&
-          <Wrapper>
+        {/* <Wrapper>
+          <br />
+          <Wrapper width="250px" margin="auto">
+            <div style={{ textAlign: 'center' }}>
+              <span>Please <strong>login</strong> to use trello</span>
+            </div>
             <br />
-            <Wrapper width="250px" margin="auto">
-              <div style={{ textAlign: 'center' }}>
-                <span>Please <strong>login</strong> to use trello</span>
-              </div>
-              <br />
-              <div>
-                <Button solid onClick={this.login}>Login</Button>
-              </div>
-            </Wrapper>
+            <div>
+              <Button solid onClick={this.login}>Login</Button>
+            </div>
           </Wrapper>
-        }
+        </Wrapper> */}
         <br />
-        {console.log(keepOpen)}
         <FlexWrapper width={keepOpen ? '98%' : '80%'}>
-          {isAuthenticated &&
+          <LeftSidebar
+            {...this.state}
+            {...this.props}
+          />
+          {activeComponent === 'boards' && <BoardsHome {...this.props} />}
+          {activeComponent !== 'boards' &&
             <Fragment>
-              <LeftSidebar
+              <TeamViewer
                 {...this.state}
                 {...this.props}
               />
-              {activeComponent === 'boards' && <BoardsHome {...this.props} />}
-              {activeComponent !== 'boards' &&
-                <Fragment>
-                  <TeamViewer
-                    {...this.state}
-                    {...this.props}
-                  />
-                </Fragment>
-              }
             </Fragment>
           }
         </FlexWrapper>

@@ -5,9 +5,11 @@
   "dependencies": {
     "apollo-cache-inmemory": "^1.2.5",
     "apollo-client": "^2.3.5",
+    "apollo-link": "^1.2.2",
     "apollo-link-http": "^1.5.4",
     "array.prototype.move": "0.0.4",
     "auth0-js": "^9.6.1",
+    "auth0-lock": "^11.8.1",
     "axios": "^0.18.0",
     "body-parser": "^1.18.3",
     "express": "^4.16.3",

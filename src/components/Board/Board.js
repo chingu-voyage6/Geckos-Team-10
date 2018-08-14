@@ -4,7 +4,6 @@ import { withApollo } from 'react-apollo'
 import gql from 'graphql-tag'
 import 'array.prototype.move'
 import List from './components/List/List'
-import { Auth } from '../../services'
 import BoardProvider from './BoardProvider'
 import Modal from './components/Modal/Modal'
 import { Button } from '../StyledComponents'
@@ -15,11 +14,6 @@ import {
   CreateListActions,
   TextArea
 } from './Board.styles'
-
-const auth = new Auth()
-
-const { isAuthenticated } = auth
-
 
 const addToListCards = gql`
   mutation($CardId: ID!, $ListId: ID!) {
@@ -130,7 +124,7 @@ class Board extends Component {
     this.getBoardById(boardId)
   }
 
-  onCreateNewList = async e => {
+  onCreateNewList = async () => {
     // if(e.key && e.key !== 'Enter') return
     if (!this.state.newListTitle) return
 
@@ -284,7 +278,7 @@ class Board extends Component {
       await this.props.client.mutate({
         mutation: addToListCards,
         variables: { CardId, ListId },
-        update: (store, { data: { createCard } }) => {
+        update: store => {
           // Read the data from our cache for this query.
           const data = store.readQuery({
             query: boardQuery,
@@ -381,7 +375,7 @@ class Board extends Component {
       top: 0,
     })
 
-    return (isAuthenticated() &&
+    return (
       <BoardProvider>
         <Modal lists={this.state} changeListsState={this.changeListsState} cardsRemoved={this.cardsRemoved} />
         <DragDropContext onDragEnd={this.onDragEnd}>
