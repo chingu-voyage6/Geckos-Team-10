@@ -9,7 +9,6 @@ const ListContainer = styled.div`
   left: 0;
   display: flex;
   align-items: flex-start;
-  background-color: #7a88b9;
 `
 
 const BoardContainer = styled.div`
@@ -17,6 +16,13 @@ const BoardContainer = styled.div`
   position: relative;
   flex-grow: 1;
   height: 100vh;
+`
+
+const BackgroundFilter = styled.div`
+  filter: brightness(90%);
+  position: relative;
+  height: 100%;
+  width: 100%;
 `
 
 const CreateListButton = styled.div`
@@ -63,6 +69,7 @@ const TextArea = styled.input`
 export {
   ListContainer,
   BoardContainer,
+  BackgroundFilter,
   CreateListButton,
   CreateListFormContainer,
   CreateListActions,

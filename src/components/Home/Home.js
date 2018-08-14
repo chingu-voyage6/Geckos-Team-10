@@ -9,12 +9,13 @@ import { FlexWrapper } from './Home.styles'
 const auth = new Auth()
 
 class Home extends Component {
+  state = { containerWidth: '80%' }
   // will re-render App.js
   componentDidMount = () => {
+    console.log(window.innerWidth)
     this.props.getUserDataWithAuth(localStorage.getItem('user_id'))
     this.props.authStateChanged()
   }
-
   // calls the login method in authentication service
   login = () => {
     auth.login()
@@ -69,8 +70,7 @@ class Home extends Component {
           </Wrapper>
         }
         <br />
-        {console.log(keepOpen)}
-        <FlexWrapper width={keepOpen ? '98%' : '80%'}>
+        <FlexWrapper keepOpen={keepOpen}>
           {isAuthenticated &&
             <Fragment>
               <LeftSidebar
