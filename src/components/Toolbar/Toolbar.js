@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react'
+import Color from 'color'
 import { Wrapper, Button, Brand, Input, Icon, RowItem } from './Toolbar.styles'
 import { StyledLink } from '../StyledComponents'
 import { Boards, PopOver } from '../Components'
@@ -21,11 +22,33 @@ export default class Toolbar extends Component {
 
   render() {
     const { isActive } = this.state
-    const { toggleFixedMenu, keepOpen } = this.props
+    const {
+      toggleFixedMenu, keepOpen, isAuthenticated, background
+    } = this.props
+
+    let primary = Color(background)
+    let secondary = Color(background)
+    let tertiary = Color(background)
+
+    if (secondary.isLight()) {
+      // console.log('light color!')
+      primary = primary.darken(0.15).desaturate(0.1)
+      secondary = secondary.lighten(0.2)
+      tertiary = tertiary.desaturate(0.1)
+    } else {
+      // console.log('dark color!')
+      secondary = secondary.lighten(0.5).desaturate(0.5)
+      tertiary = tertiary.lighten(0.25).desaturate(0.25)
+    }
 
     const CreateButton = props => {
       return (
-        <Button pull_right onClick={() => props.togglePopOver()}>
+        <Button
+          pull_right
+          hover={tertiary.hex()}
+          background={secondary.hex()}
+          onClick={() => props.togglePopOver()}
+        >
           <Icon className="fa fa-plus" />
         </Button>
       )
@@ -37,9 +60,10 @@ export default class Toolbar extends Component {
 
     return (
       <Fragment>
-        <Wrapper offset={keepOpen}>
+        <Wrapper offset={keepOpen} background={primary.hex()}>
           {isActive &&
             <Boards
+              setBackground={this.setBackground}
               toggleFixedMenu={toggleFixedMenu}
               toggleBoards={this.toggleBoards}
               keepOpen={keepOpen}
@@ -47,11 +71,21 @@ export default class Toolbar extends Component {
             />
           }
           {!keepOpen &&
-            <Button id="toggle_boards" onClick={this.toggleBoards}>Boards</Button>
+            <Button
+              id="toggle_boards"
+              hover={tertiary.hex()}
+              background={secondary.hex()}
+              onClick={this.toggleBoards}
+            >Boards
+            </Button>
           }
-          <Input type="search" />
-          <Brand>
-            <StyledLink to="/">Trello Clone</StyledLink>
+          <Input
+            type="search"
+            hover={tertiary.hex()}
+            background={secondary.hex()}
+          />
+          <Brand re_center={keepOpen ? '55%' : '45%'}>
+            <StyledLink to="/" color={secondary.hex()}>Trello Clone</StyledLink>
           </Brand>
           <RowItem pull_right>
             <PopOverCreate {...this.props} />

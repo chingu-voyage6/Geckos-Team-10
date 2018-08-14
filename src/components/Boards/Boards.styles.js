@@ -5,6 +5,7 @@ const Wrapper = styled.div`
   display: block;
   width: 280px;
   z-index: 99;
+  overflow-y: auto;
   
   background: white;
 

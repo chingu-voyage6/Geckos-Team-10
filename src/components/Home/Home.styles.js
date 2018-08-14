@@ -4,7 +4,13 @@ const FlexWrapper = styled.div`
   display: flex;
   margin: auto;
   height: 100%;
-  width: ${props => props.width || '80%'};
+  @media (max-width: 1600px) {
+    width: ${props => props.keepOpen ? '98%' : '80%'};
+  }
+
+  @media (min-width:1601px) {
+    width: ${props => props.keepOpen ? '75%' : '50%'};
+  }
 `
 
 const Button = styled.button`

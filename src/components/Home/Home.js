@@ -6,11 +6,12 @@ import { BoardsHome, LeftSidebar, TeamViewer } from './components'
 import { FlexWrapper } from './Home.styles'
 
 class Home extends Component {
+  state = { containerWidth: '80%' }
   // will re-render App.js
   componentDidMount = () => {
+    console.log(window.innerWidth)
     this.props.getUserDataWithAuth(localStorage.getItem('user_id'))
   }
-
   // calls the login method in authentication service
   login = () => {
     // auth.login()
@@ -63,7 +64,7 @@ class Home extends Component {
           </Wrapper>
         </Wrapper> */}
         <br />
-        <FlexWrapper width={keepOpen ? '98%' : '80%'}>
+        <FlexWrapper keepOpen={keepOpen}>
           <LeftSidebar
             {...this.state}
             {...this.props}

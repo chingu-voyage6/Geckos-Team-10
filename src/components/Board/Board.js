@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Color from 'color'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { withApollo } from 'react-apollo'
 import gql from 'graphql-tag'
@@ -9,6 +10,7 @@ import Modal from './components/Modal/Modal'
 import { Button } from '../StyledComponents'
 import {
   BoardContainer,
+  BackgroundFilter,
   CreateListButton,
   CreateListFormContainer,
   CreateListActions,
@@ -81,6 +83,7 @@ query board($id: ID){
   Board(id: $id) {
     id
     title
+    background
     lists(orderBy: order_ASC) {
       id
       listTitle
@@ -108,6 +111,7 @@ query board($id: ID){
 
 class Board extends Component {
   state = {
+    boardId: '',
     lists: [],
     showAddList: false,
     newListTitle: '',
@@ -116,12 +120,19 @@ class Board extends Component {
 
   componentDidMount = () => {
     const { boardId } = this.props.match.params
+    this.props.setBackground(boardId)
     this.getBoardById(boardId)
   }
 
+  componentWillUnmount = () => {
+    this.props.setBackground()
+  }
+
   componentWillReceiveProps = nextState => {
-    const { boardId } = nextState.match.params
-    this.getBoardById(boardId)
+    if (this.props.match.params.boardId !== nextState.match.params.boardId) {
+      this.getBoardById(nextState.match.params.boardId)
+      this.props.setBackground(nextState.match.params.boardId)
+    }
   }
 
   onCreateNewList = async () => {
@@ -256,10 +267,11 @@ class Board extends Component {
         variables: { id }
       })
       if (MainBoard) {
-        const { lists } = MainBoard
+        const { lists, background } = MainBoard
 
         this.setState({
           lists,
+          background,
           cards: lists.map(({ cards }, index) => {
             return {
               listId: lists[index].id,
@@ -267,6 +279,8 @@ class Board extends Component {
             }
           })
         })
+
+        // this.props.setBackground(id)
       }
     } catch (err) {
       console.log('err::', err)
@@ -360,12 +374,24 @@ class Board extends Component {
   }
 
   render() {
+    const { background } = this.props
     const { lists, showAddList } = this.state
     const { boardId } = this.props.match.params
 
-    const getListStyle = isDraggingOver => ({
-      background: isDraggingOver ? 'lightblue' : '#7a88b9',
+    let secondary = Color(background)
+
+    if (secondary.isLight()) {
+      secondary = secondary.darken(0.08)
+    } else {
+      secondary = secondary.lighten(0.2)
+    }
+
+    // console.log(lighter.hex())
+
+    const getListStyle = () => ({
+      // background: isDraggingOver ? 'lightblue' : background,
       position: 'absolute',
+      background: secondary.hex(),
       alignItems: 'flex-start',
       display: 'flex',
       overflow: 'auto',
@@ -379,7 +405,8 @@ class Board extends Component {
       <BoardProvider>
         <Modal lists={this.state} changeListsState={this.changeListsState} cardsRemoved={this.cardsRemoved} />
         <DragDropContext onDragEnd={this.onDragEnd}>
-          <BoardContainer>
+          <BoardContainer background={background}>
+            <BackgroundFilter />
             <Droppable droppableId={boardId} type="COLUMN" direction="horizontal">
               {(provided, snapshot) => (
                 <div

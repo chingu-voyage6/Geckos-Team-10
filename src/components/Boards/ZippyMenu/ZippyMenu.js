@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import { Icon, Title } from '../../StyledComponents'
 import { Button, Text } from '../Boards.styles'
-import { Pills, Pill, StyledLink } from './ZippyMenu.styles'
+import { Pills, Pill, StyledLink, Filter } from './ZippyMenu.styles'
 
 class ZippyMenu extends Component {
   constructor(props) {
@@ -32,7 +32,9 @@ class ZippyMenu extends Component {
             {boards && boards.length ? boards.map(board => {
               return (
                 <StyledLink key={board.id} to={`/board/${board.id}`} background={board.background}>
-                  <Title black>{board.title}</Title>
+                  <Filter>
+                    <Title black>{board.title}</Title>
+                  </Filter>
                 </StyledLink>
               )
             })
