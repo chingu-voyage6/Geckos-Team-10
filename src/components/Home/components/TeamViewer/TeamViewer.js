@@ -2,7 +2,7 @@ import React from 'react'
 import { Query, withApollo } from 'react-apollo'
 import gql from 'graphql-tag'
 
-import { Icon, Title } from '../../../StyledComponents/index'
+import { Icon } from '../../../StyledComponents/index'
 import { Wrapper, Button } from './TeamViewer.styles'
 import { EditTeam, Members, Settings } from './components'
 import { CreateBoardButton, CreateBoard, PopOver } from '../../../Components'
@@ -19,7 +19,6 @@ const TeamQuery = gql`
 
 const TeamViewer = props => {
   const CreateBoardPopOver = PopOver(CreateBoard, CreateBoardButton)
-  // console.log(props)
   return (
     <Wrapper large>
       <div style={{ width: '95%', display: 'block', margin: 'auto' }}>
@@ -29,7 +28,7 @@ const TeamViewer = props => {
               !loading && Team && (
                 <Wrapper flex>
                   <Wrapper large>
-                    <Title><Icon grey className="fa fa-user" />{Team.name}</Title>
+                    {/* <Title><Icon grey className="fa fa-user" />{Team.name}</Title> */}
                     <br />
                     {props.activeTab === 'settings' && <Settings team={Team} {...props} />}
                     {props.activeTab === 'members' && <Members team={Team} />}
@@ -84,9 +83,9 @@ const TeamViewer = props => {
                     </Button>
                     <br />
                     <CreateBoardPopOver teamId={Team.id} />
-                    <Button solid bold>
+                    {/* <Button solid bold>
                       <Icon grey className="fa fa-user-plus" />Add Member
-                    </Button>
+                    </Button> */}
                   </Wrapper>
                 </Wrapper>
               )

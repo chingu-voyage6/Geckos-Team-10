@@ -391,8 +391,6 @@ class Board extends Component {
       secondary = secondary.lighten(0.2)
     }
 
-    // console.log(lighter.hex())
-
     const getListStyle = () => ({
       // background: isDraggingOver ? 'lightblue' : background,
       position: 'absolute',

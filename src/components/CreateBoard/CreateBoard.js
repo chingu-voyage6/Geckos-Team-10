@@ -49,8 +49,6 @@ class CreateBoard extends Component {
   render() {
     const { colors, background } = this.state
     const { hasChevron, goBack } = this.props
-
-    console.log(this.props)
     return (
       <Wrapper width="100%">
         <Heading>

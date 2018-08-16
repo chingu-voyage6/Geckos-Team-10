@@ -31,12 +31,10 @@ export default class Toolbar extends Component {
     let tertiary = Color(background)
 
     if (secondary.isLight()) {
-      // console.log('light color!')
       primary = primary.darken(0.15).desaturate(0.1)
       secondary = secondary.lighten(0.2)
       tertiary = tertiary.desaturate(0.1)
     } else {
-      // console.log('dark color!')
       secondary = secondary.lighten(0.5).desaturate(0.5)
       tertiary = tertiary.lighten(0.25).desaturate(0.25)
     }
@@ -61,7 +59,7 @@ export default class Toolbar extends Component {
     return (
       isAuthenticated &&
       <Fragment>
-        <Wrapper offset={keepOpen} background={primary.hex()}>
+        <Wrapper offset={keepOpen || undefined} background={primary.hex()}>
           {isActive &&
             <Boards
               setBackground={this.setBackground}

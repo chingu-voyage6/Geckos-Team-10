@@ -20,7 +20,6 @@ export default class Auth {
   handleAuthentication = () => {
     this.auth0.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
-        // console.log(authResult)
         this.setSession(authResult)
         history.replace('/home')
       } else if (err) {
@@ -34,7 +33,7 @@ export default class Auth {
     // Set the time that the access token will expire at
     const expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime())
     localStorage.setItem('name', authResult.idTokenPayload.name)
-    localStorage.setItem('user_id', authResult.idTokenPayload.sub)
+    localStorage.setItem('user_id', authResult.idTokenPayload.sub.slice(6))
     localStorage.setItem('picture', authResult.idTokenPayload.picture)
     localStorage.setItem('nickname', authResult.idTokenPayload.nickname)
     localStorage.setItem('access_token', authResult.accessToken)

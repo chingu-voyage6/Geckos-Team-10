@@ -184,8 +184,6 @@ class App extends Component {
           }
         })
 
-        console.log(data.User.boards)
-
         store.writeQuery({ query: UserWithAuthQuery, data })
         this.setState({
           boards: data.User.boards,
@@ -198,15 +196,12 @@ class App extends Component {
   }
 
   createBoard = async (userId, title, background, teamId) => {
-    // console.log(teamId)
     const variables = {
       authorId: userId, title, background
     }
     if (teamId) {
       variables.teamId = teamId
     }
-
-    console.log(variables)
 
     try {
       await this.props.client.mutate({
@@ -251,7 +246,6 @@ class App extends Component {
           })
 
           data.User.teams.push(createTeam)
-          console.log(data.User.teams)
           store.writeQuery({ query: UserWithAuthQuery, data })
 
           this.setState({ teams: data.User.teams })
@@ -347,7 +341,7 @@ class App extends Component {
                   toggleFixedMenu={this.toggleFixedMenu}
                 />
               }
-              <Wrapper offset={keepOpen} background>
+              <Wrapper offset={keepOpen || undefined} background>
                 <Route exact path="/" render={homeJSX} />
                 <Route path="/home" render={homeJSX} />
                 <Route
