@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { withApollo } from 'react-apollo'
 import gql from 'graphql-tag'
 import _ from 'lodash'
@@ -129,9 +129,10 @@ class EditTeam extends Component {
       desc,
     } = this.state
     return (
-      <Fragment>
+      <div style={{ width: '300px', margin: 'auto', display: 'block' }}>
         <span>Name</span>
         <Input
+          wide
           id="name"
           value={name || ''}
           onChange={this.onChange}
@@ -139,6 +140,7 @@ class EditTeam extends Component {
         <br />
         <span>desc (optional)</span>
         <TextArea
+          wide
           id="desc"
           value={desc || ''}
           onChange={this.onChange}
@@ -146,6 +148,7 @@ class EditTeam extends Component {
         <br />
         <span>Website URL (optional)</span>
         <Input
+          wide
           id="website"
           value={website || ''}
           onChange={this.onChange}
@@ -162,7 +165,7 @@ class EditTeam extends Component {
           </Button>
           <Button solid small >Cancel</Button>
         </Wrapper>
-      </Fragment>
+      </div>
     )
   }
 }

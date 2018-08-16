@@ -5,7 +5,7 @@ const Wrapper = styled.div`
   display: block;
   width: 100%;
 
-  ${props => props.large && css` width: 74% !important;`}
+  ${props => props.large && css` width: 70% !important;`}
   ${props => props.med && css` width: 49% !important;`}
   ${props => props.small && css` width: 24% !important;`}
   ${props => props.flex && css` display: flex !important;`}
