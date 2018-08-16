@@ -5,11 +5,11 @@ const FlexWrapper = styled.div`
   margin: auto;
   height: 100%;
   @media (max-width: 1600px) {
-    width: ${props => props.keepOpen ? '98%' : '80%'};
+    width: ${props => (props.keepOpen ? '98%' : '80%')};
   }
 
   @media (min-width:1601px) {
-    width: ${props => props.keepOpen ? '75%' : '50%'};
+    width: ${props => (props.keepOpen ? '75%' : '50%')};
   }
 `
 

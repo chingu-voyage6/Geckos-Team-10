@@ -12,7 +12,6 @@ class Home extends Component {
   state = { containerWidth: '80%' }
   // will re-render App.js
   componentDidMount = () => {
-    console.log(window.innerWidth)
     this.props.getUserDataWithAuth(localStorage.getItem('user_id'))
     this.props.authStateChanged()
   }
@@ -54,7 +53,7 @@ class Home extends Component {
   render() {
     const { activeComponent, isAuthenticated, keepOpen } = this.props
     return (
-      <div>
+      <Fragment>
         {!isAuthenticated &&
           <Wrapper>
             <br />
@@ -89,7 +88,7 @@ class Home extends Component {
             </Fragment>
           }
         </FlexWrapper>
-      </div >
+      </Fragment>
     )
   }
 }
