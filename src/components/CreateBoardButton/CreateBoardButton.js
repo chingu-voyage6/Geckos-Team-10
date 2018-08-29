@@ -14,6 +14,7 @@ class CreateBoardButton extends Component {
         {buttonType && buttonType === 'card' ?
           <ButtonCard
             id="create"
+            {...this.props}
             onClick={() => togglePopOver(this.buttonRef.getBoundingClientRect())}
           >Create new board..
           </ButtonCard> :

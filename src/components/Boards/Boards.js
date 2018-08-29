@@ -9,6 +9,10 @@ class Boards extends Component {
     document.addEventListener('mousedown', this.handleClickOutside)
   }
 
+  componentWillReceiveProps = nextState => {
+    console.log(nextState)
+  }
+
   componentWillUnmount = () => {
     document.removeEventListener('mousedown', this.handleClickOutside)
   }

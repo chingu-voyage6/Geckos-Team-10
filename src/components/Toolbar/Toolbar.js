@@ -1,8 +1,8 @@
 import React, { Component, Fragment } from 'react'
 import Color from 'color'
-import { Wrapper, Button, Brand, Input, Icon, RowItem } from './Toolbar.styles'
+import { Wrapper, Button, Brand, Icon, RowItem } from './Toolbar.styles'
 import { StyledLink } from '../StyledComponents'
-import { Boards, PopOver } from '../Components'
+import { Boards, PopOver, Search } from '../Components'
 import { Avatar, Menu, CreateMenu } from './components'
 
 
@@ -78,10 +78,9 @@ export default class Toolbar extends Component {
             >Boards
             </Button>
           }
-          <Input
-            type="search"
-            hover={tertiary.hex()}
-            background={secondary.hex()}
+          <Search
+            tertiary={tertiary.hex()}
+            secondary={secondary.hex()}
           />
           <Brand re_center={keepOpen ? '55%' : '45%'}>
             <StyledLink to="/" color={secondary.hex()}>Trello Clone</StyledLink>
