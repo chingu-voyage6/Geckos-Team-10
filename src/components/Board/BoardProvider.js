@@ -3,8 +3,6 @@ import React from 'react'
 const BorderContext = React.createContext()
 
 export default class BoardProvider extends React.Component {
-  static Consumer = BorderContext.Consumer
-
   state = {
     showModal: false,
     cardSelected: '',
@@ -15,6 +13,8 @@ export default class BoardProvider extends React.Component {
       this.setState({ showModal: false, cardSelected: '' })
     }
   }
+
+  static Consumer = BorderContext.Consumer
 
   render() {
     return (
