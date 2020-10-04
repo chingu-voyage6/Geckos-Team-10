@@ -6,10 +6,11 @@ const auth = new Auth()
 const { isAuthenticated } = auth
 
 const Profile = () => (
-  isAuthenticated() &&
-  <div>
-    <h1>Profile</h1>
-  </div>
+  isAuthenticated() && (
+    <div>
+      <h1>Profile</h1>
+    </div>
+  )
 )
 
 export default Profile
