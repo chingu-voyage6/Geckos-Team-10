@@ -23,7 +23,7 @@ class CreateBoard extends Component {
   }
 
   onChange = e => {
-    this.setState({ title: e.target.value })
+    this.setState({ title: e.target.value });
   }
 
   randomColorSet = () => {
@@ -32,11 +32,11 @@ class CreateBoard extends Component {
     colors.forEach(() => {
       newColors.push(RandomColor())
     })
-    this.setState({ colors: newColors })
+    this.setState({ colors: newColors });
   }
 
   selectColor = e => {
-    this.setState({ background: e.target.id })
+    this.setState({ background: e.target.id });
   }
 
   handleSubmit = async () => {
@@ -47,8 +47,8 @@ class CreateBoard extends Component {
   }
 
   render() {
-    const { colors, background } = this.state
-    const { hasChevron, goBack } = this.props
+    const { colors, background } = this.state;
+    const { hasChevron, goBack } = this.props;
     return (
       <Wrapper width="100%">
         <Heading>
