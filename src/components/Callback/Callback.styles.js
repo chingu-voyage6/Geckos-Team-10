@@ -1,4 +1,4 @@
-import styled, { keyframes } from 'styled-components'
+import styled, { keyframes } from 'styled-components';
 
 const SpinnerContainer = styled.div`
   align-items: center
@@ -10,13 +10,13 @@ const SpinnerContainer = styled.div`
   min-height: 100vh
   min-width: 100vw
   padding: 0rem
-`
+`;
 
 const rotate360 = keyframes`
   to {
     transform: rotate(360deg);
   }
-`
+`;
 
 const Spinner = styled.div`
   border: 8px solid #1e1f21;
@@ -25,7 +25,7 @@ const Spinner = styled.div`
   width: 100px;
   height: 100px;
   animation: ${rotate360} 1s linear infinite;
-`
+`;
 
 export {
   Spinner,
