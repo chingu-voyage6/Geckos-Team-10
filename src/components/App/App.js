@@ -112,9 +112,7 @@ class App extends Component {
     boards: [],
     teams: []
   }
-  //
-  // getUserId is passed as props to Home.js Component and then called when Home.js is rendered
-  //
+
   setBackground = boardId => {
     const board = this.state.boards.find(({ id }) => boardId === id)
     const theme = localStorage.getItem('theme')
@@ -136,7 +134,6 @@ class App extends Component {
       const { data: { User } } = await this.props.client.query({
         query: UserWithAuthQuery,
         variables: { key: auth0Key },
-        // fetchPolicy: 'network-only'
       })
       if (User) {
         this.setState({
@@ -176,7 +173,6 @@ class App extends Component {
           variables: { key: localStorage.getItem('user_id') }
         })
 
-        // find team by id and remove it from the cache
         data.User.teams.forEach((team, index) => {
           if (team.id === deleteTeam.id) {
             data.User.teams.splice(index, 1)
@@ -238,7 +234,6 @@ class App extends Component {
           authorId: userId, name, desc
         },
         update: (store, { data: { createTeam } }) => {
-          // Read the data from our cache for this query.
           const data = store.readQuery({
             query: UserWithAuthQuery,
             variables: { key: localStorage.getItem('user_id') },
@@ -256,7 +251,6 @@ class App extends Component {
     }
   }
 
-  // toggle components that are shown
   toggleComponents = e => {
     this.setState({
       activeTeam: e.target.id || '',
