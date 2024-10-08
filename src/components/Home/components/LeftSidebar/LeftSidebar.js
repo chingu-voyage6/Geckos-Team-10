@@ -1,6 +1,4 @@
 import React from 'react'
-// import { Query } from 'react-apollo'
-// import gql from 'graphql-tag'
 
 import { Icon, Title } from '../../../StyledComponents/index'
 import { PopOver, CreateTeam, CreateTeamButton } from '../../../Components'
