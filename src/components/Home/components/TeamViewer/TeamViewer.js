@@ -28,7 +28,6 @@ const TeamViewer = props => {
               !loading && Team && (
                 <Wrapper flex>
                   <Wrapper large>
-                    {/* <Title><Icon grey className="fa fa-user" />{Team.name}</Title> */}
                     <br />
                     {props.activeTab === 'settings' && <Settings team={Team} {...props} />}
                     {props.activeTab === 'members' && <Members team={Team} />}
@@ -83,9 +82,6 @@ const TeamViewer = props => {
                     </Button>
                     <br />
                     <CreateBoardPopOver teamId={Team.id} />
-                    {/* <Button solid bold>
-                      <Icon grey className="fa fa-user-plus" />Add Member
-                    </Button> */}
                   </Wrapper>
                 </Wrapper>
               )
