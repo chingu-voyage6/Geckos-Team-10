@@ -32,9 +32,6 @@ class Boards extends Component {
             <Text black>Menu</Text>
           </MenuHeader>
         }
-        {/* <Input type="search" placeholder="Find boards by name..." /> */
-        /* <ZippyMenu title="Starred Boards" /> */
-        /* <ZippyMenu title="Recent Boards" /> */}
         <ZippyMenu title="All Boards" boards={boards} />
         {teams && teams.map(team => {
           return <ZippyMenu key={team.id} teamId={team.id} title={team.name} boards={team.boards} />
