@@ -1,0 +1,19 @@
+query board {
+  Board(id: "cjj7smzwg8eco0149e347lcq0") {
+    id
+    title
+    lists {
+      id
+      listTitle
+      cards {
+        id
+        desc
+        author {
+          id
+          name
+          nickname
+        }
+      }
+    }
+  }
+}

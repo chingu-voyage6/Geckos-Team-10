@@ -1,4 +1,5 @@
 node_modules/
 src/registerServiceWorker.js
+build/
 server.js
 .github/

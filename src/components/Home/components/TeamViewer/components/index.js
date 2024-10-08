@@ -1,0 +1,5 @@
+export { default as EditTeam } from './EditTeam/EditTeam'
+export { default as Members } from './Members/Members'
+export { default as Settings } from './Settings/Settings'
+export { default as DeleteButton } from './DeleteButton/DeleteButton'
+export { default as DeleteTeam } from './DeleteTeam/DeleteTeam'
