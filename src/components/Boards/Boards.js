@@ -1,7 +1,5 @@
 import React, { Component, Fragment } from 'react'
-
 import { Wrapper, Button, MenuHeader, Text } from './Boards.styles'
-
 import ZippyMenu from './ZippyMenu/ZippyMenu'
 
 class Boards extends Component {
@@ -14,7 +12,7 @@ class Boards extends Component {
   }
 
   setBoardsRef = node => {
-    this.boardsRef = node
+    this.boardsRef = node;
   }
 
   handleClickOutside = event => {
@@ -24,7 +22,7 @@ class Boards extends Component {
   }
 
   render() {
-    const { boards, teams } = this.props
+    const { boards, teams } = this.props;
     const ContentJSX = (
       <Fragment>
         {this.props.keepOpen &&
