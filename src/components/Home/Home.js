@@ -28,9 +28,9 @@ class Home extends Component {
   }
   // sends our access token to the server so
   // we can access restricted routes
-  validate = accessToken => {
+  validate = async (accessToken) => {
     const BearerToken = `Bearer ${accessToken}`
-    axios({
+    const res = await axios({
       method: 'POST',
       url: '/api/private',
       headers: {
@@ -40,15 +40,9 @@ class Home extends Component {
         nickname: localStorage.getItem('nickname'),
         user_id: localStorage.getItem('user_id')
       }
-    }).then(res => {
-      console.log(res)
-      // this.setState({ authMessage: res.data.message })
-    }, error => {
-      if (error.response.status === 401) {
-        // this.setState({ authMessage: error.response.statusText })
-      }
-      return error
     })
+    console.log(res)
+    // this.setState({ authMessage: res.data.message })
   }
   render() {
     const { activeComponent, isAuthenticated, keepOpen } = this.props
